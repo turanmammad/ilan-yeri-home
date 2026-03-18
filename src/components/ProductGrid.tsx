@@ -1,4 +1,5 @@
 import ProductCard, { type Product } from "./ProductCard";
+import { Link } from "react-router-dom";
 
 const products: Product[] = [
   { id: 1, title: "Mercedes-Benz E 220 d", price: 45000, currency: "AZN", location: "Bakı, Nəsimi", image: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=400&h=300&fit=crop", isVip: true, timeAgo: "Bu gün, 14:30" },
@@ -15,7 +16,7 @@ const ProductGrid = () => (
   <section className="container pb-12">
     <div className="flex items-center justify-between mb-6">
       <h2 className="text-xl sm:text-2xl font-bold text-foreground">Seçilmiş elanlar</h2>
-      <button className="text-sm font-medium text-foreground/60 hover:text-foreground transition-colors">Hamısına bax →</button>
+      <Link to="/elanlar" className="text-sm font-medium text-foreground/60 hover:text-foreground transition-colors">Hamısına bax →</Link>
     </div>
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {products.map((product, i) => (
