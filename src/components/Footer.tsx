@@ -110,8 +110,7 @@ const Footer = () => (
             <ul className="space-y-2 sm:space-y-2.5 text-sm text-muted-foreground pl-1 md:pl-0">
               <li><Link to="/yardim" className="hover:text-foreground transition-colors">Yardım mərkəzi</Link></li>
               <li><Link to="/qaydalar" className="hover:text-foreground transition-colors">İstifadə qaydaları</Link></li>
-              <li><Link to="/tehlukesizlik" className="hover:text-foreground transition-colors">Məxfilik siyasəti</Link></li>
-              <li><Link to="/tehlukesizlik" className="hover:text-foreground transition-colors">Təhlükəsizlik</Link></li>
+              <li><Link to="/tehlukesizlik" className="hover:text-foreground transition-colors">Məxfilik və Təhlükəsizlik</Link></li>
               <li><Link to="/sikayat" className="hover:text-foreground transition-colors">Şikayət bildirin</Link></li>
               <li><Link to="/magazalar" className="hover:text-foreground transition-colors">Mağaza açın</Link></li>
             </ul>

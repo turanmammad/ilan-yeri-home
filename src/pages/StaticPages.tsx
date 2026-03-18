@@ -123,3 +123,89 @@ Telefon: +994 12 345 67 89
 Mətbuat dəsti və loqolar tələb əsasında təqdim edilir.`}
   />
 );
+
+const sitemapSections = [
+  {
+    title: "Əsas səhifələr",
+    links: [
+      { label: "Ana səhifə", path: "/" },
+      { label: "Bütün elanlar", path: "/elanlar" },
+      { label: "Mağazalar", path: "/magazalar" },
+      { label: "Xidmətlər", path: "/xidmetler" },
+      { label: "Elan yerləşdir", path: "/elan-yerleshdir" },
+    ],
+  },
+  {
+    title: "Hesab",
+    links: [
+      { label: "Daxil ol", path: "/giris" },
+      { label: "Qeydiyyat", path: "/qeydiyyat" },
+      { label: "İdarə paneli", path: "/hesab" },
+      { label: "Elanlarım", path: "/hesab/elanlar" },
+      { label: "Seçilmişlər", path: "/hesab/secilmisler" },
+      { label: "Mesajlar", path: "/hesab/mesajlar" },
+      { label: "Bildirişlər", path: "/hesab/bildirisler" },
+      { label: "Tənzimləmələr", path: "/hesab/tenzimleme" },
+    ],
+  },
+  {
+    title: "Mağaza",
+    links: [
+      { label: "Mağaza paneli", path: "/hesab/magazam" },
+      { label: "Sifarişlər", path: "/hesab/magazam/sifarisler" },
+      { label: "Rəylər", path: "/hesab/magazam/reyler" },
+      { label: "Mağaza ayarları", path: "/hesab/magazam/ayarlar" },
+    ],
+  },
+  {
+    title: "Şirkət",
+    links: [
+      { label: "Haqqımızda", path: "/haqqimizda" },
+      { label: "Əlaqə", path: "/elaqe" },
+      { label: "Reklam", path: "/reklam" },
+      { label: "Tərəfdaşlıq", path: "/terefdashlik" },
+      { label: "Karyera", path: "/karyera" },
+      { label: "Mətbuat", path: "/metbuat" },
+    ],
+  },
+  {
+    title: "Dəstək",
+    links: [
+      { label: "Yardım mərkəzi", path: "/yardim" },
+      { label: "İstifadə qaydaları", path: "/qaydalar" },
+      { label: "Təhlükəsizlik", path: "/tehlukesizlik" },
+      { label: "Şikayət bildirin", path: "/sikayat" },
+    ],
+  },
+];
+
+export const Sitemap = () => (
+  <div className="min-h-screen flex flex-col bg-background">
+    <Header />
+    <main className="container py-10 flex-1 max-w-4xl">
+      <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">Sayt xəritəsi</h1>
+      <p className="text-sm text-muted-foreground mb-8">UcuzTap platformasının bütün səhifələri</p>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sitemapSections.map((section) => (
+          <div key={section.title} className="bg-card rounded-2xl border border-border p-5 shadow-sm">
+            <h2 className="text-sm font-bold text-foreground mb-3">{section.title}</h2>
+            <ul className="space-y-1.5">
+              {section.links.map((link) => (
+                <li key={link.path}>
+                  <Link
+                    to={link.path}
+                    className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <ChevronRight className="w-3 h-3" />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </main>
+    <Footer />
+  </div>
+);

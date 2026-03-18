@@ -73,6 +73,7 @@ const App = () => (
             <Route path="/sikayat" element={<Complaint />} />
             <Route path="/terefdashlik" element={<Partnership />} />
             <Route path="/metbuat" element={<Press />} />
+            <Route path="/sitemap" element={<Sitemap />} />
 
             {/* Admin panel */}
             <Route path="/admin" element={<AdminLayout />}>
