@@ -1,5 +1,7 @@
 import { useState, useMemo } from "react";
 import { Search, Filter, Eye, Ban, Star, Clock, ExternalLink, ShoppingBag, TrendingUp, UserCheck, ShieldAlert } from "lucide-react";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { toast } from "sonner";
 
 type ShopStatus = "active" | "suspended" | "pending";
 

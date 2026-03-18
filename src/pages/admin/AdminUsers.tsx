@@ -185,6 +185,24 @@ const AdminUsers = () => {
           <p className="text-xs text-muted-foreground">{filtered.length} istifadəçi göstərilir</p>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={!!confirmAction}
+        onOpenChange={(open) => !open && setConfirmAction(null)}
+        title={
+          confirmAction?.type === "block" ? "İstifadəçini bloklamaq istəyirsiniz?" :
+          confirmAction?.type === "suspend" ? "İstifadəçini dayandırmaq istəyirsiniz?" :
+          "İstifadəçini aktiv etmək istəyirsiniz?"
+        }
+        description={`"${confirmAction?.name}" ${
+          confirmAction?.type === "block" ? "adlı istifadəçi bloklanacaq və platformaya daxil ola bilməyəcək." :
+          confirmAction?.type === "suspend" ? "adlı istifadəçinin hesabı müvəqqəti dayandırılacaq." :
+          "adlı istifadəçinin hesabı yenidən aktiv ediləcək."
+        }`}
+        confirmLabel={confirmAction?.type === "block" ? "Blokla" : confirmAction?.type === "suspend" ? "Dayandır" : "Aktiv et"}
+        variant={confirmAction?.type === "block" ? "destructive" : confirmAction?.type === "suspend" ? "warning" : "default"}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 };
