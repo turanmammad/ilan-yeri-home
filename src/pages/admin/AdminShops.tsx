@@ -227,6 +227,18 @@ const AdminShops = () => {
           <p className="text-xs text-muted-foreground">{filtered.length} mağaza göstərilir</p>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={!!confirmAction}
+        onOpenChange={(open) => !open && setConfirmAction(null)}
+        title={confirmAction?.type === "suspend" ? "Mağazanı dayandırmaq istəyirsiniz?" : "Mağazanı aktiv etmək istəyirsiniz?"}
+        description={`"${confirmAction?.name}" ${
+          confirmAction?.type === "suspend" ? "adlı mağaza dayandırılacaq və elanları gizlədiləcək." : "adlı mağaza yenidən aktiv ediləcək."
+        }`}
+        confirmLabel={confirmAction?.type === "suspend" ? "Dayandır" : "Aktiv et"}
+        variant={confirmAction?.type === "suspend" ? "destructive" : "default"}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 };
