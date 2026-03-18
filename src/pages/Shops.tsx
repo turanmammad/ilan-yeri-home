@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { Store, MapPin, Star, ExternalLink } from "lucide-react";
+import { Store, MapPin, Star, Crown } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
+import { SponsoredBadge, AdBanner, mockBannerAds, mockSponsoredShops } from "@/components/ads/AdSystem";
 
 const shops = [
   { id: 1, name: "TechStore Bakı", category: "Elektronika", rating: 4.8, listings: 234, location: "Bakı", verified: true },
@@ -23,6 +24,57 @@ const Shops = () => (
       <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">Mağazalar</h1>
       <p className="text-sm text-muted-foreground mb-8">Etibarlı satıcılardan alış-veriş edin</p>
 
+      {/* Sponsorlu mağazalar */}
+      {mockSponsoredShops.length > 0 && (
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-3">
+            <SponsoredBadge />
+            <span className="text-xs text-muted-foreground">Sponsorlu mağazalar</span>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {mockSponsoredShops.map((shop, i) => (
+              <motion.div
+                key={shop.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05, duration: 0.35 }}
+              >
+                <Link
+                  to={`/magaza/${shop.id}`}
+                  className="block bg-card rounded-2xl border-2 border-primary/20 p-5 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 relative overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 bg-gradient-to-bl from-primary/10 to-transparent w-24 h-24 pointer-events-none" />
+                  <div className="absolute top-3 right-3">
+                    <SponsoredBadge />
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="w-14 h-14 rounded-xl bg-primary/15 flex items-center justify-center shrink-0 relative">
+                      <Store className="w-7 h-7 text-primary" />
+                      <Crown className="w-4 h-4 text-primary absolute -top-1 -right-1" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-sm font-bold text-foreground truncate">{shop.name}</h3>
+                      <p className="text-xs text-muted-foreground mt-0.5">{shop.category}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <Star className="w-3.5 h-3.5 text-primary fill-primary" />
+                      <span className="font-medium text-foreground">{shop.rating}</span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">{shop.listings} elan</span>
+                    <span className="text-xs text-muted-foreground flex items-center gap-1">
+                      <MapPin className="w-3 h-3" />{shop.location}
+                    </span>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Normal mağazalar */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {shops.map((shop, i) => (
           <motion.div
@@ -49,7 +101,6 @@ const Shops = () => (
                   <p className="text-xs text-muted-foreground mt-0.5">{shop.category}</p>
                 </div>
               </div>
-
               <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
                 <div className="flex items-center gap-1 text-xs text-muted-foreground">
                   <Star className="w-3.5 h-3.5 text-primary fill-primary" />
@@ -63,6 +114,11 @@ const Shops = () => (
             </Link>
           </motion.div>
         ))}
+      </div>
+
+      {/* Reklam banner altda */}
+      <div className="mt-8">
+        <AdBanner ad={mockBannerAds.footerTop} />
       </div>
     </div>
 
