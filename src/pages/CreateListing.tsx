@@ -73,10 +73,65 @@ const CreateListing = () => {
   const [city, setCity] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [currency, setCurrency] = useState("AZN");
+  const [negotiable, setNegotiable] = useState(false);
+  const [barter, setBarter] = useState(false);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [district, setDistrict] = useState("");
   const [aiTitleLoading, setAiTitleLoading] = useState(false);
   const [aiDescLoading, setAiDescLoading] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState<{ titles?: string[]; descriptions?: string[] }>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitted, setSubmitted] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  // ─── Validation ───
+  const validateForm = (): Record<string, string> => {
+    const errs: Record<string, string> = {};
+    if (images.length < 1) errs.images = "Ən az 1 şəkil əlavə edin";
+    if (title.trim().length < 5) errs.title = "Başlıq ən az 5 simvol olmalıdır";
+    if (description.trim().length < 20) errs.description = "Təsvir ən az 20 simvol olmalıdır";
+    if (!negotiable && !price.trim()) errs.price = "Qiymət daxil edin və ya 'Razılaşma yolu ilə' seçin";
+    if (!city) errs.city = "Şəhər seçin";
+    if (city === "Bakı" && !district) errs.district = "Rayon seçin";
+    if (name.trim().length < 2) errs.name = "Ad ən az 2 simvol olmalıdır";
+    // AZ phone: 2 digit operator + 7 digits = 9 digits total (spaces/dashes ignored)
+    const phoneDigits = phone.replace(/[\s\-()]/g, "");
+    if (!/^\d{9}$/.test(phoneDigits)) errs.phone = "Telefon nömrəsi düzgün deyil (məs: 50 123 45 67)";
+    if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) errs.email = "E-poçt formatı düzgün deyil";
+    return errs;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+    const errs = validateForm();
+    setErrors(errs);
+    if (Object.keys(errs).length > 0) {
+      toast({ title: "Xəta", description: "Zəhmət olmasa bütün sahələri düzgün doldurun", variant: "destructive" });
+      // scroll to first error
+      const firstKey = Object.keys(errs)[0];
+      document.getElementById(`field-${firstKey}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    toast({ title: "Uğurlu!", description: "Elanınız uğurla yerləşdirildi" });
+    // TODO: submit to backend
+  };
+
+  // Re-validate on change if already submitted
+  const clearError = (key: string) => {
+    if (submitted) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      });
+    }
+  };
 
   // TODO: Backend əlavə edildikdən sonra bu funksiyaları real API çağırışları ilə əvəz edin
   const handleAiTitle = async () => {
