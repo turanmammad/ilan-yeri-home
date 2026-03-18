@@ -285,6 +285,7 @@ const CreateListing = () => {
   const handleSelectMain = (slug: string) => {
     setSelectedMain(slug);
     setSelectedSub(null);
+    setCategoryExtra({});
   };
 
   const handleSelectSub = (sub: string) => {
