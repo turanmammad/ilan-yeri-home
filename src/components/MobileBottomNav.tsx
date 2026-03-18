@@ -12,6 +12,9 @@ const navItems = [
 const MobileBottomNav = () => {
   const { pathname } = useLocation();
 
+  // Hide on admin pages
+  if (pathname.startsWith("/admin")) return null;
+
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-t border-border safe-bottom">
       <div className="flex items-end justify-around px-2 pt-1.5 pb-1.5">
