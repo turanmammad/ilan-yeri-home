@@ -97,7 +97,7 @@ const Header = () => {
 
       {/* Mobile slide-out menu */}
       {menuOpen && (
-        <div className="md:hidden fixed inset-0 z-40 flex">
+        <div className="md:hidden fixed inset-0 z-[60] flex">
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-foreground/40 backdrop-blur-sm"
