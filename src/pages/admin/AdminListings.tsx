@@ -255,6 +255,7 @@ const AdminListings = () => {
                             <AlertCircle className="w-4 h-4" />
                           </button>
                         )}
+                        <button onClick={() => setEditListing({ id: l.id, title: l.title, price: l.price, category: l.category })} className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Redaktə et"><Edit className="w-4 h-4" /></button>
                         <button onClick={() => setDetailListing(l)} className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Bax"><Eye className="w-4 h-4" /></button>
                         <button onClick={() => setConfirmAction({ type: "delete", id: l.id, title: l.title })} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive" title="Sil"><Trash2 className="w-4 h-4" /></button>
                       </div>
