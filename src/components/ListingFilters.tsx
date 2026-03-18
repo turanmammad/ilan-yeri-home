@@ -97,7 +97,7 @@ const ListingFilters = ({ open, onToggle, filters, onChange, onReset, activeCate
     filters.vipOnly,
     ...extraFilters.map((f) => {
       const val = filters[f.key];
-      return val && val !== "Hamısı" && val !== false;
+      return !!val && val !== "Hamısı";
     }),
   ].filter(Boolean).length;
 
