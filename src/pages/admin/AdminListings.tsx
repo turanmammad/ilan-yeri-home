@@ -301,6 +301,18 @@ const AdminListings = () => {
         variant={confirmAction?.type === "delete" ? "destructive" : "warning"}
         onConfirm={handleConfirm}
       />
+
+      <ListingEditDialog
+        listing={editListing}
+        open={!!editListing}
+        onOpenChange={(open) => !open && setEditListing(null)}
+        onSave={(updated) => {
+          setListings(prev => prev.map(l =>
+            l.id === updated.id ? { ...l, title: updated.title, price: updated.price, category: updated.category || l.category } : l
+          ));
+        }}
+        isAdmin
+      />
     </div>
   );
 };
