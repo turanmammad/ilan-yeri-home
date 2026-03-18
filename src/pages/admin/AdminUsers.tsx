@@ -1,5 +1,7 @@
 import { useState, useMemo } from "react";
 import { Search, Filter, Eye, Ban, Mail, Clock, CheckCircle, ShieldAlert, UserCheck } from "lucide-react";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { toast } from "sonner";
 
 type UserStatus = "active" | "blocked" | "suspended";
 
@@ -41,6 +43,7 @@ const AdminUsers = () => {
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<"all" | UserStatus>("all");
   const [showFilters, setShowFilters] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<{ type: "block" | "suspend" | "activate"; id: number; name: string } | null>(null);
 
   const filtered = useMemo(() => {
     return users.filter((u) => {
@@ -59,6 +62,15 @@ const AdminUsers = () => {
 
   const changeStatus = (id: number, newStatus: UserStatus) => {
     setUsers((prev) => prev.map((u) => u.id === id ? { ...u, status: newStatus } : u));
+    const labels: Record<UserStatus, string> = { active: "Aktiv", blocked: "Bloklanıb", suspended: "Dayandırılıb" };
+    toast.success(`İstifadəçi statusu "${labels[newStatus]}" olaraq dəyişdirildi`);
+  };
+
+  const handleConfirm = () => {
+    if (!confirmAction) return;
+    const statusMap = { block: "blocked" as const, suspend: "suspended" as const, activate: "active" as const };
+    changeStatus(confirmAction.id, statusMap[confirmAction.type]);
+    setConfirmAction(null);
   };
 
   const tabs: { key: "all" | UserStatus; label: string }[] = [
@@ -150,12 +162,12 @@ const AdminUsers = () => {
                           </button>
                         )}
                         {u.status !== "blocked" && (
-                          <button onClick={() => changeStatus(u.id, "blocked")} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive" title="Blokla">
+                          <button onClick={() => setConfirmAction({ type: "block", id: u.id, name: u.name })} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive" title="Blokla">
                             <Ban className="w-4 h-4" />
                           </button>
                         )}
                         {u.status !== "suspended" && (
-                          <button onClick={() => changeStatus(u.id, "suspended")} className="p-1.5 rounded-lg hover:bg-amber-500/10 transition-colors text-muted-foreground hover:text-amber-500" title="Dayandır">
+                          <button onClick={() => setConfirmAction({ type: "suspend", id: u.id, name: u.name })} className="p-1.5 rounded-lg hover:bg-amber-500/10 transition-colors text-muted-foreground hover:text-amber-500" title="Dayandır">
                             <ShieldAlert className="w-4 h-4" />
                           </button>
                         )}
@@ -173,6 +185,24 @@ const AdminUsers = () => {
           <p className="text-xs text-muted-foreground">{filtered.length} istifadəçi göstərilir</p>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={!!confirmAction}
+        onOpenChange={(open) => !open && setConfirmAction(null)}
+        title={
+          confirmAction?.type === "block" ? "İstifadəçini bloklamaq istəyirsiniz?" :
+          confirmAction?.type === "suspend" ? "İstifadəçini dayandırmaq istəyirsiniz?" :
+          "İstifadəçini aktiv etmək istəyirsiniz?"
+        }
+        description={`"${confirmAction?.name}" ${
+          confirmAction?.type === "block" ? "adlı istifadəçi bloklanacaq və platformaya daxil ola bilməyəcək." :
+          confirmAction?.type === "suspend" ? "adlı istifadəçinin hesabı müvəqqəti dayandırılacaq." :
+          "adlı istifadəçinin hesabı yenidən aktiv ediləcək."
+        }`}
+        confirmLabel={confirmAction?.type === "block" ? "Blokla" : confirmAction?.type === "suspend" ? "Dayandır" : "Aktiv et"}
+        variant={confirmAction?.type === "block" ? "destructive" : confirmAction?.type === "suspend" ? "warning" : "default"}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 };

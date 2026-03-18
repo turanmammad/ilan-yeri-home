@@ -1,5 +1,7 @@
 import { useState, useMemo } from "react";
 import { Search, Filter, Eye, Trash2, Clock, CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { toast } from "sonner";
 
 type ListingStatus = "active" | "pending" | "rejected";
 
@@ -43,6 +45,7 @@ const AdminListings = () => {
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<"all" | ListingStatus>("all");
   const [selectedCategory, setSelectedCategory] = useState("Hamısı");
+  const [confirmAction, setConfirmAction] = useState<{ type: "delete" | "reject" | "pending"; id: number; title: string } | null>(null);
   const [showFilters, setShowFilters] = useState(false);
 
   const filtered = useMemo(() => {
@@ -63,10 +66,21 @@ const AdminListings = () => {
 
   const changeStatus = (id: number, newStatus: ListingStatus) => {
     setListings((prev) => prev.map((l) => l.id === id ? { ...l, status: newStatus } : l));
+    const statusLabels: Record<ListingStatus, string> = { active: "Aktiv", pending: "Gözləyir", rejected: "Rədd" };
+    toast.success(`Elan statusu "${statusLabels[newStatus]}" olaraq dəyişdirildi`);
   };
 
   const deleteListing = (id: number) => {
     setListings((prev) => prev.filter((l) => l.id !== id));
+    toast.success("Elan uğurla silindi");
+  };
+
+  const handleConfirm = () => {
+    if (!confirmAction) return;
+    if (confirmAction.type === "delete") deleteListing(confirmAction.id);
+    else if (confirmAction.type === "reject") changeStatus(confirmAction.id, "rejected");
+    else if (confirmAction.type === "pending") changeStatus(confirmAction.id, "pending");
+    setConfirmAction(null);
   };
 
   const tabs: { key: "all" | ListingStatus; label: string }[] = [
@@ -171,17 +185,17 @@ const AdminListings = () => {
                           </button>
                         )}
                         {l.status !== "rejected" && (
-                          <button onClick={() => changeStatus(l.id, "rejected")} className="p-1.5 rounded-lg hover:bg-amber-500/10 transition-colors text-muted-foreground hover:text-amber-600" title="Rədd et">
+                          <button onClick={() => setConfirmAction({ type: "reject", id: l.id, title: l.title })} className="p-1.5 rounded-lg hover:bg-amber-500/10 transition-colors text-muted-foreground hover:text-amber-600" title="Rədd et">
                             <XCircle className="w-4 h-4" />
                           </button>
                         )}
                         {l.status === "active" && (
-                          <button onClick={() => changeStatus(l.id, "pending")} className="p-1.5 rounded-lg hover:bg-amber-500/10 transition-colors text-muted-foreground hover:text-amber-500" title="Gözləməyə al">
+                          <button onClick={() => setConfirmAction({ type: "pending", id: l.id, title: l.title })} className="p-1.5 rounded-lg hover:bg-amber-500/10 transition-colors text-muted-foreground hover:text-amber-500" title="Gözləməyə al">
                             <AlertCircle className="w-4 h-4" />
                           </button>
                         )}
                         <button className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Bax"><Eye className="w-4 h-4" /></button>
-                        <button onClick={() => deleteListing(l.id)} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive" title="Sil"><Trash2 className="w-4 h-4" /></button>
+                        <button onClick={() => setConfirmAction({ type: "delete", id: l.id, title: l.title })} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive" title="Sil"><Trash2 className="w-4 h-4" /></button>
                       </div>
                     </td>
                   </tr>
@@ -194,6 +208,24 @@ const AdminListings = () => {
           <p className="text-xs text-muted-foreground">{filtered.length} elan göstərilir</p>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={!!confirmAction}
+        onOpenChange={(open) => !open && setConfirmAction(null)}
+        title={
+          confirmAction?.type === "delete" ? "Elanı silmək istəyirsiniz?" :
+          confirmAction?.type === "reject" ? "Elanı rədd etmək istəyirsiniz?" :
+          "Elanı gözləməyə almaq istəyirsiniz?"
+        }
+        description={`"${confirmAction?.title}" ${
+          confirmAction?.type === "delete" ? "adlı elan birdəfəlik silinəcək. Bu əməliyyat geri qaytarıla bilməz." :
+          confirmAction?.type === "reject" ? "adlı elan rədd ediləcək." :
+          "adlı elan gözləmə statusuna keçiriləcək."
+        }`}
+        confirmLabel={confirmAction?.type === "delete" ? "Sil" : confirmAction?.type === "reject" ? "Rədd et" : "Gözləməyə al"}
+        variant={confirmAction?.type === "delete" ? "destructive" : "warning"}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 };

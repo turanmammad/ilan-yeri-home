@@ -1,5 +1,7 @@
 import { useState, useMemo } from "react";
 import { Search, Filter, Eye, Ban, Star, Clock, ExternalLink, ShoppingBag, TrendingUp, UserCheck, ShieldAlert } from "lucide-react";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { toast } from "sonner";
 
 type ShopStatus = "active" | "suspended" | "pending";
 
@@ -44,6 +46,7 @@ const AdminShops = () => {
   const [activeTab, setActiveTab] = useState<"all" | ShopStatus>("all");
   const [selectedCategory, setSelectedCategory] = useState("Hamısı");
   const [showFilters, setShowFilters] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<{ type: "suspend" | "activate"; id: number; name: string } | null>(null);
 
   const filtered = useMemo(() => {
     return shops.filter((s) => {
@@ -63,6 +66,14 @@ const AdminShops = () => {
 
   const changeStatus = (id: number, newStatus: ShopStatus) => {
     setShops((prev) => prev.map((s) => s.id === id ? { ...s, status: newStatus } : s));
+    const labels: Record<ShopStatus, string> = { active: "Aktiv", suspended: "Dayandırılıb", pending: "Gözləyir" };
+    toast.success(`Mağaza statusu "${labels[newStatus]}" olaraq dəyişdirildi`);
+  };
+
+  const handleConfirm = () => {
+    if (!confirmAction) return;
+    changeStatus(confirmAction.id, confirmAction.type === "suspend" ? "suspended" : "active");
+    setConfirmAction(null);
   };
 
   const tabs: { key: "all" | ShopStatus; label: string }[] = [
@@ -198,7 +209,7 @@ const AdminShops = () => {
                           </button>
                         )}
                         {s.status !== "suspended" && (
-                          <button onClick={() => changeStatus(s.id, "suspended")} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive" title="Dayandır">
+                          <button onClick={() => setConfirmAction({ type: "suspend", id: s.id, name: s.name })} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive" title="Dayandır">
                             <ShieldAlert className="w-4 h-4" />
                           </button>
                         )}
@@ -216,6 +227,18 @@ const AdminShops = () => {
           <p className="text-xs text-muted-foreground">{filtered.length} mağaza göstərilir</p>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={!!confirmAction}
+        onOpenChange={(open) => !open && setConfirmAction(null)}
+        title={confirmAction?.type === "suspend" ? "Mağazanı dayandırmaq istəyirsiniz?" : "Mağazanı aktiv etmək istəyirsiniz?"}
+        description={`"${confirmAction?.name}" ${
+          confirmAction?.type === "suspend" ? "adlı mağaza dayandırılacaq və elanları gizlədiləcək." : "adlı mağaza yenidən aktiv ediləcək."
+        }`}
+        confirmLabel={confirmAction?.type === "suspend" ? "Dayandır" : "Aktiv et"}
+        variant={confirmAction?.type === "suspend" ? "destructive" : "default"}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 };
