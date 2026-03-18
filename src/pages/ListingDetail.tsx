@@ -23,6 +23,7 @@ const listing = {
     verified: true,
   },
   phone: "+994 50 123 45 67",
+  whatsapp: "+994501234567",
   images: ["/placeholder.svg"],
 };
 
