@@ -54,6 +54,95 @@ const mainCategories = [
   },
 ];
 
+// ─── Category-Specific Fields ───
+interface CategoryField {
+  key: string;
+  label: string;
+  type: "select" | "input" | "number" | "checkbox";
+  options?: string[];
+  placeholder?: string;
+  suffix?: string;
+  required?: boolean;
+}
+
+const categoryFields: Record<string, CategoryField[]> = {
+  transport: [
+    { key: "brand", label: "Marka", type: "select", options: ["BMW", "Mercedes-Benz", "Toyota", "Hyundai", "Kia", "Lexus", "Nissan", "Chevrolet", "VAZ (LADA)", "Ford", "Volkswagen", "Audi", "Honda"], required: true },
+    { key: "model", label: "Model", type: "input", placeholder: "Məs: Camry, X5, E220", required: true },
+    { key: "year", label: "Buraxılış ili", type: "number", placeholder: "2020", required: true },
+    { key: "mileage", label: "Yürüş (km)", type: "number", placeholder: "50000", suffix: "km" },
+    { key: "fuelType", label: "Yanacaq növü", type: "select", options: ["Benzin", "Dizel", "Qaz", "Hibrid", "Elektrik"], required: true },
+    { key: "gearbox", label: "Sürətlər qutusu", type: "select", options: ["Avtomat", "Mexaniki", "Robotlaşdırılmış", "Variator"] },
+    { key: "engineVolume", label: "Mühərrik həcmi (L)", type: "input", placeholder: "1.6" },
+    { key: "color", label: "Rəng", type: "select", options: ["Ağ", "Qara", "Boz", "Gümüşü", "Mavi", "Qırmızı", "Yaşıl", "Sarı", "Qəhvəyi", "Digər"] },
+    { key: "driveType", label: "Ötürücü", type: "select", options: ["Ön", "Arxa", "Tam"] },
+  ],
+  realestate: [
+    { key: "propertyType", label: "Əmlak növü", type: "select", options: ["Mənzil", "Ev / Villa", "Torpaq", "Ofis", "Qaraj", "Bağ evi"], required: true },
+    { key: "dealType", label: "Əməliyyat növü", type: "select", options: ["Satış", "Kirayə (aylıq)", "Günlük kirayə"], required: true },
+    { key: "rooms", label: "Otaq sayı", type: "select", options: ["1", "2", "3", "4", "5", "6+"] },
+    { key: "area", label: "Sahə (m²)", type: "number", placeholder: "85", suffix: "m²", required: true },
+    { key: "floor", label: "Mərtəbə", type: "input", placeholder: "Məs: 5/16" },
+    { key: "repairType", label: "Təmir", type: "select", options: ["Təmirsiz", "Orta təmir", "Əla təmir", "Yeni təmir"] },
+    { key: "hasDocuments", label: "Sənəd var", type: "checkbox" },
+    { key: "hasMortgage", label: "İpoteka mümkündür", type: "checkbox" },
+  ],
+  electronics: [
+    { key: "brand", label: "Marka", type: "select", options: ["Apple", "Samsung", "Xiaomi", "Huawei", "Sony", "LG", "Lenovo", "HP", "Dell", "Asus", "Digər"], required: true },
+    { key: "model", label: "Model", type: "input", placeholder: "Məs: iPhone 15 Pro", required: true },
+    { key: "condition", label: "Vəziyyəti", type: "select", options: ["Yeni (bağlı qutuda)", "Yeni kimi", "İşlənmiş (yaxşı)", "İşlənmiş (orta)", "Ehtiyat hissə üçün"], required: true },
+    { key: "memory", label: "Yaddaş / Həcm", type: "input", placeholder: "Məs: 256GB" },
+    { key: "color", label: "Rəng", type: "input", placeholder: "Məs: Titan Mavi" },
+    { key: "hasWarranty", label: "Zəmanət var", type: "checkbox" },
+    { key: "hasBox", label: "Qutusu var", type: "checkbox" },
+  ],
+  jobs: [
+    { key: "jobType", label: "İş növü", type: "select", options: ["Tam ştat", "Yarım ştat", "Freelance", "Staj", "Müvəqqəti"], required: true },
+    { key: "experience", label: "Təcrübə tələbi", type: "select", options: ["Təcrübəsiz", "1-3 il", "3-5 il", "5-10 il", "10+ il"] },
+    { key: "education", label: "Təhsil tələbi", type: "select", options: ["Fərqi yoxdur", "Orta", "Ali", "Magistr / Doktorantura"] },
+    { key: "salary", label: "Əmək haqqı (AZN)", type: "number", placeholder: "1500" },
+    { key: "schedule", label: "İş qrafiki", type: "select", options: ["09:00-18:00", "Növbəli", "Serbəst", "Uzaqdan"] },
+    { key: "companyName", label: "Şirkət adı", type: "input", placeholder: "Şirkət adı" },
+  ],
+  personal: [
+    { key: "gender", label: "Cins", type: "select", options: ["Kişi", "Qadın", "Uşaq", "Uniseks"], required: true },
+    { key: "size", label: "Ölçü", type: "select", options: ["XS", "S", "M", "L", "XL", "XXL", "XXXL", "Standart"] },
+    { key: "condition", label: "Vəziyyəti", type: "select", options: ["Yeni (etiketli)", "Yeni kimi", "İşlənmiş (yaxşı)", "İşlənmiş (orta)"], required: true },
+    { key: "brand", label: "Brend", type: "input", placeholder: "Məs: Nike, Zara" },
+  ],
+  home: [
+    { key: "subcategory", label: "Alt kateqoriya", type: "select", options: ["Mebel", "Məişət texnikası", "Bağ avadanlığı", "Təmir materialları", "Dekor", "Mətbəx ləvazimatı"], required: true },
+    { key: "condition", label: "Vəziyyəti", type: "select", options: ["Yeni", "Yeni kimi", "İşlənmiş (yaxşı)", "İşlənmiş (orta)"], required: true },
+    { key: "brand", label: "Marka", type: "input", placeholder: "Məs: IKEA, Bosch" },
+    { key: "hasDelivery", label: "Çatdırılma var", type: "checkbox" },
+  ],
+  kids: [
+    { key: "ageGroup", label: "Yaş qrupu", type: "select", options: ["0-1 yaş", "1-3 yaş", "3-6 yaş", "6-12 yaş", "12+ yaş"], required: true },
+    { key: "gender", label: "Cins", type: "select", options: ["Oğlan", "Qız", "Uniseks"] },
+    { key: "condition", label: "Vəziyyəti", type: "select", options: ["Yeni", "Yeni kimi", "İşlənmiş (yaxşı)", "İşlənmiş (orta)"], required: true },
+    { key: "subcategory", label: "Alt kateqoriya", type: "select", options: ["Geyim", "Oyuncaq", "Araba / Çarpayı", "Dərs ləvazimatı", "Bəslənmə"] },
+  ],
+  hobby: [
+    { key: "subcategory", label: "Alt kateqoriya", type: "select", options: ["İdman avadanlığı", "Musiqi alətləri", "Kitab", "Kolleksiya", "Turizm / Kempinq", "Əl işləri"], required: true },
+    { key: "condition", label: "Vəziyyəti", type: "select", options: ["Yeni", "İşlənmiş (yaxşı)", "İşlənmiş (orta)"], required: true },
+    { key: "brand", label: "Marka", type: "input", placeholder: "Məs: Yamaha, Adidas" },
+  ],
+  animals: [
+    { key: "animalType", label: "Heyvan növü", type: "select", options: ["İt", "Pişik", "Quş", "Balıq", "Gəmirici", "Sürünən", "Digər"], required: true },
+    { key: "breed", label: "Cins", type: "input", placeholder: "Məs: Golden Retriever" },
+    { key: "age", label: "Yaş", type: "input", placeholder: "Məs: 3 ay, 2 il" },
+    { key: "gender", label: "Cinsi", type: "select", options: ["Erkək", "Dişi", "Bilinmir"] },
+    { key: "vaccinated", label: "Peyvənd olunub", type: "checkbox" },
+    { key: "passport", label: "Pasportu var", type: "checkbox" },
+  ],
+  services: [
+    { key: "serviceType", label: "Xidmət növü", type: "select", options: ["Təmir xidməti", "Təmizlik", "Nəqliyyat / Kuryer", "Təhsil / Repetitor", "IT xidmət", "Sağlamlıq / Gözəllik", "Hüquqi", "Digər"], required: true },
+    { key: "experience", label: "Təcrübə", type: "select", options: ["1 ildən az", "1-3 il", "3-5 il", "5+ il"] },
+    { key: "availability", label: "Müraciət vaxtı", type: "select", options: ["Həftə içi", "Həftə sonu", "Hər gün", "Razılaşma ilə"] },
+    { key: "hasPortfolio", label: "Portfolio / nümunə var", type: "checkbox" },
+  ],
+};
+
 const cities = [
   "Bakı", "Gəncə", "Sumqayıt", "Mingəçevir", "Lənkəran", "Şəki",
   "Şirvan", "Naxçıvan", "Quba", "Zaqatala", "Bərdə", "Şamaxı",
