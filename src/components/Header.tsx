@@ -2,6 +2,7 @@ import { Heart, MessageCircle, Moon, Plus, Sun, User, Menu, X, Home, Search, Sho
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
+import NotificationDropdown from "@/components/NotificationDropdown";
 
 const mobileMenuLinks = [
   { label: "Ana səhifə", path: "/", icon: Home },
