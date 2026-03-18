@@ -272,39 +272,6 @@ const ShopSettings = () => {
             </div>
           </div>
 
-          {/* Logo in appearance too */}
-          <div className="bg-card rounded-2xl border border-border p-6 shadow-card space-y-4">
-            <h3 className="font-bold text-foreground">Profil şəkli</h3>
-            <div className="flex items-center gap-5">
-              <div className="relative">
-                <div className="w-24 h-24 rounded-2xl border-2 border-dashed border-border bg-secondary/50 flex items-center justify-center overflow-hidden">
-                  {logo ? (
-                    <img src={logo} alt="Logo" className="w-full h-full object-cover" />
-                  ) : (
-                    <Store className="w-10 h-10 text-muted-foreground" />
-                  )}
-                </div>
-                <button onClick={() => logoRef.current?.click()}
-                  className="absolute -bottom-1.5 -right-1.5 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:brightness-90 transition">
-                  <Camera className="w-4 h-4" />
-                </button>
-                {logo && (
-                  <button onClick={() => setLogo(null)}
-                    className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-destructive text-white flex items-center justify-center shadow-md">
-                    <X className="w-3 h-3" />
-                  </button>
-                )}
-                <input ref={logoRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, setLogo)} />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-foreground">Profil / Logo şəkli</p>
-                <p className="text-xs text-muted-foreground mt-0.5">PNG, JPG, WEBP — max 5MB</p>
-                <button onClick={() => logoRef.current?.click()} className="mt-2 text-xs font-medium text-primary hover:underline flex items-center gap-1">
-                  <Upload className="w-3 h-3" /> Fayl seç
-                </button>
-              </div>
-            </div>
-          </div>
 
           <button onClick={handleSave}
             className={`flex items-center justify-center gap-2 w-full h-11 font-semibold rounded-xl text-sm transition-all active:scale-[0.98] ${
