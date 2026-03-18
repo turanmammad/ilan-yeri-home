@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Heart, Share2, MapPin, Clock, Phone, MessageCircle, Shield, Eye } from "lucide-react";
+import { ArrowLeft, Heart, Share2, MapPin, Clock, Phone, MessageCircle, Shield, Eye, Store, ChevronRight, Star } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -11,10 +11,26 @@ const listing = {
   location: "Bakı, Nəsimi rayonu",
   time: "2 saat əvvəl",
   views: 342,
-  seller: "Əli H.",
+  seller: {
+    id: 1,
+    name: "TechStore Bakı",
+    isShop: true,
+    avatar: "T",
+    rating: 4.8,
+    listingsCount: 234,
+    memberSince: "2024",
+    verified: true,
+  },
   phone: "+994 50 123 45 67",
   images: ["/placeholder.svg"],
 };
+
+const sellerOtherListings = [
+  { id: 10, title: "Samsung Galaxy S24 Ultra", price: "1,850 ₼", img: "/placeholder.svg", time: "1 gün əvvəl" },
+  { id: 11, title: "AirPods Pro 2nd Gen", price: "320 ₼", img: "/placeholder.svg", time: "2 gün əvvəl" },
+  { id: 12, title: "MacBook Pro M3 14 inch", price: "3,800 ₼", img: "/placeholder.svg", time: "3 gün əvvəl" },
+  { id: 13, title: "iPad Air M2 256GB", price: "1,200 ₼", img: "/placeholder.svg", time: "5 gün əvvəl" },
+];
 
 const similar = [
   { id: 2, title: "Samsung Galaxy S24 Ultra", price: "1,850 ₼", img: "/placeholder.svg" },
@@ -25,6 +41,7 @@ const similar = [
 
 const ListingDetail = () => {
   const { id } = useParams();
+  const seller = listing.seller;
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -76,20 +93,46 @@ const ListingDetail = () => {
               </div>
             </div>
 
-            {/* Seller */}
-            <div className="bg-card rounded-2xl border border-border p-5 shadow-card">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center">
-                  <span className="text-lg font-bold text-primary">{listing.seller[0]}</span>
+            {/* Seller card */}
+            <Link
+              to={seller.isShop ? `/magaza/${seller.id}` : `/istifadeci/${seller.id}`}
+              className="block bg-card rounded-2xl border border-border p-5 shadow-card hover:shadow-card-hover transition-all group"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${
+                    seller.isShop ? "bg-primary/15" : "bg-secondary"
+                  }`}>
+                    {seller.isShop ? (
+                      <Store className="w-6 h-6 text-primary" />
+                    ) : (
+                      <span className="text-lg font-bold text-primary">{seller.avatar}</span>
+                    )}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{seller.name}</p>
+                      {seller.verified && (
+                        <span className="text-[10px] font-semibold bg-primary/15 text-primary px-1.5 py-0.5 rounded-md">✓</span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      {seller.isShop && (
+                        <span className="text-xs text-muted-foreground flex items-center gap-0.5">
+                          <Star className="w-3 h-3 text-primary fill-primary" /> {seller.rating}
+                        </span>
+                      )}
+                      <span className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Shield className="w-3 h-3" />
+                        {seller.isShop ? "Mağaza" : "Təsdiqlənmiş"}
+                      </span>
+                      <span className="text-xs text-muted-foreground">{seller.listingsCount} elan</span>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-semibold text-foreground">{listing.seller}</p>
-                  <p className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Shield className="w-3 h-3" /> Təsdiqlənmiş istifadəçi
-                  </p>
-                </div>
+                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
               </div>
-            </div>
+            </Link>
           </div>
         </div>
 
@@ -99,7 +142,40 @@ const ListingDetail = () => {
           <p className="text-sm text-foreground/80 leading-relaxed">{listing.description}</p>
         </div>
 
-        {/* Similar */}
+        {/* Seller's other listings */}
+        <div className="mt-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-foreground">
+              {seller.isShop ? `${seller.name} — digər elanlar` : `${seller.name} — digər elanları`}
+            </h2>
+            <Link
+              to={seller.isShop ? `/magaza/${seller.id}` : `/istifadeci/${seller.id}`}
+              className="text-sm font-medium text-primary hover:underline flex items-center gap-0.5"
+            >
+              Hamısına bax <ChevronRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {sellerOtherListings.map((item) => (
+              <Link
+                key={item.id}
+                to={`/elan/${item.id}`}
+                className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 group"
+              >
+                <div className="aspect-[4/3] bg-secondary overflow-hidden">
+                  <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                </div>
+                <div className="p-3">
+                  <h3 className="text-sm font-medium text-foreground truncate">{item.title}</h3>
+                  <p className="text-sm font-bold text-foreground mt-1">{item.price}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{item.time}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Similar listings */}
         <div className="mt-8">
           <h2 className="text-lg font-bold text-foreground mb-4">Oxşar elanlar</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -107,10 +183,10 @@ const ListingDetail = () => {
               <Link
                 key={item.id}
                 to={`/elan/${item.id}`}
-                className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-card-hover transition-all"
+                className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 group"
               >
-                <div className="aspect-[4/3] bg-secondary">
-                  <img src={item.img} alt={item.title} className="w-full h-full object-cover" />
+                <div className="aspect-[4/3] bg-secondary overflow-hidden">
+                  <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 </div>
                 <div className="p-3">
                   <h3 className="text-sm font-medium text-foreground truncate">{item.title}</h3>
