@@ -4,7 +4,9 @@ import {
   ArrowLeft, ImagePlus, X, MapPin, ChevronDown, ChevronRight,
   Car, Smartphone, Home, Shirt, Sofa, Briefcase, Baby, Dumbbell,
   Wrench, PawPrint, Monitor, Sparkles, Camera, Info, Wand2, Loader2,
+  AlertCircle,
 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -71,10 +73,65 @@ const CreateListing = () => {
   const [city, setCity] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [currency, setCurrency] = useState("AZN");
+  const [negotiable, setNegotiable] = useState(false);
+  const [barter, setBarter] = useState(false);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [district, setDistrict] = useState("");
   const [aiTitleLoading, setAiTitleLoading] = useState(false);
   const [aiDescLoading, setAiDescLoading] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState<{ titles?: string[]; descriptions?: string[] }>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitted, setSubmitted] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  // ─── Validation ───
+  const validateForm = (): Record<string, string> => {
+    const errs: Record<string, string> = {};
+    if (images.length < 1) errs.images = "Ən az 1 şəkil əlavə edin";
+    if (title.trim().length < 5) errs.title = "Başlıq ən az 5 simvol olmalıdır";
+    if (description.trim().length < 20) errs.description = "Təsvir ən az 20 simvol olmalıdır";
+    if (!negotiable && !price.trim()) errs.price = "Qiymət daxil edin və ya 'Razılaşma yolu ilə' seçin";
+    if (!city) errs.city = "Şəhər seçin";
+    if (city === "Bakı" && !district) errs.district = "Rayon seçin";
+    if (name.trim().length < 2) errs.name = "Ad ən az 2 simvol olmalıdır";
+    // AZ phone: 2 digit operator + 7 digits = 9 digits total (spaces/dashes ignored)
+    const phoneDigits = phone.replace(/[\s\-()]/g, "");
+    if (!/^\d{9}$/.test(phoneDigits)) errs.phone = "Telefon nömrəsi düzgün deyil (məs: 50 123 45 67)";
+    if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) errs.email = "E-poçt formatı düzgün deyil";
+    return errs;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+    const errs = validateForm();
+    setErrors(errs);
+    if (Object.keys(errs).length > 0) {
+      toast({ title: "Xəta", description: "Zəhmət olmasa bütün sahələri düzgün doldurun", variant: "destructive" });
+      // scroll to first error
+      const firstKey = Object.keys(errs)[0];
+      document.getElementById(`field-${firstKey}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    toast({ title: "Uğurlu!", description: "Elanınız uğurla yerləşdirildi" });
+    // TODO: submit to backend
+  };
+
+  // Re-validate on change if already submitted
+  const clearError = (key: string) => {
+    if (submitted) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      });
+    }
+  };
 
   // TODO: Backend əlavə edildikdən sonra bu funksiyaları real API çağırışları ilə əvəz edin
   const handleAiTitle = async () => {
@@ -254,7 +311,7 @@ const CreateListing = () => {
 
         {/* STEP 2: Listing Details */}
         {step === 2 && (
-          <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+           <form className="space-y-5" onSubmit={handleSubmit}>
             <div className="flex items-center gap-2 mb-2">
               <button
                 type="button"
@@ -268,7 +325,7 @@ const CreateListing = () => {
             </div>
 
             {/* Images */}
-            <div className="bg-card rounded-2xl border border-border p-5 shadow-card">
+            <div id="field-images" className={`bg-card rounded-2xl border p-5 shadow-card ${errors.images ? "border-destructive" : "border-border"}`}>
               <div className="flex items-center gap-2 mb-1">
                 <Camera className="w-4 h-4 text-primary" />
                 <h2 className="text-base font-bold text-foreground">Şəkillər</h2>
@@ -283,7 +340,7 @@ const CreateListing = () => {
                     <img src={img} alt="" className="w-full h-full object-cover" />
                     <button
                       type="button"
-                      onClick={() => removeImage(i)}
+                      onClick={() => { removeImage(i); clearError("images"); }}
                       className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-foreground/70 text-card flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <X className="w-3.5 h-3.5" />
@@ -298,7 +355,7 @@ const CreateListing = () => {
                 {images.length < 8 && (
                   <button
                     type="button"
-                    onClick={handleImageAdd}
+                    onClick={() => { handleImageAdd(); clearError("images"); }}
                     className="aspect-square rounded-xl border-2 border-dashed border-input hover:border-primary/50 bg-secondary/50 flex flex-col items-center justify-center gap-1 text-muted-foreground hover:text-primary transition-colors"
                   >
                     <ImagePlus className="w-6 h-6" />
@@ -306,6 +363,7 @@ const CreateListing = () => {
                   </button>
                 )}
               </div>
+              {errors.images && <FieldError msg={errors.images} />}
             </div>
 
             {/* Title & Description */}
@@ -313,18 +371,19 @@ const CreateListing = () => {
               <h2 className="text-base font-bold text-foreground">Elan məlumatları</h2>
 
               {/* Title */}
-              <div>
+              <div id="field-title">
                 <label className="flex items-center justify-between text-sm font-medium text-foreground mb-1.5">
                   Başlıq <span className="text-xs text-muted-foreground font-normal">{title.length} / 80</span>
                 </label>
                 <input
                   type="text"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(e) => { setTitle(e.target.value); clearError("title"); }}
                   placeholder="Məsələn: iPhone 15 Pro Max 256GB"
                   maxLength={80}
-                  className="w-full h-11 px-4 rounded-xl border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                  className={`w-full h-11 px-4 rounded-xl border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors ${errors.title ? "border-destructive" : "border-input"}`}
                 />
+                {errors.title && <FieldError msg={errors.title} />}
                 <button
                   type="button"
                   onClick={handleAiTitle}
@@ -340,7 +399,7 @@ const CreateListing = () => {
                       <button
                         key={i}
                         type="button"
-                        onClick={() => { setTitle(s); setAiSuggestions((prev) => ({ ...prev, titles: undefined })); }}
+                        onClick={() => { setTitle(s); setAiSuggestions((prev) => ({ ...prev, titles: undefined })); clearError("title"); }}
                         className="w-full text-left px-3 py-2 rounded-lg border border-primary/20 bg-primary/5 text-sm text-foreground hover:bg-primary/10 transition-colors flex items-center gap-2"
                       >
                         <Sparkles className="w-3.5 h-3.5 text-primary shrink-0" />
@@ -352,18 +411,19 @@ const CreateListing = () => {
               </div>
 
               {/* Description */}
-              <div>
+              <div id="field-description">
                 <label className="flex items-center justify-between text-sm font-medium text-foreground mb-1.5">
                   Təsvir <span className="text-xs text-muted-foreground font-normal">{description.length} / 4000</span>
                 </label>
                 <textarea
                   rows={5}
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={(e) => { setDescription(e.target.value); clearError("description"); }}
                   maxLength={4000}
                   placeholder="Məhsul haqqında ətraflı məlumat yazın. Vəziyyəti, xüsusiyyətləri, çatdırılma şərtləri və s. qeyd edin."
-                  className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors resize-none"
+                  className={`w-full px-4 py-3 rounded-xl border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors resize-none ${errors.description ? "border-destructive" : "border-input"}`}
                 />
+                {errors.description && <FieldError msg={errors.description} />}
                 <button
                   type="button"
                   onClick={handleAiDescription}
@@ -379,7 +439,7 @@ const CreateListing = () => {
                       <button
                         key={i}
                         type="button"
-                        onClick={() => { setDescription(s); setAiSuggestions((prev) => ({ ...prev, descriptions: undefined })); }}
+                        onClick={() => { setDescription(s); setAiSuggestions((prev) => ({ ...prev, descriptions: undefined })); clearError("description"); }}
                         className="w-full text-left px-3 py-2.5 rounded-lg border border-primary/20 bg-primary/5 text-sm text-foreground hover:bg-primary/10 transition-colors flex items-start gap-2"
                       >
                         <Sparkles className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
@@ -392,20 +452,27 @@ const CreateListing = () => {
             </div>
 
             {/* Price */}
-            <div className="bg-card rounded-2xl border border-border p-5 shadow-card space-y-4">
+            <div id="field-price" className="bg-card rounded-2xl border border-border p-5 shadow-card space-y-4">
               <h2 className="text-base font-bold text-foreground">Qiymət</h2>
 
               <div className="flex gap-3">
                 <div className="flex-1">
                   <input
                     type="number"
+                    value={price}
+                    onChange={(e) => { setPrice(e.target.value); clearError("price"); }}
                     placeholder="Qiymət"
                     min={0}
-                    className="w-full h-11 px-4 rounded-xl border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors [&::-webkit-inner-spin-button]:appearance-none"
+                    disabled={negotiable}
+                    className={`w-full h-11 px-4 rounded-xl border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-50 ${errors.price ? "border-destructive" : "border-input"}`}
                   />
                 </div>
                 <div className="relative">
-                  <select className="h-11 px-4 pr-9 rounded-xl border border-input bg-background text-foreground text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-ring transition-colors">
+                  <select
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value)}
+                    className="h-11 px-4 pr-9 rounded-xl border border-input bg-background text-foreground text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                  >
                     <option>AZN</option>
                     <option>USD</option>
                     <option>EUR</option>
@@ -413,14 +480,25 @@ const CreateListing = () => {
                   <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
                 </div>
               </div>
+              {errors.price && <FieldError msg={errors.price} />}
 
               <div className="flex flex-wrap gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" className="w-4 h-4 rounded border-input accent-primary" />
+                  <input
+                    type="checkbox"
+                    checked={negotiable}
+                    onChange={(e) => { setNegotiable(e.target.checked); if (e.target.checked) { setPrice(""); clearError("price"); } }}
+                    className="w-4 h-4 rounded border-input accent-primary"
+                  />
                   <span className="text-sm text-foreground">Razılaşma yolu ilə</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" className="w-4 h-4 rounded border-input accent-primary" />
+                  <input
+                    type="checkbox"
+                    checked={barter}
+                    onChange={(e) => setBarter(e.target.checked)}
+                    className="w-4 h-4 rounded border-input accent-primary"
+                  />
                   <span className="text-sm text-foreground">Barter mümkündür</span>
                 </label>
               </div>
@@ -431,13 +509,13 @@ const CreateListing = () => {
               <h2 className="text-base font-bold text-foreground">Lokasiya</h2>
 
               <div className="grid sm:grid-cols-2 gap-4">
-                <div>
+                <div id="field-city">
                   <label className="block text-sm font-medium text-foreground mb-1.5">Şəhər / Rayon</label>
                   <div className="relative">
                     <select
                       value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                      className="w-full h-11 px-4 pl-10 pr-10 rounded-xl border border-input bg-background text-foreground text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                      onChange={(e) => { setCity(e.target.value); setDistrict(""); clearError("city"); }}
+                      className={`w-full h-11 px-4 pl-10 pr-10 rounded-xl border bg-background text-foreground text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-ring transition-colors ${errors.city ? "border-destructive" : "border-input"}`}
                     >
                       <option value="">Seçin</option>
                       {cities.map((c) => <option key={c} value={c}>{c}</option>)}
@@ -445,17 +523,23 @@ const CreateListing = () => {
                     <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                     <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
                   </div>
+                  {errors.city && <FieldError msg={errors.city} />}
                 </div>
                 {city === "Bakı" && (
-                  <div>
+                  <div id="field-district">
                     <label className="block text-sm font-medium text-foreground mb-1.5">Rayon</label>
                     <div className="relative">
-                      <select className="w-full h-11 px-4 pr-10 rounded-xl border border-input bg-background text-foreground text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-ring transition-colors">
+                      <select
+                        value={district}
+                        onChange={(e) => { setDistrict(e.target.value); clearError("district"); }}
+                        className={`w-full h-11 px-4 pr-10 rounded-xl border bg-background text-foreground text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-ring transition-colors ${errors.district ? "border-destructive" : "border-input"}`}
+                      >
                         <option value="">Seçin</option>
                         {bakuDistricts.map((d) => <option key={d} value={d}>{d}</option>)}
                       </select>
                       <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
                     </div>
+                    {errors.district && <FieldError msg={errors.district} />}
                   </div>
                 )}
               </div>
@@ -466,15 +550,19 @@ const CreateListing = () => {
               <h2 className="text-base font-bold text-foreground">Əlaqə məlumatları</h2>
 
               <div className="grid sm:grid-cols-2 gap-4">
-                <div>
+                <div id="field-name">
                   <label className="block text-sm font-medium text-foreground mb-1.5">Ad</label>
                   <input
                     type="text"
+                    value={name}
+                    onChange={(e) => { setName(e.target.value); clearError("name"); }}
                     placeholder="Adınız"
-                    className="w-full h-11 px-4 rounded-xl border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                    maxLength={50}
+                    className={`w-full h-11 px-4 rounded-xl border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors ${errors.name ? "border-destructive" : "border-input"}`}
                   />
+                  {errors.name && <FieldError msg={errors.name} />}
                 </div>
-                <div>
+                <div id="field-phone">
                   <label className="block text-sm font-medium text-foreground mb-1.5">Telefon</label>
                   <div className="flex gap-2">
                     <div className="h-11 px-3 rounded-xl border border-input bg-secondary flex items-center text-sm font-medium text-foreground shrink-0">
@@ -482,20 +570,28 @@ const CreateListing = () => {
                     </div>
                     <input
                       type="tel"
+                      value={phone}
+                      onChange={(e) => { setPhone(e.target.value); clearError("phone"); }}
                       placeholder="50 123 45 67"
-                      className="w-full h-11 px-4 rounded-xl border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                      maxLength={15}
+                      className={`w-full h-11 px-4 rounded-xl border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors ${errors.phone ? "border-destructive" : "border-input"}`}
                     />
                   </div>
+                  {errors.phone && <FieldError msg={errors.phone} />}
                 </div>
               </div>
 
-              <div>
+              <div id="field-email">
                 <label className="block text-sm font-medium text-foreground mb-1.5">E-poçt (istəyə bağlı)</label>
                 <input
                   type="email"
+                  value={email}
+                  onChange={(e) => { setEmail(e.target.value); clearError("email"); }}
                   placeholder="email@nümunə.com"
-                  className="w-full h-11 px-4 rounded-xl border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                  maxLength={255}
+                  className={`w-full h-11 px-4 rounded-xl border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors ${errors.email ? "border-destructive" : "border-input"}`}
                 />
+                {errors.email && <FieldError msg={errors.email} />}
               </div>
             </div>
 
@@ -536,5 +632,13 @@ const CreateListing = () => {
     </div>
   );
 };
+
+// ─── Field Error Component ───
+const FieldError = ({ msg }: { msg: string }) => (
+  <p className="flex items-center gap-1 mt-1.5 text-xs text-destructive">
+    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+    {msg}
+  </p>
+);
 
 export default CreateListing;
