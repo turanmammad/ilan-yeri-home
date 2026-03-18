@@ -18,7 +18,7 @@ import Services from "./pages/Services.tsx";
 import About from "./pages/About.tsx";
 import Contact from "./pages/Contact.tsx";
 import Advertising from "./pages/Advertising.tsx";
-import { Rules, Safety, Careers, HelpCenter, Complaint, Partnership, Press } from "./pages/StaticPages.tsx";
+import { Rules, Safety, Careers, HelpCenter, Complaint, Partnership, Press, Sitemap } from "./pages/StaticPages.tsx";
 import ShopDetail from "./pages/ShopDetail.tsx";
 import UserProfile from "./pages/UserProfile.tsx";
 import ServiceDetail from "./pages/ServiceDetail.tsx";
