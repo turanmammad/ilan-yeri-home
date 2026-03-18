@@ -87,21 +87,21 @@ const ProfileDropdown = () => {
             </div>
           </div>
           <div className="p-1.5">
-            <Link to="/admin/tenzimleme" onClick={() => setOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-secondary transition-colors">
-              <Settings className="w-4 h-4 text-muted-foreground" />
-              Tənzimləmələr
-            </Link>
-            <Link to="/admin/tenzimleme" onClick={() => setOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-secondary transition-colors">
+            <Link to="/admin/tenzimleme?tab=profile" onClick={() => setOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-secondary transition-colors">
               <User className="w-4 h-4 text-muted-foreground" />
               Profil məlumatları
             </Link>
-            <Link to="/admin/tenzimleme" onClick={() => setOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-secondary transition-colors">
+            <Link to="/admin/tenzimleme?tab=password" onClick={() => setOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-secondary transition-colors">
               <KeyRound className="w-4 h-4 text-muted-foreground" />
               Şifrə dəyişdir
             </Link>
-            <Link to="/admin/tenzimleme" onClick={() => setOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-secondary transition-colors">
+            <Link to="/admin/tenzimleme?tab=notifications" onClick={() => setOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-secondary transition-colors">
               <Mail className="w-4 h-4 text-muted-foreground" />
               Bildiriş tənzimləmələri
+            </Link>
+            <Link to="/admin/tenzimleme?tab=platform" onClick={() => setOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-secondary transition-colors">
+              <Settings className="w-4 h-4 text-muted-foreground" />
+              Platform tənzimləmələri
             </Link>
           </div>
           <div className="p-1.5 border-t border-border">
