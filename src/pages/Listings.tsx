@@ -1,28 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Search, MapPin, Heart } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import ListingFilters from "@/components/ListingFilters";
+import ListingFilters, { type ListingFiltersState } from "@/components/ListingFilters";
 import { AdBanner, InFeedAd, SponsoredBadge, mockBannerAds, mockSponsoredListings } from "@/components/ads/AdSystem";
 
 const allListings = [
-  { id: 1, title: "iPhone 15 Pro Max 256GB", price: 2100, priceLabel: "2,100 ₼", location: "Bakı", time: "2 saat əvvəl", img: "/placeholder.svg", vip: true },
-  { id: 2, title: "Samsung Galaxy S24 Ultra", price: 1850, priceLabel: "1,850 ₼", location: "Bakı", time: "3 saat əvvəl", img: "/placeholder.svg", vip: false },
-  { id: 3, title: "MacBook Air M2 2023", price: 1600, priceLabel: "1,600 ₼", location: "Gəncə", time: "5 saat əvvəl", img: "/placeholder.svg", vip: true },
-  { id: 4, title: "Toyota Camry 2020", price: 32000, priceLabel: "32,000 ₼", location: "Bakı", time: "1 gün əvvəl", img: "/placeholder.svg", vip: false },
-  { id: 5, title: "2 otaqlı mənzil, 28 May", price: 850, priceLabel: "850 ₼/ay", location: "Bakı", time: "1 gün əvvəl", img: "/placeholder.svg", vip: false },
-  { id: 6, title: "Nike Air Max 90", price: 120, priceLabel: "120 ₼", location: "Sumqayıt", time: "2 gün əvvəl", img: "/placeholder.svg", vip: false },
-  { id: 7, title: "PlayStation 5 Slim", price: 900, priceLabel: "900 ₼", location: "Bakı", time: "2 gün əvvəl", img: "/placeholder.svg", vip: false },
-  { id: 8, title: "Dyson V15 tozsoran", price: 450, priceLabel: "450 ₼", location: "Bakı", time: "3 gün əvvəl", img: "/placeholder.svg", vip: false },
+  { id: 1, title: "iPhone 15 Pro Max 256GB", price: 2100, priceLabel: "2,100 ₼", location: "Bakı", time: "2 saat əvvəl", img: "/placeholder.svg", vip: true, category: "Elektronika" },
+  { id: 2, title: "Samsung Galaxy S24 Ultra", price: 1850, priceLabel: "1,850 ₼", location: "Bakı", time: "3 saat əvvəl", img: "/placeholder.svg", vip: false, category: "Elektronika" },
+  { id: 3, title: "MacBook Air M2 2023", price: 1600, priceLabel: "1,600 ₼", location: "Gəncə", time: "5 saat əvvəl", img: "/placeholder.svg", vip: true, category: "Kompüter" },
+  { id: 4, title: "Toyota Camry 2020", price: 32000, priceLabel: "32,000 ₼", location: "Bakı", time: "1 gün əvvəl", img: "/placeholder.svg", vip: false, category: "Nəqliyyat" },
+  { id: 5, title: "2 otaqlı mənzil, 28 May", price: 850, priceLabel: "850 ₼/ay", location: "Bakı", time: "1 gün əvvəl", img: "/placeholder.svg", vip: false, category: "Daşınmaz əmlak" },
+  { id: 6, title: "Nike Air Max 90", price: 120, priceLabel: "120 ₼", location: "Sumqayıt", time: "2 gün əvvəl", img: "/placeholder.svg", vip: false, category: "Geyim" },
+  { id: 7, title: "PlayStation 5 Slim", price: 900, priceLabel: "900 ₼", location: "Bakı", time: "2 gün əvvəl", img: "/placeholder.svg", vip: false, category: "Elektronika" },
+  { id: 8, title: "Dyson V15 tozsoran", price: 450, priceLabel: "450 ₼", location: "Bakı", time: "3 gün əvvəl", img: "/placeholder.svg", vip: false, category: "Ev və bağ" },
 ];
 
 const categories = [
   "Hamısı", "Nəqliyyat", "Daşınmaz əmlak", "Elektronika", "İş elanları",
-  "Geyim", "Ev və bağ", "Uşaq aləmi", "Xidmətlər",
+  "Geyim", "Ev və bağ", "Uşaq aləmi", "Hobbi və idman", "Xidmətlər",
+  "Heyvanlar", "Kompüter", "Gözəllik",
 ];
 
-const defaultFilters = { city: "Hamısı", minPrice: "", maxPrice: "", sort: "newest", vipOnly: false };
+const defaultFilters: ListingFiltersState = { city: "Hamısı", minPrice: "", maxPrice: "", sort: "newest", vipOnly: false };
 
 const Listings = () => {
   const [searchParams] = useSearchParams();
@@ -30,9 +31,24 @@ const Listings = () => {
   const category = searchParams.get("category") || "Hamısı";
   const [activeCategory, setActiveCategory] = useState(category);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [filters, setFilters] = useState(defaultFilters);
+  const [filters, setFilters] = useState<ListingFiltersState>(defaultFilters);
+
+  // Reset category-specific filters when category changes
+  useEffect(() => {
+    setFilters((prev) => {
+      const base: ListingFiltersState = {
+        city: prev.city,
+        minPrice: prev.minPrice,
+        maxPrice: prev.maxPrice,
+        sort: prev.sort,
+        vipOnly: prev.vipOnly,
+      };
+      return base;
+    });
+  }, [activeCategory]);
 
   let filtered = allListings;
+  if (activeCategory !== "Hamısı") filtered = filtered.filter((l) => l.category === activeCategory);
   if (query) filtered = filtered.filter((l) => l.title.toLowerCase().includes(query.toLowerCase()));
   if (filters.city !== "Hamısı") filtered = filtered.filter((l) => l.location === filters.city);
   if (filters.minPrice) filtered = filtered.filter((l) => l.price >= Number(filters.minPrice));
@@ -41,8 +57,7 @@ const Listings = () => {
   if (filters.sort === "price_asc") filtered = [...filtered].sort((a, b) => a.price - b.price);
   else if (filters.sort === "price_desc") filtered = [...filtered].sort((a, b) => b.price - a.price);
 
-  // Insert in-feed ads at positions
-  const AD_POSITIONS = [4]; // After 4th item
+  const AD_POSITIONS = [4];
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -55,7 +70,14 @@ const Listings = () => {
               <Search className="w-4 h-4 text-muted-foreground" />
               <input type="text" defaultValue={query} placeholder="Elanlar arasında axtar..." className="w-full bg-transparent border-none outline-none text-sm text-foreground placeholder:text-muted-foreground" />
             </div>
-            <ListingFilters open={filtersOpen} onToggle={() => setFiltersOpen(!filtersOpen)} filters={filters} onChange={setFilters} onReset={() => setFilters(defaultFilters)} />
+            <ListingFilters
+              open={filtersOpen}
+              onToggle={() => setFiltersOpen(!filtersOpen)}
+              filters={filters}
+              onChange={setFilters}
+              onReset={() => setFilters(defaultFilters)}
+              activeCategory={activeCategory}
+            />
           </form>
           <div className="flex gap-2 mt-3 overflow-x-auto pb-1 scrollbar-hide">
             {categories.map((cat) => (
@@ -68,7 +90,6 @@ const Listings = () => {
       </div>
 
       <main className="container py-6 flex-1">
-        {/* Sponsorlu elanlar — üst sıra */}
         {mockSponsoredListings.length > 0 && (
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-3">
@@ -77,14 +98,8 @@ const Listings = () => {
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {mockSponsoredListings.map((sl) => (
-                <Link
-                  to={sl.ctaLink}
-                  key={sl.id}
-                  className="bg-card rounded-2xl border-2 border-primary/20 overflow-hidden hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 group relative"
-                >
-                  <div className="absolute top-2 left-2 z-10">
-                    <SponsoredBadge />
-                  </div>
+                <Link to={sl.ctaLink} key={sl.id} className="bg-card rounded-2xl border-2 border-primary/20 overflow-hidden hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 group relative">
+                  <div className="absolute top-2 left-2 z-10"><SponsoredBadge /></div>
                   <div className="relative aspect-[4/3] bg-secondary overflow-hidden">
                     <img src={sl.img} alt={sl.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   </div>
@@ -105,6 +120,7 @@ const Listings = () => {
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm text-muted-foreground">
             {filtered.length} elan tapıldı
+            {activeCategory !== "Hamısı" && <span className="font-medium text-foreground"> · {activeCategory}</span>}
             {query && <span className="font-medium text-foreground"> "{query}"</span>}
           </p>
         </div>
@@ -118,15 +134,10 @@ const Listings = () => {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {filtered.map((listing, index) => (
               <>
-                {/* In-feed ad insertion */}
                 {AD_POSITIONS.includes(index) && (
                   <InFeedAd key={`ad-${index}`} ad={mockBannerAds.listingInfeed1} />
                 )}
-                <Link
-                  to={`/elan/${listing.id}`}
-                  key={listing.id}
-                  className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 group"
-                >
+                <Link to={`/elan/${listing.id}`} key={listing.id} className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 group">
                   <div className="relative aspect-[4/3] bg-secondary overflow-hidden">
                     <img src={listing.img} alt={listing.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                     {listing.vip && (
@@ -147,15 +158,10 @@ const Listings = () => {
                 </Link>
               </>
             ))}
-
-            {/* Bottom in-feed ad */}
-            {filtered.length > 4 && (
-              <InFeedAd ad={mockBannerAds.listingInfeed2} />
-            )}
+            {filtered.length > 4 && <InFeedAd ad={mockBannerAds.listingInfeed2} />}
           </div>
         )}
 
-        {/* Banner ad at bottom of listings */}
         <div className="mt-8">
           <AdBanner ad={mockBannerAds.footerTop} />
         </div>
