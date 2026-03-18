@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
-import { Search, Filter, Eye, Trash2, Clock, CheckCircle, XCircle, AlertCircle, Bot, ShieldCheck, ShieldAlert, AlertTriangle } from "lucide-react";
+import { Search, Filter, Eye, Trash2, Clock, CheckCircle, XCircle, AlertCircle, Bot, ShieldCheck, ShieldAlert, AlertTriangle, Edit } from "lucide-react";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { ListingDetailDialog } from "@/components/admin/ListingDetailDialog";
+import { ListingEditDialog, EditableListing } from "@/components/admin/ListingEditDialog";
 import { toast } from "sonner";
 
 type ListingStatus = "active" | "pending" | "rejected";
@@ -59,6 +60,7 @@ const AdminListings = () => {
   const [confirmAction, setConfirmAction] = useState<{ type: "delete" | "reject" | "pending"; id: number; title: string } | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [detailListing, setDetailListing] = useState<Listing | null>(null);
+  const [editListing, setEditListing] = useState<EditableListing | null>(null);
 
   const filtered = useMemo(() => {
     let result = listings.filter((l) => {
@@ -253,6 +255,7 @@ const AdminListings = () => {
                             <AlertCircle className="w-4 h-4" />
                           </button>
                         )}
+                        <button onClick={() => setEditListing({ id: l.id, title: l.title, price: l.price, category: l.category })} className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Redaktə et"><Edit className="w-4 h-4" /></button>
                         <button onClick={() => setDetailListing(l)} className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Bax"><Eye className="w-4 h-4" /></button>
                         <button onClick={() => setConfirmAction({ type: "delete", id: l.id, title: l.title })} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive" title="Sil"><Trash2 className="w-4 h-4" /></button>
                       </div>
@@ -297,6 +300,18 @@ const AdminListings = () => {
         confirmLabel={confirmAction?.type === "delete" ? "Sil" : confirmAction?.type === "reject" ? "Rədd et" : "Gözləməyə al"}
         variant={confirmAction?.type === "delete" ? "destructive" : "warning"}
         onConfirm={handleConfirm}
+      />
+
+      <ListingEditDialog
+        listing={editListing}
+        open={!!editListing}
+        onOpenChange={(open) => !open && setEditListing(null)}
+        onSave={(updated) => {
+          setListings(prev => prev.map(l =>
+            l.id === updated.id ? { ...l, title: updated.title, price: updated.price, category: updated.category || l.category } : l
+          ));
+        }}
+        isAdmin
       />
     </div>
   );
