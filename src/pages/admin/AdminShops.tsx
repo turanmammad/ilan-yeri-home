@@ -66,6 +66,14 @@ const AdminShops = () => {
 
   const changeStatus = (id: number, newStatus: ShopStatus) => {
     setShops((prev) => prev.map((s) => s.id === id ? { ...s, status: newStatus } : s));
+    const labels: Record<ShopStatus, string> = { active: "Aktiv", suspended: "Dayandırılıb", pending: "Gözləyir" };
+    toast.success(`Mağaza statusu "${labels[newStatus]}" olaraq dəyişdirildi`);
+  };
+
+  const handleConfirm = () => {
+    if (!confirmAction) return;
+    changeStatus(confirmAction.id, confirmAction.type === "suspend" ? "suspended" : "active");
+    setConfirmAction(null);
   };
 
   const tabs: { key: "all" | ShopStatus; label: string }[] = [
