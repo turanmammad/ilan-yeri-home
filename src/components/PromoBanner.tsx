@@ -31,9 +31,9 @@ const PromoBanner = () => (
         ))}
       </div>
 
-      <button className="bg-primary text-primary-foreground font-semibold px-6 py-3 rounded-xl text-sm hover:brightness-95 active:scale-95 transition-all">
+      <Link to="/reklam" className="bg-primary text-primary-foreground font-semibold px-6 py-3 rounded-xl text-sm hover:brightness-95 active:scale-95 transition-all inline-block">
         Paketlərə bax
-      </button>
+      </Link>
     </div>
   </section>
 );
