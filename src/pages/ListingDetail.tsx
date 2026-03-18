@@ -1,8 +1,19 @@
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Heart, Share2, MapPin, Clock, Phone, MessageCircle, Shield, Eye, Store, ChevronRight, Star } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { SidebarAd, AdBanner, SponsoredBadge, mockBannerAds, mockSponsoredListings } from "@/components/ads/AdSystem";
+
+const maskPhone = (phone: string) => {
+  const digits = phone.replace(/\D/g, "");
+  if (digits.length < 6) return phone;
+  const visible = digits.slice(0, 6);
+  const hidden = digits.slice(6).replace(/./g, "*");
+  // Format back nicely
+  const full = visible + hidden;
+  return `+${full.slice(0, 3)} ${full.slice(3, 5)} ${full.slice(5, 8)} ${full.slice(8, 10)} ${full.slice(10)}`;
+};
 
 const listing = {
   id: 1,
