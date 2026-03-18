@@ -162,12 +162,12 @@ const AdminUsers = () => {
                           </button>
                         )}
                         {u.status !== "blocked" && (
-                          <button onClick={() => changeStatus(u.id, "blocked")} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive" title="Blokla">
+                          <button onClick={() => setConfirmAction({ type: "block", id: u.id, name: u.name })} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive" title="Blokla">
                             <Ban className="w-4 h-4" />
                           </button>
                         )}
                         {u.status !== "suspended" && (
-                          <button onClick={() => changeStatus(u.id, "suspended")} className="p-1.5 rounded-lg hover:bg-amber-500/10 transition-colors text-muted-foreground hover:text-amber-500" title="Dayandır">
+                          <button onClick={() => setConfirmAction({ type: "suspend", id: u.id, name: u.name })} className="p-1.5 rounded-lg hover:bg-amber-500/10 transition-colors text-muted-foreground hover:text-amber-500" title="Dayandır">
                             <ShieldAlert className="w-4 h-4" />
                           </button>
                         )}

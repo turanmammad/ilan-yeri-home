@@ -208,6 +208,24 @@ const AdminListings = () => {
           <p className="text-xs text-muted-foreground">{filtered.length} elan göstərilir</p>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={!!confirmAction}
+        onOpenChange={(open) => !open && setConfirmAction(null)}
+        title={
+          confirmAction?.type === "delete" ? "Elanı silmək istəyirsiniz?" :
+          confirmAction?.type === "reject" ? "Elanı rədd etmək istəyirsiniz?" :
+          "Elanı gözləməyə almaq istəyirsiniz?"
+        }
+        description={`"${confirmAction?.title}" ${
+          confirmAction?.type === "delete" ? "adlı elan birdəfəlik silinəcək. Bu əməliyyat geri qaytarıla bilməz." :
+          confirmAction?.type === "reject" ? "adlı elan rədd ediləcək." :
+          "adlı elan gözləmə statusuna keçiriləcək."
+        }`}
+        confirmLabel={confirmAction?.type === "delete" ? "Sil" : confirmAction?.type === "reject" ? "Rədd et" : "Gözləməyə al"}
+        variant={confirmAction?.type === "delete" ? "destructive" : "warning"}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 };
