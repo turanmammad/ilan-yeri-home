@@ -121,7 +121,7 @@ const Listings = () => {
           </form>
           <div className="flex gap-2 mt-3 overflow-x-auto pb-1 scrollbar-hide">
             {categories.map((cat) => (
-              <button key={cat} onClick={() => setActiveCategory(cat)} className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all ${activeCategory === cat ? "bg-foreground text-card" : "bg-secondary text-foreground/70 hover:bg-secondary/80"}`}>
+              <button key={cat} onClick={() => handleCategoryChange(cat)} className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all ${activeCategory === cat ? "bg-foreground text-card" : "bg-secondary text-foreground/70 hover:bg-secondary/80"}`}>
                 {cat}
               </button>
             ))}
