@@ -557,6 +557,83 @@ const CreateListing = () => {
               </div>
             </div>
 
+            {/* Category-Specific Fields */}
+            {currentCategoryFields.length > 0 && (
+              <div className="bg-card rounded-2xl border border-border p-5 shadow-card space-y-4">
+                <div className="flex items-center gap-2 mb-1">
+                  {mainCat && <mainCat.icon className="w-4 h-4 text-primary" />}
+                  <h2 className="text-base font-bold text-foreground">{mainCat?.label} xüsusiyyətləri</h2>
+                </div>
+                <p className="text-xs text-muted-foreground -mt-2">
+                  Kateqoriyaya aid əlavə məlumatları doldurun
+                </p>
+
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {currentCategoryFields.map((field) => {
+                    if (field.type === "checkbox") {
+                      return (
+                        <label key={field.key} className="flex items-center gap-2.5 h-10 px-3 rounded-xl border border-input bg-background cursor-pointer hover:bg-secondary/50 transition-colors">
+                          <input
+                            type="checkbox"
+                            checked={!!categoryExtra[field.key]}
+                            onChange={(e) => setCategoryExtra((prev) => ({ ...prev, [field.key]: e.target.checked }))}
+                            className="w-4 h-4 rounded border-input accent-primary"
+                          />
+                          <span className="text-sm text-foreground font-medium">{field.label}</span>
+                        </label>
+                      );
+                    }
+
+                    if (field.type === "select") {
+                      return (
+                        <div key={field.key} id={`field-cat_${field.key}`}>
+                          <label className="block text-sm font-medium text-foreground mb-1.5">
+                            {field.label}
+                            {field.required && <span className="text-destructive ml-0.5">*</span>}
+                          </label>
+                          <div className="relative">
+                            <select
+                              value={(categoryExtra[field.key] as string) || ""}
+                              onChange={(e) => { setCategoryExtra((prev) => ({ ...prev, [field.key]: e.target.value })); clearError(`cat_${field.key}`); }}
+                              className={`w-full h-11 px-4 pr-10 rounded-xl border bg-background text-foreground text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-ring transition-colors ${errors[`cat_${field.key}`] ? "border-destructive" : "border-input"}`}
+                            >
+                              <option value="">Seçin</option>
+                              {field.options?.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
+                            </select>
+                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+                          </div>
+                          {errors[`cat_${field.key}`] && <FieldError msg={errors[`cat_${field.key}`]} />}
+                        </div>
+                      );
+                    }
+
+                    // input or number
+                    return (
+                      <div key={field.key} id={`field-cat_${field.key}`}>
+                        <label className="block text-sm font-medium text-foreground mb-1.5">
+                          {field.label}
+                          {field.required && <span className="text-destructive ml-0.5">*</span>}
+                        </label>
+                        <div className="relative">
+                          <input
+                            type={field.type === "number" ? "number" : "text"}
+                            value={(categoryExtra[field.key] as string) || ""}
+                            onChange={(e) => { setCategoryExtra((prev) => ({ ...prev, [field.key]: e.target.value })); clearError(`cat_${field.key}`); }}
+                            placeholder={field.placeholder}
+                            className={`w-full h-11 px-4 rounded-xl border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors [&::-webkit-inner-spin-button]:appearance-none ${errors[`cat_${field.key}`] ? "border-destructive" : "border-input"}`}
+                          />
+                          {field.suffix && (
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">{field.suffix}</span>
+                          )}
+                        </div>
+                        {errors[`cat_${field.key}`] && <FieldError msg={errors[`cat_${field.key}`]} />}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Price */}
             <div id="field-price" className="bg-card rounded-2xl border border-border p-5 shadow-card space-y-4">
               <h2 className="text-base font-bold text-foreground">Qiymət</h2>
