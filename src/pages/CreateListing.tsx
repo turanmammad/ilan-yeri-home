@@ -170,11 +170,18 @@ const CreateListing = () => {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [district, setDistrict] = useState("");
+  const [categoryExtra, setCategoryExtra] = useState<Record<string, string | boolean>>({});
   const [aiTitleLoading, setAiTitleLoading] = useState(false);
   const [aiDescLoading, setAiDescLoading] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState<{ titles?: string[]; descriptions?: string[] }>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
+
+  // Get current category fields
+  const currentCategoryFields = useMemo(() => {
+    if (!selectedMain) return [];
+    return categoryFields[selectedMain] || [];
+  }, [selectedMain]);
   const navigate = useNavigate();
   const { toast } = useToast();
 
