@@ -48,6 +48,7 @@ const AdminShops = () => {
   const [selectedCategory, setSelectedCategory] = useState("Hamısı");
   const [showFilters, setShowFilters] = useState(false);
   const [confirmAction, setConfirmAction] = useState<{ type: "suspend" | "activate"; id: number; name: string } | null>(null);
+  const [detailShop, setDetailShop] = useState<Shop | null>(null);
 
   const filtered = useMemo(() => {
     return shops.filter((s) => {
