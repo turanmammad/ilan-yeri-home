@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Store, Camera, Save, MapPin, Mail, Phone, Globe, Clock, FileText, Image, Palette, X, Upload, Check, Trash2 } from "lucide-react";
+import { Store, Camera, Save, MapPin, Mail, Phone, Globe, Clock, FileText, Image, Palette, X, Upload, Check, Trash2, Sparkles, Lock, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 
 const themeColors = [
