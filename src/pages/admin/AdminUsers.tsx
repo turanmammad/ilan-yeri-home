@@ -1,5 +1,7 @@
 import { useState, useMemo } from "react";
 import { Search, Filter, Eye, Ban, Mail, Clock, CheckCircle, ShieldAlert, UserCheck } from "lucide-react";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { toast } from "sonner";
 
 type UserStatus = "active" | "blocked" | "suspended";
 
