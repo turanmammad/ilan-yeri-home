@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import {
   LayoutDashboard, Users, FileText, Flag, Settings, LogOut,
   ChevronLeft, ChevronRight, Bell, Search, Menu, X,
   TrendingUp, ShoppingBag, MessageCircle, Shield,
+  User, KeyRound, Mail,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
