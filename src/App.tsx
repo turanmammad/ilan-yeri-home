@@ -22,6 +22,12 @@ import { Rules, Safety, Careers, HelpCenter, Complaint, Partnership, Press } fro
 import ShopDetail from "./pages/ShopDetail.tsx";
 import UserProfile from "./pages/UserProfile.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import AdminLayout from "./components/admin/AdminLayout.tsx";
+import AdminDashboard from "./pages/admin/AdminDashboard.tsx";
+import AdminListings from "./pages/admin/AdminListings.tsx";
+import AdminUsers from "./pages/admin/AdminUsers.tsx";
+import AdminSettings from "./pages/admin/AdminSettings.tsx";
+import { AdminShops, AdminReports, AdminMessages, AdminBlocklist, AdminAnalytics } from "./pages/admin/AdminPlaceholders.tsx";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +61,20 @@ const App = () => (
             <Route path="/sikayat" element={<Complaint />} />
             <Route path="/terefdashlik" element={<Partnership />} />
             <Route path="/metbuat" element={<Press />} />
+
+            {/* Admin panel */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="elanlar" element={<AdminListings />} />
+              <Route path="istifadeciler" element={<AdminUsers />} />
+              <Route path="magazalar" element={<AdminShops />} />
+              <Route path="sikayetler" element={<AdminReports />} />
+              <Route path="mesajlar" element={<AdminMessages />} />
+              <Route path="blok" element={<AdminBlocklist />} />
+              <Route path="analitika" element={<AdminAnalytics />} />
+              <Route path="tenzimleme" element={<AdminSettings />} />
+            </Route>
+
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
