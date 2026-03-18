@@ -32,6 +32,10 @@ import AdminReports from "./pages/admin/AdminReports.tsx";
 import AdminMessages from "./pages/admin/AdminMessages.tsx";
 import AdminBlocklist from "./pages/admin/AdminBlocklist.tsx";
 import AdminAnalytics from "./pages/admin/AdminAnalytics.tsx";
+import AdminPayments from "./pages/admin/AdminPayments.tsx";
+import AdminCampaigns from "./pages/admin/AdminCampaigns.tsx";
+import AdminAI from "./pages/admin/AdminAI.tsx";
+import AdminSystem from "./pages/admin/AdminSystem.tsx";
 
 const queryClient = new QueryClient();
 
