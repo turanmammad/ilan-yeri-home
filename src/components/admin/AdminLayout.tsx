@@ -47,6 +47,73 @@ const navSections = [
   },
 ];
 
+const ProfileDropdown = () => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative flex items-center gap-2 pl-2 border-l border-border ml-1">
+      <button onClick={() => setOpen(!open)} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+          <span className="text-xs font-bold text-primary">A</span>
+        </div>
+        <div className="hidden sm:block text-left">
+          <p className="text-xs font-semibold text-foreground leading-tight">Admin</p>
+          <p className="text-[10px] text-muted-foreground leading-tight">admin@ucuztap.az</p>
+        </div>
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-64 bg-card rounded-xl border border-border shadow-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+          <div className="p-4 border-b border-border">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <span className="text-sm font-bold text-primary">A</span>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-foreground">Admin</p>
+                <p className="text-xs text-muted-foreground">admin@ucuztap.az</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-1.5">
+            <Link to="/admin/tenzimleme" onClick={() => setOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-secondary transition-colors">
+              <Settings className="w-4 h-4 text-muted-foreground" />
+              Tənzimləmələr
+            </Link>
+            <Link to="/admin/tenzimleme" onClick={() => setOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-secondary transition-colors">
+              <User className="w-4 h-4 text-muted-foreground" />
+              Profil məlumatları
+            </Link>
+            <Link to="/admin/tenzimleme" onClick={() => setOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-secondary transition-colors">
+              <KeyRound className="w-4 h-4 text-muted-foreground" />
+              Şifrə dəyişdir
+            </Link>
+            <Link to="/admin/tenzimleme" onClick={() => setOpen(false)} className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-secondary transition-colors">
+              <Mail className="w-4 h-4 text-muted-foreground" />
+              Bildiriş tənzimləmələri
+            </Link>
+          </div>
+          <div className="p-1.5 border-t border-border">
+            <Link to="/" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-destructive hover:bg-destructive/10 transition-colors">
+              <LogOut className="w-4 h-4" />
+              Çıxış
+            </Link>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
