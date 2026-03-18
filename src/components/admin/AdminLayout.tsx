@@ -8,6 +8,8 @@ import {
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 
+import { CreditCard, Megaphone, Bot, Server } from "lucide-react";
+
 const navSections = [
   {
     label: "Əsas",
@@ -27,9 +29,18 @@ const navSections = [
     ],
   },
   {
+    label: "Maliyyə & Reklam",
+    items: [
+      { icon: CreditCard, label: "Ödənişlər", path: "/admin/odenisler" },
+      { icon: Megaphone, label: "Kampaniyalar", path: "/admin/kampaniyalar" },
+    ],
+  },
+  {
     label: "Sistem",
     items: [
       { icon: TrendingUp, label: "Analitika", path: "/admin/analitika" },
+      { icon: Bot, label: "AI Düzəltmələr", path: "/admin/ai" },
+      { icon: Server, label: "Sistem vəziyyəti", path: "/admin/sistem" },
       { icon: Settings, label: "Tənzimləmələr", path: "/admin/tenzimleme" },
     ],
   },
