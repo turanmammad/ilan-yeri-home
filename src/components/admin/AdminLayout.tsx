@@ -180,15 +180,7 @@ const AdminLayout = () => {
               <Bell className="w-5 h-5" strokeWidth={1.5} />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-destructive" />
             </button>
-            <div className="flex items-center gap-2 pl-2 border-l border-border ml-1">
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                <span className="text-xs font-bold text-primary">A</span>
-              </div>
-              <div className="hidden sm:block">
-                <p className="text-xs font-semibold text-foreground leading-tight">Admin</p>
-                <p className="text-[10px] text-muted-foreground leading-tight">admin@ucuztap.az</p>
-              </div>
-            </div>
+            <ProfileDropdown />
           </div>
         </header>
 
