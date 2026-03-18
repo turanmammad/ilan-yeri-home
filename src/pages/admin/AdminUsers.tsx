@@ -43,6 +43,7 @@ const AdminUsers = () => {
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<"all" | UserStatus>("all");
   const [showFilters, setShowFilters] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<{ type: "block" | "suspend" | "activate"; id: number; name: string } | null>(null);
 
   const filtered = useMemo(() => {
     return users.filter((u) => {
