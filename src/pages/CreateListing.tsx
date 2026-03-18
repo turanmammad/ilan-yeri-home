@@ -69,7 +69,54 @@ const CreateListing = () => {
   const [selectedSub, setSelectedSub] = useState<string | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [city, setCity] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [aiTitleLoading, setAiTitleLoading] = useState(false);
+  const [aiDescLoading, setAiDescLoading] = useState(false);
+  const [aiSuggestions, setAiSuggestions] = useState<{ titles?: string[]; descriptions?: string[] }>({});
   const navigate = useNavigate();
+
+  // TODO: Backend əlavə edildikdən sonra bu funksiyaları real API çağırışları ilə əvəz edin
+  const handleAiTitle = async () => {
+    setAiTitleLoading(true);
+    setAiSuggestions((prev) => ({ ...prev, titles: undefined }));
+    try {
+      // TODO: API call - POST /functions/v1/ai-listing-helper { type: "title", category: mainCat?.label, subcategory: selectedSub, currentTitle: title }
+      // Placeholder: simulate delay
+      await new Promise((r) => setTimeout(r, 1500));
+      setAiSuggestions((prev) => ({
+        ...prev,
+        titles: [
+          "AI tərəfindən yaradılmış başlıq 1",
+          "AI tərəfindən yaradılmış başlıq 2",
+          "AI tərəfindən yaradılmış başlıq 3",
+        ],
+      }));
+    } catch {
+      // TODO: handle error with toast
+    } finally {
+      setAiTitleLoading(false);
+    }
+  };
+
+  const handleAiDescription = async () => {
+    setAiDescLoading(true);
+    setAiSuggestions((prev) => ({ ...prev, descriptions: undefined }));
+    try {
+      // TODO: API call - POST /functions/v1/ai-listing-helper { type: "description", category: mainCat?.label, subcategory: selectedSub, title, currentDescription: description }
+      await new Promise((r) => setTimeout(r, 1500));
+      setAiSuggestions((prev) => ({
+        ...prev,
+        descriptions: [
+          "AI tərəfindən yaradılmış ətraflı təsvir. Məhsulun vəziyyəti, xüsusiyyətləri və çatdırılma şərtləri daxil edilmişdir.",
+        ],
+      }));
+    } catch {
+      // TODO: handle error with toast
+    } finally {
+      setAiDescLoading(false);
+    }
+  };
 
   const mainCat = mainCategories.find((c) => c.slug === selectedMain);
 
