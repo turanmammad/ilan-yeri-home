@@ -16,6 +16,8 @@ import About from "./pages/About.tsx";
 import Contact from "./pages/Contact.tsx";
 import Advertising from "./pages/Advertising.tsx";
 import { Rules, Safety, Careers, HelpCenter, Complaint, Partnership, Press } from "./pages/StaticPages.tsx";
+import ShopDetail from "./pages/ShopDetail.tsx";
+import UserProfile from "./pages/UserProfile.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -35,6 +37,8 @@ const App = () => (
           <Route path="/elanlar" element={<Listings />} />
           <Route path="/elan/:id" element={<ListingDetail />} />
           <Route path="/magazalar" element={<Shops />} />
+          <Route path="/magaza/:id" element={<ShopDetail />} />
+          <Route path="/istifadeci/:id" element={<UserProfile />} />
           <Route path="/xidmetler" element={<Services />} />
           <Route path="/haqqimizda" element={<About />} />
           <Route path="/elaqe" element={<Contact />} />
