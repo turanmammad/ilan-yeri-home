@@ -66,10 +66,21 @@ const AdminListings = () => {
 
   const changeStatus = (id: number, newStatus: ListingStatus) => {
     setListings((prev) => prev.map((l) => l.id === id ? { ...l, status: newStatus } : l));
+    const statusLabels: Record<ListingStatus, string> = { active: "Aktiv", pending: "Gözləyir", rejected: "Rədd" };
+    toast.success(`Elan statusu "${statusLabels[newStatus]}" olaraq dəyişdirildi`);
   };
 
   const deleteListing = (id: number) => {
     setListings((prev) => prev.filter((l) => l.id !== id));
+    toast.success("Elan uğurla silindi");
+  };
+
+  const handleConfirm = () => {
+    if (!confirmAction) return;
+    if (confirmAction.type === "delete") deleteListing(confirmAction.id);
+    else if (confirmAction.type === "reject") changeStatus(confirmAction.id, "rejected");
+    else if (confirmAction.type === "pending") changeStatus(confirmAction.id, "pending");
+    setConfirmAction(null);
   };
 
   const tabs: { key: "all" | ListingStatus; label: string }[] = [
