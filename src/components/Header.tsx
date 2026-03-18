@@ -65,6 +65,7 @@ const Header = () => {
             >
               <Heart className="w-5 h-5" strokeWidth={1.5} />
             </Link>
+            <NotificationDropdown />
             <Link
               to="/hesab/mesajlar"
               className="hidden sm:flex relative p-2.5 rounded-xl text-foreground/60 hover:text-foreground hover:bg-secondary transition-colors"
