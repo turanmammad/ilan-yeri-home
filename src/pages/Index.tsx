@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import SearchHero from "@/components/SearchHero";
 import Categories from "@/components/Categories";
 import ProductGrid from "@/components/ProductGrid";
+import PromoBanner from "@/components/PromoBanner";
 import Footer from "@/components/Footer";
 
 const Index = () => (
@@ -10,6 +11,7 @@ const Index = () => (
     <SearchHero />
     <Categories />
     <ProductGrid />
+    <PromoBanner />
     <div className="flex-1" />
     <Footer />
   </div>
