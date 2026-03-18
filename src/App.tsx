@@ -27,7 +27,11 @@ import AdminDashboard from "./pages/admin/AdminDashboard.tsx";
 import AdminListings from "./pages/admin/AdminListings.tsx";
 import AdminUsers from "./pages/admin/AdminUsers.tsx";
 import AdminSettings from "./pages/admin/AdminSettings.tsx";
-import { AdminShops, AdminReports, AdminMessages, AdminBlocklist, AdminAnalytics } from "./pages/admin/AdminPlaceholders.tsx";
+import AdminShops from "./pages/admin/AdminShops.tsx";
+import AdminReports from "./pages/admin/AdminReports.tsx";
+import AdminMessages from "./pages/admin/AdminMessages.tsx";
+import AdminBlocklist from "./pages/admin/AdminBlocklist.tsx";
+import AdminAnalytics from "./pages/admin/AdminAnalytics.tsx";
 
 const queryClient = new QueryClient();
 
