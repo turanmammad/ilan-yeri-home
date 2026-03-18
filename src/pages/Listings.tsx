@@ -114,8 +114,8 @@ const Listings = () => {
               open={filtersOpen}
               onToggle={() => setFiltersOpen(!filtersOpen)}
               filters={filters}
-              onChange={setFilters}
-              onReset={() => setFilters(defaultFilters)}
+              onChange={handleFiltersChange}
+              onReset={handleReset}
               activeCategory={activeCategory}
             />
           </form>
