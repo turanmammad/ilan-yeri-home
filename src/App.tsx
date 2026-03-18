@@ -80,6 +80,10 @@ const App = () => (
               <Route path="mesajlar" element={<AdminMessages />} />
               <Route path="blok" element={<AdminBlocklist />} />
               <Route path="analitika" element={<AdminAnalytics />} />
+              <Route path="odenisler" element={<AdminPayments />} />
+              <Route path="kampaniyalar" element={<AdminCampaigns />} />
+              <Route path="ai" element={<AdminAI />} />
+              <Route path="sistem" element={<AdminSystem />} />
               <Route path="tenzimleme" element={<AdminSettings />} />
             </Route>
 
