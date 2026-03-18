@@ -1,4 +1,5 @@
 import { Zap, Eye, TrendingUp } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const stats = [
   { icon: Zap, value: "5x", label: "Daha sürətli satış" },
