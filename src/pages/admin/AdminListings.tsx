@@ -45,6 +45,7 @@ const AdminListings = () => {
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<"all" | ListingStatus>("all");
   const [selectedCategory, setSelectedCategory] = useState("Hamısı");
+  const [confirmAction, setConfirmAction] = useState<{ type: "delete" | "reject" | "pending"; id: number; title: string } | null>(null);
   const [showFilters, setShowFilters] = useState(false);
 
   const filtered = useMemo(() => {
