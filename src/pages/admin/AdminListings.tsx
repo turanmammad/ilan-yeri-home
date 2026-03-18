@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
-import { Search, Filter, Eye, Trash2, Clock, CheckCircle, XCircle, AlertCircle, Bot, ShieldCheck, ShieldAlert, AlertTriangle } from "lucide-react";
+import { Search, Filter, Eye, Trash2, Clock, CheckCircle, XCircle, AlertCircle, Bot, ShieldCheck, ShieldAlert, AlertTriangle, Edit } from "lucide-react";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { ListingDetailDialog } from "@/components/admin/ListingDetailDialog";
+import { ListingEditDialog, EditableListing } from "@/components/admin/ListingEditDialog";
 import { toast } from "sonner";
 
 type ListingStatus = "active" | "pending" | "rejected";
