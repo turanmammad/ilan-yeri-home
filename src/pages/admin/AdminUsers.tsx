@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
-import { Search, Filter, Eye, Ban, Mail, Clock, CheckCircle, ShieldAlert, UserCheck } from "lucide-react";
+import { Search, Filter, Eye, Ban, Mail, Clock, ShieldAlert, UserCheck } from "lucide-react";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { UserDetailDialog } from "@/components/admin/UserDetailDialog";
 import { toast } from "sonner";
 
 type UserStatus = "active" | "blocked" | "suspended";
@@ -44,6 +45,7 @@ const AdminUsers = () => {
   const [activeTab, setActiveTab] = useState<"all" | UserStatus>("all");
   const [showFilters, setShowFilters] = useState(false);
   const [confirmAction, setConfirmAction] = useState<{ type: "block" | "suspend" | "activate"; id: number; name: string } | null>(null);
+  const [detailUser, setDetailUser] = useState<UserItem | null>(null);
 
   const filtered = useMemo(() => {
     return users.filter((u) => {
@@ -137,7 +139,7 @@ const AdminUsers = () => {
                 <tr><td colSpan={6} className="text-center py-8 text-muted-foreground text-sm">Nəticə tapılmadı</td></tr>
               ) : (
                 filtered.map((u) => (
-                  <tr key={u.id} className="border-b border-border/50 hover:bg-secondary/20 transition-colors">
+                  <tr key={u.id} className="border-b border-border/50 hover:bg-secondary/20 transition-colors cursor-pointer" onClick={() => setDetailUser(u)}>
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
@@ -155,7 +157,7 @@ const AdminUsers = () => {
                     <td className="px-3 py-3 text-center text-sm font-semibold text-foreground hidden sm:table-cell">{u.listings}</td>
                     <td className="px-3 py-3 text-center">{statusBadge(u.status)}</td>
                     <td className="px-5 py-3 text-right">
-                      <div className="flex items-center justify-end gap-1">
+                      <div className="flex items-center justify-end gap-1" onClick={(e) => e.stopPropagation()}>
                         {u.status !== "active" && (
                           <button onClick={() => changeStatus(u.id, "active")} className="p-1.5 rounded-lg hover:bg-emerald-500/10 transition-colors text-muted-foreground hover:text-emerald-600" title="Aktiv et">
                             <UserCheck className="w-4 h-4" />
@@ -171,7 +173,7 @@ const AdminUsers = () => {
                             <ShieldAlert className="w-4 h-4" />
                           </button>
                         )}
-                        <button className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Profil"><Eye className="w-4 h-4" /></button>
+                        <button onClick={() => setDetailUser(u)} className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Profil"><Eye className="w-4 h-4" /></button>
                         <button className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Mesaj"><Mail className="w-4 h-4" /></button>
                       </div>
                     </td>
@@ -185,6 +187,12 @@ const AdminUsers = () => {
           <p className="text-xs text-muted-foreground">{filtered.length} istifadəçi göstərilir</p>
         </div>
       </div>
+
+      <UserDetailDialog
+        user={detailUser}
+        open={!!detailUser}
+        onOpenChange={(open) => !open && setDetailUser(null)}
+      />
 
       <ConfirmDialog
         open={!!confirmAction}
