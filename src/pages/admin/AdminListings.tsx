@@ -60,6 +60,7 @@ const AdminListings = () => {
   const [confirmAction, setConfirmAction] = useState<{ type: "delete" | "reject" | "pending"; id: number; title: string } | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [detailListing, setDetailListing] = useState<Listing | null>(null);
+  const [editListing, setEditListing] = useState<EditableListing | null>(null);
 
   const filtered = useMemo(() => {
     let result = listings.filter((l) => {
