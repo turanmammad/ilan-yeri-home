@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Search, MapPin, Heart } from "lucide-react";
 import Header from "@/components/Header";
@@ -25,27 +25,67 @@ const categories = [
 
 const defaultFilters: ListingFiltersState = { city: "Hamısı", minPrice: "", maxPrice: "", sort: "newest", vipOnly: false };
 
-const Listings = () => {
-  const [searchParams] = useSearchParams();
-  const query = searchParams.get("q") || "";
-  const category = searchParams.get("category") || "Hamısı";
-  const [activeCategory, setActiveCategory] = useState(category);
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const [filters, setFilters] = useState<ListingFiltersState>(defaultFilters);
+// Read filters from URL params
+const filtersFromParams = (params: URLSearchParams): { filters: ListingFiltersState; category: string } => {
+  const base: ListingFiltersState = {
+    city: params.get("city") || "Hamısı",
+    minPrice: params.get("minPrice") || "",
+    maxPrice: params.get("maxPrice") || "",
+    sort: params.get("sort") || "newest",
+    vipOnly: params.get("vip") === "1",
+  };
+  const knownKeys = new Set(["q", "category", "city", "minPrice", "maxPrice", "sort", "vip"]);
+  params.forEach((val, key) => {
+    if (!knownKeys.has(key)) base[key] = val;
+  });
+  return { filters: base, category: params.get("category") || "Hamısı" };
+};
 
-  // Reset category-specific filters when category changes
-  useEffect(() => {
-    setFilters((prev) => {
-      const base: ListingFiltersState = {
-        city: prev.city,
-        minPrice: prev.minPrice,
-        maxPrice: prev.maxPrice,
-        sort: prev.sort,
-        vipOnly: prev.vipOnly,
-      };
-      return base;
+const Listings = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("q") || "";
+
+  const [initial] = useState(() => filtersFromParams(searchParams));
+  const [activeCategory, setActiveCategory] = useState(initial.category);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filters, setFilters] = useState<ListingFiltersState>(initial.filters);
+
+  // Sync state → URL
+  const syncToUrl = (cat: string, f: ListingFiltersState, q: string) => {
+    const params = new URLSearchParams();
+    if (q) params.set("q", q);
+    if (cat !== "Hamısı") params.set("category", cat);
+    if (f.city !== "Hamısı") params.set("city", f.city);
+    if (f.minPrice) params.set("minPrice", f.minPrice);
+    if (f.maxPrice) params.set("maxPrice", f.maxPrice);
+    if (f.sort !== "newest") params.set("sort", f.sort);
+    if (f.vipOnly) params.set("vip", "1");
+    const baseKeys = new Set(["city", "minPrice", "maxPrice", "sort", "vipOnly"]);
+    Object.entries(f).forEach(([k, v]) => {
+      if (!baseKeys.has(k) && v && v !== "Hamısı") params.set(k, String(v));
     });
-  }, [activeCategory]);
+    setSearchParams(params, { replace: true });
+  };
+
+  const handleFiltersChange = (newFilters: ListingFiltersState) => {
+    setFilters(newFilters);
+    syncToUrl(activeCategory, newFilters, query);
+  };
+
+  const handleCategoryChange = (cat: string) => {
+    setActiveCategory(cat);
+    const base: ListingFiltersState = {
+      city: filters.city, minPrice: filters.minPrice, maxPrice: filters.maxPrice,
+      sort: filters.sort, vipOnly: filters.vipOnly,
+    };
+    setFilters(base);
+    syncToUrl(cat, base, query);
+  };
+
+  const handleReset = () => {
+    setFilters(defaultFilters);
+    syncToUrl(activeCategory, defaultFilters, query);
+  };
 
   let filtered = allListings;
   if (activeCategory !== "Hamısı") filtered = filtered.filter((l) => l.category === activeCategory);
@@ -74,14 +114,14 @@ const Listings = () => {
               open={filtersOpen}
               onToggle={() => setFiltersOpen(!filtersOpen)}
               filters={filters}
-              onChange={setFilters}
-              onReset={() => setFilters(defaultFilters)}
+              onChange={handleFiltersChange}
+              onReset={handleReset}
               activeCategory={activeCategory}
             />
           </form>
           <div className="flex gap-2 mt-3 overflow-x-auto pb-1 scrollbar-hide">
             {categories.map((cat) => (
-              <button key={cat} onClick={() => setActiveCategory(cat)} className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all ${activeCategory === cat ? "bg-foreground text-card" : "bg-secondary text-foreground/70 hover:bg-secondary/80"}`}>
+              <button key={cat} onClick={() => handleCategoryChange(cat)} className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all ${activeCategory === cat ? "bg-foreground text-card" : "bg-secondary text-foreground/70 hover:bg-secondary/80"}`}>
                 {cat}
               </button>
             ))}
