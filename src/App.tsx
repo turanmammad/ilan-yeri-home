@@ -37,6 +37,8 @@ import AdminPayments from "./pages/admin/AdminPayments.tsx";
 import AdminCampaigns from "./pages/admin/AdminCampaigns.tsx";
 import AdminAI from "./pages/admin/AdminAI.tsx";
 import AdminSystem from "./pages/admin/AdminSystem.tsx";
+import AdminPromotions from "./pages/admin/AdminPromotions.tsx";
+import AdminSponsors from "./pages/admin/AdminSponsors.tsx";
 
 const queryClient = new QueryClient();
 
