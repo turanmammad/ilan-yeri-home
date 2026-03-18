@@ -199,6 +199,15 @@ const CreateListing = () => {
     const phoneDigits = phone.replace(/[\s\-()]/g, "");
     if (!/^\d{9}$/.test(phoneDigits)) errs.phone = "Telefon nömrəsi düzgün deyil (məs: 50 123 45 67)";
     if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) errs.email = "E-poçt formatı düzgün deyil";
+    // Validate required category-specific fields
+    currentCategoryFields.forEach((f) => {
+      if (f.required && f.type !== "checkbox") {
+        const val = categoryExtra[f.key];
+        if (!val || (typeof val === "string" && !val.trim())) {
+          errs[`cat_${f.key}`] = `${f.label} sahəsini doldurun`;
+        }
+      }
+    });
     return errs;
   };
 
