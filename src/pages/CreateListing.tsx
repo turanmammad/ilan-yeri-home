@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowLeft, ImagePlus, X, MapPin, ChevronDown, ChevronRight,
   Car, Smartphone, Home, Shirt, Sofa, Briefcase, Baby, Dumbbell,
-  Wrench, PawPrint, Monitor, Sparkles, Camera, Info,
+  Wrench, PawPrint, Monitor, Sparkles, Camera, Info, Wand2, Loader2,
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -69,7 +69,54 @@ const CreateListing = () => {
   const [selectedSub, setSelectedSub] = useState<string | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [city, setCity] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [aiTitleLoading, setAiTitleLoading] = useState(false);
+  const [aiDescLoading, setAiDescLoading] = useState(false);
+  const [aiSuggestions, setAiSuggestions] = useState<{ titles?: string[]; descriptions?: string[] }>({});
   const navigate = useNavigate();
+
+  // TODO: Backend əlavə edildikdən sonra bu funksiyaları real API çağırışları ilə əvəz edin
+  const handleAiTitle = async () => {
+    setAiTitleLoading(true);
+    setAiSuggestions((prev) => ({ ...prev, titles: undefined }));
+    try {
+      // TODO: API call - POST /functions/v1/ai-listing-helper { type: "title", category: mainCat?.label, subcategory: selectedSub, currentTitle: title }
+      // Placeholder: simulate delay
+      await new Promise((r) => setTimeout(r, 1500));
+      setAiSuggestions((prev) => ({
+        ...prev,
+        titles: [
+          "AI tərəfindən yaradılmış başlıq 1",
+          "AI tərəfindən yaradılmış başlıq 2",
+          "AI tərəfindən yaradılmış başlıq 3",
+        ],
+      }));
+    } catch {
+      // TODO: handle error with toast
+    } finally {
+      setAiTitleLoading(false);
+    }
+  };
+
+  const handleAiDescription = async () => {
+    setAiDescLoading(true);
+    setAiSuggestions((prev) => ({ ...prev, descriptions: undefined }));
+    try {
+      // TODO: API call - POST /functions/v1/ai-listing-helper { type: "description", category: mainCat?.label, subcategory: selectedSub, title, currentDescription: description }
+      await new Promise((r) => setTimeout(r, 1500));
+      setAiSuggestions((prev) => ({
+        ...prev,
+        descriptions: [
+          "AI tərəfindən yaradılmış ətraflı təsvir. Məhsulun vəziyyəti, xüsusiyyətləri və çatdırılma şərtləri daxil edilmişdir.",
+        ],
+      }));
+    } catch {
+      // TODO: handle error with toast
+    } finally {
+      setAiDescLoading(false);
+    }
+  };
 
   const mainCat = mainCategories.find((c) => c.slug === selectedMain);
 
@@ -265,28 +312,82 @@ const CreateListing = () => {
             <div className="bg-card rounded-2xl border border-border p-5 shadow-card space-y-4">
               <h2 className="text-base font-bold text-foreground">Elan məlumatları</h2>
 
+              {/* Title */}
               <div>
                 <label className="flex items-center justify-between text-sm font-medium text-foreground mb-1.5">
-                  Başlıq <span className="text-xs text-muted-foreground font-normal">0 / 80</span>
+                  Başlıq <span className="text-xs text-muted-foreground font-normal">{title.length} / 80</span>
                 </label>
                 <input
                   type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                   placeholder="Məsələn: iPhone 15 Pro Max 256GB"
                   maxLength={80}
                   className="w-full h-11 px-4 rounded-xl border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
                 />
+                <button
+                  type="button"
+                  onClick={handleAiTitle}
+                  disabled={aiTitleLoading}
+                  className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20 text-xs font-medium text-primary hover:from-primary/20 hover:to-accent/20 transition-all disabled:opacity-50"
+                >
+                  {aiTitleLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Wand2 className="w-3.5 h-3.5" />}
+                  AI ilə başlıq yarat
+                </button>
+                {aiSuggestions.titles && (
+                  <div className="mt-2 space-y-1.5">
+                    {aiSuggestions.titles.map((s, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => { setTitle(s); setAiSuggestions((prev) => ({ ...prev, titles: undefined })); }}
+                        className="w-full text-left px-3 py-2 rounded-lg border border-primary/20 bg-primary/5 text-sm text-foreground hover:bg-primary/10 transition-colors flex items-center gap-2"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-primary shrink-0" />
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
+              {/* Description */}
               <div>
                 <label className="flex items-center justify-between text-sm font-medium text-foreground mb-1.5">
-                  Təsvir <span className="text-xs text-muted-foreground font-normal">0 / 4000</span>
+                  Təsvir <span className="text-xs text-muted-foreground font-normal">{description.length} / 4000</span>
                 </label>
                 <textarea
                   rows={5}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                   maxLength={4000}
                   placeholder="Məhsul haqqında ətraflı məlumat yazın. Vəziyyəti, xüsusiyyətləri, çatdırılma şərtləri və s. qeyd edin."
                   className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors resize-none"
                 />
+                <button
+                  type="button"
+                  onClick={handleAiDescription}
+                  disabled={aiDescLoading}
+                  className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20 text-xs font-medium text-primary hover:from-primary/20 hover:to-accent/20 transition-all disabled:opacity-50"
+                >
+                  {aiDescLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Wand2 className="w-3.5 h-3.5" />}
+                  {description.length > 0 ? "AI ilə təsviri yaxşılaşdır" : "AI ilə təsvir yarat"}
+                </button>
+                {aiSuggestions.descriptions && (
+                  <div className="mt-2 space-y-1.5">
+                    {aiSuggestions.descriptions.map((s, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => { setDescription(s); setAiSuggestions((prev) => ({ ...prev, descriptions: undefined })); }}
+                        className="w-full text-left px-3 py-2.5 rounded-lg border border-primary/20 bg-primary/5 text-sm text-foreground hover:bg-primary/10 transition-colors flex items-start gap-2"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+                        <span className="line-clamp-3">{s}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
