@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowLeft, ImagePlus, X, MapPin, ChevronDown, ChevronRight,
   Car, Smartphone, Home, Shirt, Sofa, Briefcase, Baby, Dumbbell,
-  Wrench, PawPrint, Monitor, Sparkles, Camera, Info,
+  Wrench, PawPrint, Monitor, Sparkles, Camera, Info, Wand2, Loader2,
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
