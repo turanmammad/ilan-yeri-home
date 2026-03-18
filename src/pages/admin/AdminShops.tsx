@@ -182,7 +182,7 @@ const AdminShops = () => {
                 <tr><td colSpan={7} className="text-center py-8 text-muted-foreground text-sm">Nəticə tapılmadı</td></tr>
               ) : (
                 filtered.map((s) => (
-                  <tr key={s.id} className="border-b border-border/50 hover:bg-secondary/20 transition-colors">
+                  <tr key={s.id} className="border-b border-border/50 hover:bg-secondary/20 transition-colors cursor-pointer" onClick={() => setDetailShop(s)}>
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
