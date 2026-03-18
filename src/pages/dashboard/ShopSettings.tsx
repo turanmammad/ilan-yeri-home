@@ -277,6 +277,7 @@ const ShopSettings = () => {
                 </div>
               </div>
             </div>
+          </div>
 
           {/* Theme Color */}
           <div className="bg-card rounded-2xl border border-border p-6 shadow-card space-y-4">
