@@ -204,7 +204,7 @@ const AdminShops = () => {
                     </td>
                     <td className="px-3 py-3 text-center">{statusBadge(s.status)}</td>
                     <td className="px-5 py-3 text-right">
-                      <div className="flex items-center justify-end gap-1">
+                      <div className="flex items-center justify-end gap-1" onClick={(e) => e.stopPropagation()}>
                         {s.status !== "active" && (
                           <button onClick={() => changeStatus(s.id, "active")} className="p-1.5 rounded-lg hover:bg-emerald-500/10 transition-colors text-muted-foreground hover:text-emerald-600" title="Aktiv et">
                             <UserCheck className="w-4 h-4" />
@@ -215,7 +215,7 @@ const AdminShops = () => {
                             <ShieldAlert className="w-4 h-4" />
                           </button>
                         )}
-                        <button className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Bax"><Eye className="w-4 h-4" /></button>
+                        <button onClick={() => setDetailShop(s)} className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Bax"><Eye className="w-4 h-4" /></button>
                         <button className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Sayta keç"><ExternalLink className="w-4 h-4" /></button>
                       </div>
                     </td>
