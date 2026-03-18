@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Search, Filter, Eye, Ban, Star, Clock, ExternalLink, ShoppingBag, TrendingUp, UserCheck, ShieldAlert } from "lucide-react";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { ShopDetailDialog } from "@/components/admin/ShopDetailDialog";
 import { toast } from "sonner";
 
 type ShopStatus = "active" | "suspended" | "pending";
@@ -47,6 +48,7 @@ const AdminShops = () => {
   const [selectedCategory, setSelectedCategory] = useState("Hamısı");
   const [showFilters, setShowFilters] = useState(false);
   const [confirmAction, setConfirmAction] = useState<{ type: "suspend" | "activate"; id: number; name: string } | null>(null);
+  const [detailShop, setDetailShop] = useState<Shop | null>(null);
 
   const filtered = useMemo(() => {
     return shops.filter((s) => {
@@ -180,7 +182,7 @@ const AdminShops = () => {
                 <tr><td colSpan={7} className="text-center py-8 text-muted-foreground text-sm">Nəticə tapılmadı</td></tr>
               ) : (
                 filtered.map((s) => (
-                  <tr key={s.id} className="border-b border-border/50 hover:bg-secondary/20 transition-colors">
+                  <tr key={s.id} className="border-b border-border/50 hover:bg-secondary/20 transition-colors cursor-pointer" onClick={() => setDetailShop(s)}>
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
@@ -202,7 +204,7 @@ const AdminShops = () => {
                     </td>
                     <td className="px-3 py-3 text-center">{statusBadge(s.status)}</td>
                     <td className="px-5 py-3 text-right">
-                      <div className="flex items-center justify-end gap-1">
+                      <div className="flex items-center justify-end gap-1" onClick={(e) => e.stopPropagation()}>
                         {s.status !== "active" && (
                           <button onClick={() => changeStatus(s.id, "active")} className="p-1.5 rounded-lg hover:bg-emerald-500/10 transition-colors text-muted-foreground hover:text-emerald-600" title="Aktiv et">
                             <UserCheck className="w-4 h-4" />
@@ -213,7 +215,7 @@ const AdminShops = () => {
                             <ShieldAlert className="w-4 h-4" />
                           </button>
                         )}
-                        <button className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Bax"><Eye className="w-4 h-4" /></button>
+                        <button onClick={() => setDetailShop(s)} className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Bax"><Eye className="w-4 h-4" /></button>
                         <button className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Sayta keç"><ExternalLink className="w-4 h-4" /></button>
                       </div>
                     </td>
@@ -227,6 +229,12 @@ const AdminShops = () => {
           <p className="text-xs text-muted-foreground">{filtered.length} mağaza göstərilir</p>
         </div>
       </div>
+
+      <ShopDetailDialog
+        shop={detailShop}
+        open={!!detailShop}
+        onOpenChange={(open) => !open && setDetailShop(null)}
+      />
 
       <ConfirmDialog
         open={!!confirmAction}

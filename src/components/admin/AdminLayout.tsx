@@ -9,7 +9,7 @@ import {
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 
-import { CreditCard, Megaphone, Bot, Server } from "lucide-react";
+import { CreditCard, Megaphone, Bot, Server, Crown, Sparkles } from "lucide-react";
 
 const navSections = [
   {
@@ -34,6 +34,8 @@ const navSections = [
     items: [
       { icon: CreditCard, label: "Ödənişlər", path: "/admin/odenisler" },
       { icon: Megaphone, label: "Kampaniyalar", path: "/admin/kampaniyalar" },
+      { icon: Crown, label: "Premium & VIP", path: "/admin/premium" },
+      { icon: Sparkles, label: "Sponsor & Reklam", path: "/admin/sponsor" },
     ],
   },
   {
