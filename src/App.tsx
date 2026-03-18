@@ -89,6 +89,8 @@ const App = () => (
               <Route path="ai" element={<AdminAI />} />
               <Route path="sistem" element={<AdminSystem />} />
               <Route path="tenzimleme" element={<AdminSettings />} />
+              <Route path="premium" element={<AdminPromotions />} />
+              <Route path="sponsor" element={<AdminSponsors />} />
             </Route>
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

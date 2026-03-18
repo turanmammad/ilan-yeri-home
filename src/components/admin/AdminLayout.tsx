@@ -34,6 +34,8 @@ const navSections = [
     items: [
       { icon: CreditCard, label: "Ödənişlər", path: "/admin/odenisler" },
       { icon: Megaphone, label: "Kampaniyalar", path: "/admin/kampaniyalar" },
+      { icon: Crown, label: "Premium & VIP", path: "/admin/premium" },
+      { icon: Sparkles, label: "Sponsor & Reklam", path: "/admin/sponsor" },
     ],
   },
   {

@@ -230,6 +230,12 @@ const AdminShops = () => {
         </div>
       </div>
 
+      <ShopDetailDialog
+        shop={detailShop}
+        open={!!detailShop}
+        onOpenChange={(open) => !open && setDetailShop(null)}
+      />
+
       <ConfirmDialog
         open={!!confirmAction}
         onOpenChange={(open) => !open && setConfirmAction(null)}
