@@ -110,10 +110,17 @@ const ListingDetail = () => {
                   WhatsApp ilə yaz
                 </a>
                 <div className="grid grid-cols-2 gap-2">
-                  <a href={`tel:${listing.phone}`}
-                    className="h-11 bg-primary text-primary-foreground font-semibold rounded-xl text-sm hover:brightness-95 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-                    <Phone className="w-4 h-4" /> Zəng et
-                  </a>
+                  {phoneRevealed ? (
+                    <a href={`tel:${listing.phone}`}
+                      className="h-11 bg-primary text-primary-foreground font-semibold rounded-xl text-sm hover:brightness-95 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                      <Phone className="w-4 h-4" /> {listing.phone}
+                    </a>
+                  ) : (
+                    <button onClick={() => setPhoneRevealed(true)}
+                      className="h-11 bg-primary text-primary-foreground font-semibold rounded-xl text-sm hover:brightness-95 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                      <Phone className="w-4 h-4" /> {maskPhone(listing.phone)}
+                    </button>
+                  )}
                   <button className="h-11 border border-input bg-card text-foreground font-medium rounded-xl text-sm hover:bg-secondary transition-colors flex items-center justify-center gap-2">
                     <MessageCircle className="w-4 h-4" /> Mesaj yaz
                   </button>
