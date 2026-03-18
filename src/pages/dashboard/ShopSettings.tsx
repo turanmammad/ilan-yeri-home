@@ -203,6 +203,81 @@ const ShopSettings = () => {
             </div>
           </div>
 
+          {/* AI Banner Editor - Premium */}
+          <div className="bg-card rounded-2xl border border-border p-6 shadow-card space-y-4 relative overflow-hidden">
+            {/* Premium badge */}
+            <div className="absolute top-4 right-4">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-xs font-bold text-amber-600 dark:text-amber-400">
+                <Lock className="w-3 h-3" /> Premium
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <h3 className="font-bold text-foreground">AI ilə Baner Dizaynı</h3>
+                <p className="text-xs text-muted-foreground">Süni zəka ilə baner şəklinizi redaktə edin</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {/* AI prompt input */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5">Necə dəyişdirilsin?</label>
+                <div className="relative">
+                  <Wand2 className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
+                  <textarea
+                    placeholder="Məsələn: Fonunu tünd mavi et, mağaza adını böyük yaz, texnologiya mövzusu əlavə et..."
+                    rows={3}
+                    className="w-full px-4 pl-10 py-3 rounded-xl border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+                    disabled
+                  />
+                </div>
+              </div>
+
+              {/* Quick style presets */}
+              <div>
+                <p className="text-xs font-medium text-foreground mb-2">Hazır üslublar</p>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { label: "Minimalist", emoji: "✨" },
+                    { label: "Texnologiya", emoji: "💻" },
+                    { label: "Rəngarəng", emoji: "🎨" },
+                    { label: "Professional", emoji: "💼" },
+                    { label: "Neon", emoji: "🌈" },
+                    { label: "Vintage", emoji: "📷" },
+                  ].map((preset) => (
+                    <button key={preset.label} disabled
+                      className="px-3 py-1.5 rounded-lg border border-border bg-secondary/50 text-xs font-medium text-muted-foreground flex items-center gap-1.5 opacity-60 cursor-not-allowed">
+                      <span>{preset.emoji}</span> {preset.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Generate button */}
+              <button disabled
+                className="w-full h-11 rounded-xl bg-gradient-to-r from-violet-500 to-indigo-600 text-white font-semibold text-sm flex items-center justify-center gap-2 opacity-50 cursor-not-allowed">
+                <Sparkles className="w-4 h-4" /> AI ilə Baner Yarat
+              </button>
+
+              {/* Premium upsell */}
+              <div className="p-3 rounded-xl bg-gradient-to-r from-amber-500/5 to-orange-500/5 border border-amber-500/20">
+                <div className="flex items-start gap-2">
+                  <Lock className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-xs font-semibold text-foreground">Premium xüsusiyyət</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">AI ilə baner dizaynı yalnız Premium istifadəçilər üçün aktivdir. Abunəliyinizi yüksəldərək bu və digər xüsusiyyətlərdən yararlana bilərsiniz.</p>
+                    <button className="mt-2 text-xs font-semibold text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1">
+                      <Sparkles className="w-3 h-3" /> Premium-a keç →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           {/* Theme Color */}
           <div className="bg-card rounded-2xl border border-border p-6 shadow-card space-y-4">
             <h3 className="font-bold text-foreground">Mağaza rəngi</h3>
