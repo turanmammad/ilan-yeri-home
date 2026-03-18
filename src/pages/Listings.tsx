@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Search, MapPin, Heart } from "lucide-react";
 import Header from "@/components/Header";
