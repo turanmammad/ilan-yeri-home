@@ -62,6 +62,15 @@ const AdminUsers = () => {
 
   const changeStatus = (id: number, newStatus: UserStatus) => {
     setUsers((prev) => prev.map((u) => u.id === id ? { ...u, status: newStatus } : u));
+    const labels: Record<UserStatus, string> = { active: "Aktiv", blocked: "Bloklanıb", suspended: "Dayandırılıb" };
+    toast.success(`İstifadəçi statusu "${labels[newStatus]}" olaraq dəyişdirildi`);
+  };
+
+  const handleConfirm = () => {
+    if (!confirmAction) return;
+    const statusMap = { block: "blocked" as const, suspend: "suspended" as const, activate: "active" as const };
+    changeStatus(confirmAction.id, statusMap[confirmAction.type]);
+    setConfirmAction(null);
   };
 
   const tabs: { key: "all" | UserStatus; label: string }[] = [
