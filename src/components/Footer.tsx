@@ -1,4 +1,5 @@
 import { Apple, Play, Facebook, Instagram, Youtube, Send } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => (
   <footer className="border-t border-border bg-card">
@@ -7,28 +8,27 @@ const Footer = () => (
         <div>
           <h4 className="font-bold text-foreground mb-4">Şirkət</h4>
           <ul className="space-y-3 text-sm text-muted-foreground">
-            <li><a href="#" className="hover:text-foreground transition-colors">Haqqımızda</a></li>
-            <li><a href="#" className="hover:text-foreground transition-colors">Karyera</a></li>
-            <li><a href="#" className="hover:text-foreground transition-colors">Əlaqə</a></li>
-            <li><a href="#" className="hover:text-foreground transition-colors">Mətbuat</a></li>
+            <li><Link to="/haqqimizda" className="hover:text-foreground transition-colors">Haqqımızda</Link></li>
+            <li><Link to="/karyera" className="hover:text-foreground transition-colors">Karyera</Link></li>
+            <li><Link to="/elaqe" className="hover:text-foreground transition-colors">Əlaqə</Link></li>
+            <li><Link to="/metbuat" className="hover:text-foreground transition-colors">Mətbuat</Link></li>
           </ul>
         </div>
         <div>
           <h4 className="font-bold text-foreground mb-4">Dəstək</h4>
           <ul className="space-y-3 text-sm text-muted-foreground">
-            <li><a href="#" className="hover:text-foreground transition-colors">Yardım mərkəzi</a></li>
-            <li><a href="#" className="hover:text-foreground transition-colors">Təhlükəsizlik</a></li>
-            <li><a href="#" className="hover:text-foreground transition-colors">Qaydalar</a></li>
-            <li><a href="#" className="hover:text-foreground transition-colors">Şikayət</a></li>
+            <li><Link to="/yardim" className="hover:text-foreground transition-colors">Yardım mərkəzi</Link></li>
+            <li><Link to="/tehlukesizlik" className="hover:text-foreground transition-colors">Təhlükəsizlik</Link></li>
+            <li><Link to="/qaydalar" className="hover:text-foreground transition-colors">Qaydalar</Link></li>
+            <li><Link to="/sikayat" className="hover:text-foreground transition-colors">Şikayət</Link></li>
           </ul>
         </div>
         <div>
           <h4 className="font-bold text-foreground mb-4">Biznes üçün</h4>
           <ul className="space-y-3 text-sm text-muted-foreground">
-            <li><a href="#" className="hover:text-foreground transition-colors">Reklam</a></li>
-            <li><a href="#" className="hover:text-foreground transition-colors">Mağaza aç</a></li>
-            <li><a href="#" className="hover:text-foreground transition-colors">API</a></li>
-            <li><a href="#" className="hover:text-foreground transition-colors">Tərəfdaşlıq</a></li>
+            <li><Link to="/reklam" className="hover:text-foreground transition-colors">Reklam</Link></li>
+            <li><Link to="/magazalar" className="hover:text-foreground transition-colors">Mağaza aç</Link></li>
+            <li><Link to="/terefdashlik" className="hover:text-foreground transition-colors">Tərəfdaşlıq</Link></li>
           </ul>
         </div>
         <div>
@@ -55,12 +55,12 @@ const Footer = () => (
 
     <div className="border-t border-border">
       <div className="container py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
             <span className="font-extrabold text-primary-foreground text-sm">U</span>
           </div>
           <span className="font-extrabold text-lg text-foreground">UcuzTap</span>
-        </div>
+        </Link>
         <p className="text-sm text-muted-foreground">
           © 2026 UcuzTap. Bütün hüquqlar qorunur.
         </p>
