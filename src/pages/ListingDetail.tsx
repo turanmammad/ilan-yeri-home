@@ -55,6 +55,7 @@ const similar = [
 const ListingDetail = () => {
   const { id } = useParams();
   const seller = listing.seller;
+  const [phoneRevealed, setPhoneRevealed] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
