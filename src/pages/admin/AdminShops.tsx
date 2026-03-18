@@ -46,6 +46,7 @@ const AdminShops = () => {
   const [activeTab, setActiveTab] = useState<"all" | ShopStatus>("all");
   const [selectedCategory, setSelectedCategory] = useState("Hamısı");
   const [showFilters, setShowFilters] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<{ type: "suspend" | "activate"; id: number; name: string } | null>(null);
 
   const filtered = useMemo(() => {
     return shops.filter((s) => {
