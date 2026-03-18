@@ -1,7 +1,10 @@
-import { Heart, MessageCircle, Plus, User } from "lucide-react";
+import { Heart, MessageCircle, Moon, Plus, Sun, User } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTheme } from "next-themes";
 
 const Header = () => {
+  const { theme, setTheme } = useTheme();
+
   return (
     <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
       <div className="container flex items-center justify-between h-16 gap-4">
@@ -21,6 +24,14 @@ const Header = () => {
         </nav>
 
         <nav className="flex items-center gap-1">
+          <button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="p-2.5 rounded-xl text-foreground/60 hover:text-foreground hover:bg-secondary transition-colors"
+            title="Qaranlıq/İşıqlı rejim"
+          >
+            <Sun className="w-5 h-5 hidden dark:block" strokeWidth={1.5} />
+            <Moon className="w-5 h-5 block dark:hidden" strokeWidth={1.5} />
+          </button>
           <Link
             to="/hesab/secilmisler"
             className="relative p-2.5 rounded-xl text-foreground/60 hover:text-foreground hover:bg-secondary transition-colors"
