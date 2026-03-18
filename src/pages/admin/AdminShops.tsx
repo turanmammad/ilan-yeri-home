@@ -209,7 +209,7 @@ const AdminShops = () => {
                           </button>
                         )}
                         {s.status !== "suspended" && (
-                          <button onClick={() => changeStatus(s.id, "suspended")} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive" title="Dayandır">
+                          <button onClick={() => setConfirmAction({ type: "suspend", id: s.id, name: s.name })} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive" title="Dayandır">
                             <ShieldAlert className="w-4 h-4" />
                           </button>
                         )}
