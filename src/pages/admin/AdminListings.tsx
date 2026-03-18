@@ -185,17 +185,17 @@ const AdminListings = () => {
                           </button>
                         )}
                         {l.status !== "rejected" && (
-                          <button onClick={() => changeStatus(l.id, "rejected")} className="p-1.5 rounded-lg hover:bg-amber-500/10 transition-colors text-muted-foreground hover:text-amber-600" title="Rədd et">
+                          <button onClick={() => setConfirmAction({ type: "reject", id: l.id, title: l.title })} className="p-1.5 rounded-lg hover:bg-amber-500/10 transition-colors text-muted-foreground hover:text-amber-600" title="Rədd et">
                             <XCircle className="w-4 h-4" />
                           </button>
                         )}
                         {l.status === "active" && (
-                          <button onClick={() => changeStatus(l.id, "pending")} className="p-1.5 rounded-lg hover:bg-amber-500/10 transition-colors text-muted-foreground hover:text-amber-500" title="Gözləməyə al">
+                          <button onClick={() => setConfirmAction({ type: "pending", id: l.id, title: l.title })} className="p-1.5 rounded-lg hover:bg-amber-500/10 transition-colors text-muted-foreground hover:text-amber-500" title="Gözləməyə al">
                             <AlertCircle className="w-4 h-4" />
                           </button>
                         )}
                         <button className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Bax"><Eye className="w-4 h-4" /></button>
-                        <button onClick={() => deleteListing(l.id)} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive" title="Sil"><Trash2 className="w-4 h-4" /></button>
+                        <button onClick={() => setConfirmAction({ type: "delete", id: l.id, title: l.title })} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive" title="Sil"><Trash2 className="w-4 h-4" /></button>
                       </div>
                     </td>
                   </tr>
