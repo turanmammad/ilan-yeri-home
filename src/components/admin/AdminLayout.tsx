@@ -9,7 +9,7 @@ import {
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 
-import { CreditCard, Megaphone, Bot, Server } from "lucide-react";
+import { CreditCard, Megaphone, Bot, Server, Crown, Sparkles } from "lucide-react";
 
 const navSections = [
   {
