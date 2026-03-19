@@ -22,6 +22,7 @@ import Advertising from "./pages/Advertising.tsx";
 import { Rules, Safety, Careers, HelpCenter, Complaint, Partnership, Press, Sitemap } from "./pages/StaticPages.tsx";
 import ShopDetail from "./pages/ShopDetail.tsx";
 import UserProfile from "./pages/UserProfile.tsx";
+import OpenShop from "./pages/OpenShop.tsx";
 import ServiceDetail from "./pages/ServiceDetail.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import AdminLayout from "./components/admin/AdminLayout.tsx";
