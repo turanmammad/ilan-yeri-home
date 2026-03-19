@@ -1,5 +1,5 @@
 import { Search, MapPin, ChevronDown, Car, Home, Smartphone, Briefcase, Shirt, Sofa, Baby, Dumbbell, Wrench, PawPrint, Monitor, Sparkles, Camera, Tag, ShoppingBag, Heart } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
