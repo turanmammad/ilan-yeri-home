@@ -55,6 +55,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/giris" element={<Login />} />
             <Route path="/qeydiyyat" element={<Register />} />
+            <Route path="/sifre-sifirla" element={<ForgotPassword />} />
             <Route path="/hesab/*" element={<Dashboard />} />
             <Route path="/elan-yerleshdir" element={<CreateListing />} />
             <Route path="/elanlar" element={<Listings />} />
