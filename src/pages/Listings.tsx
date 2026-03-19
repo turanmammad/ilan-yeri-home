@@ -9,6 +9,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ListingFilters, { type ListingFiltersState } from "@/components/ListingFilters";
 import { AdBanner, InFeedAd, SponsoredBadge, mockBannerAds, mockSponsoredListings } from "@/components/ads/AdSystem";
+import usePageTitle from "@/hooks/usePageTitle";
 
 // ─── Subcategory map ───
 const categorySubcategories: Record<string, { icon: LucideIcon; subs: { label: string; count: string }[] }> = {

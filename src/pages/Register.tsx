@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, Phone, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
+import usePageTitle from "@/hooks/usePageTitle";
 
 const Register = () => {
+  usePageTitle("Qeydiyyat", "UcuzTap-da yeni hesab yaradın");
   const [tab, setTab] = useState<"email" | "phone">("email");
   const [showPassword, setShowPassword] = useState(false);
 
