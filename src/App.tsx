@@ -26,6 +26,7 @@ import OpenShop from "./pages/OpenShop.tsx";
 import ServiceDetail from "./pages/ServiceDetail.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import AdminLayout from "./components/admin/AdminLayout.tsx";
+import AdminLogin from "./pages/admin/AdminLogin.tsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.tsx";
 import AdminListings from "./pages/admin/AdminListings.tsx";
 import AdminUsers from "./pages/admin/AdminUsers.tsx";
