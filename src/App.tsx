@@ -9,6 +9,7 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import Index from "./pages/Index.tsx";
 import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
+import ForgotPassword from "./pages/ForgotPassword.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import CreateListing from "./pages/CreateListing.tsx";
 import Listings from "./pages/Listings.tsx";
@@ -54,6 +55,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/giris" element={<Login />} />
             <Route path="/qeydiyyat" element={<Register />} />
+            <Route path="/sifre-sifirla" element={<ForgotPassword />} />
             <Route path="/hesab/*" element={<Dashboard />} />
             <Route path="/elan-yerleshdir" element={<CreateListing />} />
             <Route path="/elanlar" element={<Listings />} />

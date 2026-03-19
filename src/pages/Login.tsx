@@ -97,9 +97,9 @@ const Login = () => {
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="text-sm font-medium text-foreground">Şifrə</label>
-                  <a href="#" className="text-xs font-medium text-primary hover:underline">
+                   <Link to="/sifre-sifirla" className="text-xs font-medium text-primary hover:underline">
                     Şifrəni unutdun?
-                  </a>
+                  </Link>
                 </div>
                 <div className="relative">
                   <input
