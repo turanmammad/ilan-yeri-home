@@ -29,6 +29,8 @@ const floatingIcons = [
 const SearchHero = () => {
   const [focused, setFocused] = useState(false);
   const [query, setQuery] = useState("");
+  const [city, setCity] = useState("Bakı");
+  const [cityOpen, setCityOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleSearch = (q?: string) => {
