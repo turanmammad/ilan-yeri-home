@@ -6,18 +6,18 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 const categories = [
-  { icon: Car, label: "Nəqliyyat", count: "45,231", color: "bg-blue-100 text-blue-600", slug: "Nəqliyyat" },
-  { icon: Home, label: "Daşınmaz əmlak", count: "23,456", color: "bg-green-100 text-green-600", slug: "Daşınmaz əmlak" },
-  { icon: Smartphone, label: "Elektronika", count: "31,892", color: "bg-orange-100 text-orange-600", slug: "Elektronika" },
-  { icon: Briefcase, label: "İş elanları", count: "12,567", color: "bg-purple-100 text-purple-600", slug: "İş elanları" },
-  { icon: Shirt, label: "Geyim", count: "18,234", color: "bg-pink-100 text-pink-600", slug: "Geyim" },
-  { icon: Sofa, label: "Ev və bağ", count: "9,876", color: "bg-emerald-100 text-emerald-600", slug: "Ev və bağ" },
-  { icon: Baby, label: "Uşaq aləmi", count: "7,543", color: "bg-cyan-100 text-cyan-600", slug: "Uşaq aləmi" },
-  { icon: Dumbbell, label: "Hobbi və idman", count: "5,432", color: "bg-red-100 text-red-600", slug: "Hobbi və idman" },
-  { icon: Wrench, label: "Xidmətlər", count: "8,765", color: "bg-amber-100 text-amber-600", slug: "Xidmətlər" },
-  { icon: PawPrint, label: "Heyvanlar", count: "3,210", color: "bg-teal-100 text-teal-600", slug: "Heyvanlar" },
-  { icon: Monitor, label: "Kompüter", count: "14,321", color: "bg-indigo-100 text-indigo-600", slug: "Kompüter" },
-  { icon: Sparkles, label: "Gözəllik", count: "6,789", color: "bg-rose-100 text-rose-600", slug: "Gözəllik" },
+  { icon: Car, label: "Nəqliyyat", count: "45,231", color: "bg-primary/10 text-primary", slug: "Nəqliyyat" },
+  { icon: Home, label: "Daşınmaz əmlak", count: "23,456", color: "bg-primary/10 text-primary", slug: "Daşınmaz əmlak" },
+  { icon: Smartphone, label: "Elektronika", count: "31,892", color: "bg-primary/10 text-primary", slug: "Elektronika" },
+  { icon: Briefcase, label: "İş elanları", count: "12,567", color: "bg-primary/10 text-primary", slug: "İş elanları" },
+  { icon: Shirt, label: "Geyim", count: "18,234", color: "bg-primary/10 text-primary", slug: "Geyim" },
+  { icon: Sofa, label: "Ev və bağ", count: "9,876", color: "bg-primary/10 text-primary", slug: "Ev və bağ" },
+  { icon: Baby, label: "Uşaq aləmi", count: "7,543", color: "bg-primary/10 text-primary", slug: "Uşaq aləmi" },
+  { icon: Dumbbell, label: "Hobbi və idman", count: "5,432", color: "bg-primary/10 text-primary", slug: "Hobbi və idman" },
+  { icon: Wrench, label: "Xidmətlər", count: "8,765", color: "bg-primary/10 text-primary", slug: "Xidmətlər" },
+  { icon: PawPrint, label: "Heyvanlar", count: "3,210", color: "bg-primary/10 text-primary", slug: "Heyvanlar" },
+  { icon: Monitor, label: "Kompüter", count: "14,321", color: "bg-primary/10 text-primary", slug: "Kompüter" },
+  { icon: Sparkles, label: "Gözəllik", count: "6,789", color: "bg-primary/10 text-primary", slug: "Gözəllik" },
 ];
 
 const container = {

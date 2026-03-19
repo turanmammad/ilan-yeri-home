@@ -10,6 +10,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 import { AdBanner, SponsoredBadge, mockBannerAds } from "@/components/ads/AdSystem";
+import usePageTitle from "@/hooks/usePageTitle";
 
 // ─── Service Categories ───
 interface ServiceCategory {
@@ -74,6 +75,7 @@ const sortOptions = [
 ];
 
 const Services = () => {
+  usePageTitle("Xidmətlər", "UcuzTap-da peşəkar xidmət göstəriciləri tapın");
   const [searchParams, setSearchParams] = useSearchParams();
   const initialCat = searchParams.get("category") || "";
   const initialCity = searchParams.get("city") || "Hamısı";
