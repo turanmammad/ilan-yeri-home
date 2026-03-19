@@ -81,6 +81,7 @@ const App = () => (
             <Route path="/sitemap" element={<Sitemap />} />
 
             {/* Admin panel */}
+            <Route path="/admin/giris" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="elanlar" element={<AdminListings />} />
