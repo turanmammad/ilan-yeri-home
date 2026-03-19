@@ -5,6 +5,12 @@ import { motion } from "framer-motion";
 
 const popularTags = ["iPhone", "Mənzil", "Avtomobil", "İş", "Məişət texnikası"];
 
+const cities = [
+  "Bütün Azərbaycan", "Bakı", "Gəncə", "Sumqayıt", "Mingəçevir", "Şirvan",
+  "Lənkəran", "Şəki", "Naxçıvan", "Quba", "Qusar", "Zaqatala", "Bərdə",
+  "Göyçay", "Xaçmaz", "Masallı", "Sabirabad", "Salyan", "İsmayıllı",
+];
+
 const floatingIcons = [
   { icon: Car, x: "8%", y: "18%", size: 28, delay: 0, rotate: -12 },
   { icon: Home, x: "85%", y: "15%", size: 32, delay: 0.3, rotate: 8 },
