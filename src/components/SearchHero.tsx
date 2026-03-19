@@ -105,7 +105,7 @@ const SearchHero = () => {
             onSubmit={(e) => { e.preventDefault(); handleSearch(); }}
             className={`flex items-center bg-card h-14 sm:h-16 rounded-2xl shadow-lg transition-shadow ${focused ? 'shadow-xl ring-2 ring-card' : ''}`}
           >
-            <div className="relative">
+            <div className="relative z-[60]">
               <button
                 type="button"
                 onClick={() => setCityOpen(!cityOpen)}
@@ -117,8 +117,8 @@ const SearchHero = () => {
               </button>
               {cityOpen && (
                 <>
-                  <div className="fixed inset-0 z-40" onClick={() => setCityOpen(false)} />
-                  <div className="absolute left-0 top-full mt-2 w-56 max-h-64 overflow-y-auto bg-card rounded-xl border border-border shadow-xl z-50 py-1 animate-in fade-in slide-in-from-top-2 duration-150">
+                  <div className="fixed inset-0 z-[60]" onClick={() => setCityOpen(false)} />
+                  <div className="absolute left-0 top-full mt-2 w-56 max-h-64 overflow-y-auto bg-card rounded-xl border border-border shadow-xl z-[70] py-1 animate-in fade-in slide-in-from-top-2 duration-150">
                     {cities.map((c) => (
                       <button
                         key={c}
