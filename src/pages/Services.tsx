@@ -74,6 +74,7 @@ const sortOptions = [
 ];
 
 const Services = () => {
+  usePageTitle("Xidmətlər", "UcuzTap-da peşəkar xidmət göstəriciləri tapın");
   const [searchParams, setSearchParams] = useSearchParams();
   const initialCat = searchParams.get("category") || "";
   const initialCity = searchParams.get("city") || "Hamısı";
