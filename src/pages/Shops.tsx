@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 import { SponsoredBadge, AdBanner, mockBannerAds, mockSponsoredShops } from "@/components/ads/AdSystem";
+import usePageTitle from "@/hooks/usePageTitle";
 
 const shops = [
   { id: 1, name: "TechStore Bakı", category: "Elektronika", rating: 4.8, listings: 234, location: "Bakı", verified: true },
@@ -16,7 +17,9 @@ const shops = [
   { id: 8, name: "EvTikinti", category: "Tikinti", rating: 4.6, listings: 210, location: "Bakı", verified: true },
 ];
 
-const Shops = () => (
+const Shops = () => {
+  usePageTitle("Mağazalar", "UcuzTap-da etibarlı mağazalardan alış-veriş edin");
+  return (
   <div className="min-h-screen flex flex-col bg-background">
     <Header />
 
