@@ -9,6 +9,7 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import Index from "./pages/Index.tsx";
 import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
+import ForgotPassword from "./pages/ForgotPassword.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import CreateListing from "./pages/CreateListing.tsx";
 import Listings from "./pages/Listings.tsx";
