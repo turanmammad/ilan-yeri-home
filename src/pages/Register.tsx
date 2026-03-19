@@ -128,8 +128,8 @@ const Register = () => {
                   className="mt-1 w-4 h-4 rounded border-input accent-primary"
                 />
                 <label htmlFor="terms" className="text-xs text-muted-foreground leading-relaxed">
-                  <a href="#" className="text-primary hover:underline">İstifadə şərtləri</a> və{" "}
-                  <a href="#" className="text-primary hover:underline">Məxfilik siyasəti</a> ilə razıyam
+                  <Link to="/qaydalar" className="text-primary hover:underline">İstifadə şərtləri</Link> və{" "}
+                  <Link to="/tehlukesizlik" className="text-primary hover:underline">Məxfilik siyasəti</Link> ilə razıyam
                 </label>
               </div>
 
