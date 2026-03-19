@@ -358,17 +358,17 @@ const Listings = () => {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {filtered.map((listing, index) => (
-              <>
+              <React.Fragment key={listing.id}>
                 {AD_POSITIONS.includes(index) && (
-                  <InFeedAd key={`ad-${index}`} ad={mockBannerAds.listingInfeed1} />
+                  <InFeedAd ad={mockBannerAds.listingInfeed1} />
                 )}
-                <Link to={`/elan/${listing.id}`} key={listing.id} className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 group">
+                <Link to={`/elan/${listing.id}`} className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 group">
                   <div className="relative aspect-[4/3] bg-secondary overflow-hidden">
-                    <img src={listing.img} alt={listing.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    <img src={listing.img} alt={listing.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                     {listing.vip && (
                       <span className="absolute top-2 left-2 text-[10px] font-bold bg-primary text-primary-foreground px-2 py-0.5 rounded-md">VIP</span>
                     )}
-                    <button className="absolute top-2 right-2 w-8 h-8 rounded-full bg-card/80 backdrop-blur-sm flex items-center justify-center text-foreground/60 hover:text-destructive transition-colors">
+                    <button className="absolute top-2 right-2 w-8 h-8 rounded-full bg-card/80 backdrop-blur-sm flex items-center justify-center text-foreground/60 hover:text-destructive transition-colors" aria-label="Seçilmişlərə əlavə et">
                       <Heart className="w-4 h-4" strokeWidth={1.5} />
                     </button>
                   </div>
@@ -381,7 +381,7 @@ const Listings = () => {
                     </div>
                   </div>
                 </Link>
-              </>
+              </React.Fragment>
             ))}
             {filtered.length > 4 && <InFeedAd ad={mockBannerAds.listingInfeed2} />}
           </div>
