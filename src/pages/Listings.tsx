@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Search, MapPin, Heart, ChevronRight, Grid3X3 } from "lucide-react";
 import {
