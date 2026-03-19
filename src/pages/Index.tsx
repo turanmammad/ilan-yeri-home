@@ -37,6 +37,7 @@ const Index = () => {
     <div className="flex-1" />
     <Footer />
   </div>
-);
+  );
+};
 
 export default Index;
