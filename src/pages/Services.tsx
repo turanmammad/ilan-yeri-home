@@ -10,6 +10,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 import { AdBanner, SponsoredBadge, mockBannerAds } from "@/components/ads/AdSystem";
+import usePageTitle from "@/hooks/usePageTitle";
 
 // ─── Service Categories ───
 interface ServiceCategory {
