@@ -1,5 +1,5 @@
 import { Search, MapPin, ChevronDown, Car, Home, Smartphone, Briefcase, Shirt, Sofa, Baby, Dumbbell, Wrench, PawPrint, Monitor, Sparkles, Camera, Tag, ShoppingBag, Heart } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -25,6 +25,71 @@ const floatingIcons = [
   { icon: PawPrint, x: "70%", y: "55%", size: 20, delay: 1.1, rotate: 18 },
   { icon: Monitor, x: "30%", y: "78%", size: 22, delay: 0.15, rotate: -10 },
 ];
+
+const CityDropdown = ({ city, setCity, cityOpen, setCityOpen }: {
+  city: string; setCity: (c: string) => void; cityOpen: boolean; setCityOpen: (o: boolean) => void;
+}) => {
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const [pos, setPos] = useState({ top: 0, left: 0 });
+
+  const updatePos = useCallback(() => {
+    if (btnRef.current && cityOpen) {
+      const rect = btnRef.current.getBoundingClientRect();
+      setPos({ top: rect.bottom + 8, left: rect.left });
+    }
+  }, [cityOpen]);
+
+  useEffect(() => {
+    updatePos();
+    if (cityOpen) {
+      window.addEventListener("scroll", updatePos, true);
+      window.addEventListener("resize", updatePos);
+      return () => {
+        window.removeEventListener("scroll", updatePos, true);
+        window.removeEventListener("resize", updatePos);
+      };
+    }
+  }, [cityOpen, updatePos]);
+
+  return (
+    <div className="relative">
+      <button
+        ref={btnRef}
+        type="button"
+        onClick={() => setCityOpen(!cityOpen)}
+        className="flex items-center gap-2 px-4 border-r border-border h-14 sm:h-16 shrink-0 cursor-pointer hover:bg-secondary/50 transition-colors rounded-l-2xl"
+      >
+        <MapPin className="w-4 h-4 text-muted-foreground" strokeWidth={1.5} />
+        <span className="text-sm font-medium text-foreground hidden sm:inline max-w-[100px] truncate">{city}</span>
+        <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground transition-transform ${cityOpen ? 'rotate-180' : ''}`} strokeWidth={1.5} />
+      </button>
+      {cityOpen && (
+        <>
+          <div className="fixed inset-0 z-[60]" onClick={() => setCityOpen(false)} />
+          <div
+            className="fixed w-56 max-h-64 overflow-y-auto bg-card rounded-xl border border-border shadow-xl z-[70] py-1 animate-in fade-in slide-in-from-top-2 duration-150"
+            style={{ top: pos.top, left: pos.left }}
+          >
+            {cities.map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => { setCity(c); setCityOpen(false); }}
+                className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                  city === c
+                    ? "bg-primary text-primary-foreground font-medium"
+                    : "text-foreground hover:bg-secondary"
+                }`}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
 const SearchHero = () => {
   const [focused, setFocused] = useState(false);
@@ -105,38 +170,7 @@ const SearchHero = () => {
             onSubmit={(e) => { e.preventDefault(); handleSearch(); }}
             className={`flex items-center bg-card h-14 sm:h-16 rounded-2xl shadow-lg transition-shadow ${focused ? 'shadow-xl ring-2 ring-card' : ''}`}
           >
-            <div className="relative z-[60]">
-              <button
-                type="button"
-                onClick={() => setCityOpen(!cityOpen)}
-                className="flex items-center gap-2 px-4 border-r border-border h-14 sm:h-16 shrink-0 cursor-pointer hover:bg-secondary/50 transition-colors rounded-l-2xl"
-              >
-                <MapPin className="w-4 h-4 text-muted-foreground" strokeWidth={1.5} />
-                <span className="text-sm font-medium text-foreground hidden sm:inline max-w-[100px] truncate">{city}</span>
-                <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground transition-transform ${cityOpen ? 'rotate-180' : ''}`} strokeWidth={1.5} />
-              </button>
-              {cityOpen && (
-                <>
-                  <div className="fixed inset-0 z-[60]" onClick={() => setCityOpen(false)} />
-                  <div className="absolute left-0 top-full mt-2 w-56 max-h-64 overflow-y-auto bg-card rounded-xl border border-border shadow-xl z-[70] py-1 animate-in fade-in slide-in-from-top-2 duration-150">
-                    {cities.map((c) => (
-                      <button
-                        key={c}
-                        type="button"
-                        onClick={() => { setCity(c); setCityOpen(false); }}
-                        className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
-                          city === c
-                            ? "bg-primary text-primary-foreground font-medium"
-                            : "text-foreground hover:bg-secondary"
-                        }`}
-                      >
-                        {c}
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
+            <CityDropdown city={city} setCity={setCity} cityOpen={cityOpen} setCityOpen={setCityOpen} />
             <div className="flex-1 flex items-center px-4">
               <input
                 type="text"
