@@ -165,6 +165,7 @@ const filtersFromParams = (params: URLSearchParams): { filters: ListingFiltersSt
 const Listings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
+  usePageTitle(query ? `"${query}" axtarış nəticələri` : "Bütün elanlar", "UcuzTap-da elanlar arasında axtar");
 
   const [initial] = useState(() => filtersFromParams(searchParams));
   const [activeCategory, setActiveCategory] = useState(initial.category);
