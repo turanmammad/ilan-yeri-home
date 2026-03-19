@@ -26,6 +26,71 @@ const floatingIcons = [
   { icon: Monitor, x: "30%", y: "78%", size: 22, delay: 0.15, rotate: -10 },
 ];
 
+const CityDropdown = ({ city, setCity, cityOpen, setCityOpen }: {
+  city: string; setCity: (c: string) => void; cityOpen: boolean; setCityOpen: (o: boolean) => void;
+}) => {
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const [pos, setPos] = useState({ top: 0, left: 0 });
+
+  const updatePos = useCallback(() => {
+    if (btnRef.current && cityOpen) {
+      const rect = btnRef.current.getBoundingClientRect();
+      setPos({ top: rect.bottom + 8, left: rect.left });
+    }
+  }, [cityOpen]);
+
+  useEffect(() => {
+    updatePos();
+    if (cityOpen) {
+      window.addEventListener("scroll", updatePos, true);
+      window.addEventListener("resize", updatePos);
+      return () => {
+        window.removeEventListener("scroll", updatePos, true);
+        window.removeEventListener("resize", updatePos);
+      };
+    }
+  }, [cityOpen, updatePos]);
+
+  return (
+    <div className="relative">
+      <button
+        ref={btnRef}
+        type="button"
+        onClick={() => setCityOpen(!cityOpen)}
+        className="flex items-center gap-2 px-4 border-r border-border h-14 sm:h-16 shrink-0 cursor-pointer hover:bg-secondary/50 transition-colors rounded-l-2xl"
+      >
+        <MapPin className="w-4 h-4 text-muted-foreground" strokeWidth={1.5} />
+        <span className="text-sm font-medium text-foreground hidden sm:inline max-w-[100px] truncate">{city}</span>
+        <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground transition-transform ${cityOpen ? 'rotate-180' : ''}`} strokeWidth={1.5} />
+      </button>
+      {cityOpen && (
+        <>
+          <div className="fixed inset-0 z-[60]" onClick={() => setCityOpen(false)} />
+          <div
+            className="fixed w-56 max-h-64 overflow-y-auto bg-card rounded-xl border border-border shadow-xl z-[70] py-1 animate-in fade-in slide-in-from-top-2 duration-150"
+            style={{ top: pos.top, left: pos.left }}
+          >
+            {cities.map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => { setCity(c); setCityOpen(false); }}
+                className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                  city === c
+                    ? "bg-primary text-primary-foreground font-medium"
+                    : "text-foreground hover:bg-secondary"
+                }`}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
 const SearchHero = () => {
   const [focused, setFocused] = useState(false);
   const [query, setQuery] = useState("");
