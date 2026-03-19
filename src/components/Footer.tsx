@@ -23,7 +23,7 @@ const footerLinks = {
     { label: "İstifadə qaydaları", to: "/qaydalar" },
     { label: "Məxfilik siyasəti", to: "/tehlukesizlik" },
     { label: "Şikayət bildirin", to: "/sikayat" },
-    { label: "Mağaza açın", to: "/magazalar" },
+    { label: "Mağaza açın", to: "/magaza-acin" },
   ],
 };
 
