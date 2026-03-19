@@ -127,6 +127,7 @@ const Shops = () => {
 
     <Footer />
   </div>
-);
+  );
+};
 
 export default Shops;
