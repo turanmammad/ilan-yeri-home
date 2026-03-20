@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { format, parse, isWithinInterval, subDays } from "date-fns";
 import { Megaphone, Plus, Eye, Pause, Play, Trash2, TrendingUp, MousePointerClick, Users, DollarSign, ArrowUpRight, BarChart3, Calendar as CalendarIcon, Target, Search, X, CalendarDays } from "lucide-react";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -50,6 +51,7 @@ const AdminCampaigns = () => {
   const [search, setSearch] = useState("");
   const [dateRange, setDateRange] = useState<DateRange>(null);
   const [typeFilter, setTypeFilter] = useState("all");
+  const [deleteId, setDeleteId] = useState<number | null>(null);
 
   const types = useMemo(() => [...new Set(campaigns.map(c => c.type))], []);
 
@@ -266,7 +268,7 @@ const AdminCampaigns = () => {
                           <Button variant="ghost" size="icon" className="h-8 w-8">
                             <BarChart3 className="w-3.5 h-3.5" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/70 hover:text-destructive">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/70 hover:text-destructive" onClick={() => setDeleteId(c.id)}>
                             <Trash2 className="w-3.5 h-3.5" />
                           </Button>
                         </div>
@@ -301,6 +303,19 @@ const AdminCampaigns = () => {
           </Tabs>
         </CardContent>
       </Card>
+
+      <ConfirmDialog
+        open={deleteId !== null}
+        onOpenChange={(open) => { if (!open) setDeleteId(null); }}
+        title="Kampaniyanı silmək istəyirsiniz?"
+        description="Bu əməliyyat geri qaytarıla bilməz. Kampaniya bütün statistikalarla birlikdə silinəcək."
+        confirmLabel="Sil"
+        variant="destructive"
+        onConfirm={() => {
+          // In real app: delete from DB
+          setDeleteId(null);
+        }}
+      />
     </div>
   );
 };
