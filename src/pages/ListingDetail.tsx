@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   ArrowLeft, Heart, Share2, MapPin, Clock, Phone, MessageCircle,
