@@ -1,7 +1,7 @@
-import { Search, MapPin, ChevronDown, Car, Home, Smartphone, Briefcase, Shirt, Sofa, Baby, Dumbbell, Wrench, PawPrint, Monitor, Sparkles, Camera, Tag, ShoppingBag, Heart } from "lucide-react";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { Search, MapPin, ChevronDown, Car, Home, Smartphone, Briefcase, Shirt, Sofa, Baby, Dumbbell, Wrench, PawPrint, Monitor, Sparkles, Camera, Tag, ShoppingBag, Heart, Clock, TrendingUp } from "lucide-react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const popularTags = ["iPhone", "Mənzil", "Avtomobil", "İş", "Məişət texnikası"];
 
@@ -10,6 +10,37 @@ const cities = [
   "Lənkəran", "Şəki", "Naxçıvan", "Quba", "Qusar", "Zaqatala", "Bərdə",
   "Göyçay", "Xaçmaz", "Masallı", "Sabirabad", "Salyan", "İsmayıllı",
 ];
+
+// Search suggestion data for elastic-like search
+const searchSuggestions = [
+  { text: "iPhone 15 Pro Max", category: "Elektronika", count: 234 },
+  { text: "iPhone 14", category: "Elektronika", count: 189 },
+  { text: "iPhone SE", category: "Elektronika", count: 45 },
+  { text: "Samsung Galaxy S24", category: "Elektronika", count: 312 },
+  { text: "Samsung televizor", category: "Elektronika", count: 156 },
+  { text: "MacBook Pro", category: "Kompüter", count: 87 },
+  { text: "MacBook Air", category: "Kompüter", count: 134 },
+  { text: "BMW 520", category: "Nəqliyyat", count: 423 },
+  { text: "BMW X5", category: "Nəqliyyat", count: 267 },
+  { text: "Mercedes E-class", category: "Nəqliyyat", count: 345 },
+  { text: "Toyota Camry", category: "Nəqliyyat", count: 198 },
+  { text: "3 otaqlı mənzil", category: "Daşınmaz əmlak", count: 1243 },
+  { text: "2 otaqlı mənzil kirayə", category: "Daşınmaz əmlak", count: 876 },
+  { text: "1 otaqlı mənzil", category: "Daşınmaz əmlak", count: 654 },
+  { text: "Həyət evi", category: "Daşınmaz əmlak", count: 432 },
+  { text: "PlayStation 5", category: "Elektronika", count: 167 },
+  { text: "AirPods Pro", category: "Elektronika", count: 234 },
+  { text: "Uşaq arabası", category: "Uşaq aləmi", count: 89 },
+  { text: "Divan", category: "Ev və bağ", count: 345 },
+  { text: "Velosiped", category: "Hobbi və idman", count: 123 },
+  { text: "Mühasib", category: "İş elanları", count: 78 },
+  { text: "Proqramçı", category: "İş elanları", count: 156 },
+  { text: "Sürücü", category: "İş elanları", count: 234 },
+];
+
+const recentSearches = ["iPhone 15", "Mənzil kirayə Bakı", "BMW", "Velosiped"];
+
+const trendingSearches = ["iPhone 15 Pro", "3 otaqlı mənzil", "Mercedes", "PlayStation 5", "Divan"];
 
 const floatingIcons = [
   { icon: Car, x: "8%", y: "18%", size: 28, delay: 0, rotate: -12 },
@@ -96,15 +127,69 @@ const SearchHero = () => {
   const [query, setQuery] = useState("");
   const [city, setCity] = useState("Bakı");
   const [cityOpen, setCityOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+
+  // Elastic-like filtering
+  const suggestions = useMemo(() => {
+    if (!query.trim()) return [];
+    const q = query.toLowerCase();
+    return searchSuggestions
+      .filter(s => s.text.toLowerCase().includes(q))
+      .sort((a, b) => {
+        // Prioritize starts-with matches
+        const aStarts = a.text.toLowerCase().startsWith(q) ? 0 : 1;
+        const bStarts = b.text.toLowerCase().startsWith(q) ? 0 : 1;
+        if (aStarts !== bStarts) return aStarts - bStarts;
+        return b.count - a.count;
+      })
+      .slice(0, 8);
+  }, [query]);
+
+  const showDropdown = focused && (query.trim() ? suggestions.length > 0 : true);
 
   const handleSearch = (q?: string) => {
     const searchQuery = q || query;
+    setFocused(false);
     if (searchQuery.trim()) {
       navigate(`/elanlar?q=${encodeURIComponent(searchQuery.trim())}`);
     } else {
       navigate("/elanlar");
     }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    const items = query.trim() ? suggestions : [];
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setSelectedIndex(prev => Math.min(prev + 1, items.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setSelectedIndex(prev => Math.max(prev - 1, -1));
+    } else if (e.key === "Enter" && selectedIndex >= 0 && items[selectedIndex]) {
+      e.preventDefault();
+      handleSearch(items[selectedIndex].text);
+    } else if (e.key === "Escape") {
+      setFocused(false);
+    }
+  };
+
+  // Reset selected index when query changes
+  useEffect(() => { setSelectedIndex(-1); }, [query]);
+
+  // Highlight matching text
+  const highlightMatch = (text: string, q: string) => {
+    if (!q.trim()) return text;
+    const idx = text.toLowerCase().indexOf(q.toLowerCase());
+    if (idx === -1) return text;
+    return (
+      <>
+        {text.slice(0, idx)}
+        <span className="font-bold text-foreground">{text.slice(idx, idx + q.length)}</span>
+        {text.slice(idx + q.length)}
+      </>
+    );
   };
 
   return (
@@ -164,7 +249,7 @@ const SearchHero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15, ease: [0.2, 0.8, 0.2, 1] }}
-          className="max-w-2xl mx-auto"
+          className="max-w-2xl mx-auto relative"
         >
           <form
             onSubmit={(e) => { e.preventDefault(); handleSearch(); }}
@@ -173,13 +258,15 @@ const SearchHero = () => {
             <CityDropdown city={city} setCity={setCity} cityOpen={cityOpen} setCityOpen={setCityOpen} />
             <div className="flex-1 flex items-center px-4">
               <input
+                ref={inputRef}
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
                 placeholder="Nə axtarırsınız?"
                 className="w-full bg-transparent border-none outline-none text-sm sm:text-base text-foreground placeholder:text-muted-foreground"
                 onFocus={() => setFocused(true)}
-                onBlur={() => setFocused(false)}
+                autoComplete="off"
               />
             </div>
             <button
@@ -190,6 +277,72 @@ const SearchHero = () => {
               Axtar
             </button>
           </form>
+
+          {/* Search suggestions dropdown */}
+          <AnimatePresence>
+            {showDropdown && (
+              <motion.div
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.15 }}
+                className="absolute left-0 right-0 top-full mt-2 bg-card rounded-2xl border border-border shadow-xl z-50 overflow-hidden"
+              >
+                {query.trim() ? (
+                  /* Query-based suggestions */
+                  <div className="py-1">
+                    {suggestions.map((s, i) => (
+                      <button
+                        key={s.text}
+                        type="button"
+                        onClick={() => handleSearch(s.text)}
+                        className={`w-full text-left px-4 py-2.5 flex items-center gap-3 transition-colors ${
+                          i === selectedIndex ? "bg-secondary" : "hover:bg-secondary/50"
+                        }`}
+                      >
+                        <Search className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm text-foreground/80 truncate">{highlightMatch(s.text, query)}</p>
+                        </div>
+                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-secondary text-muted-foreground shrink-0">{s.category}</span>
+                        <span className="text-[10px] text-muted-foreground shrink-0">{s.count} elan</span>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  /* Empty query - show recent + trending */
+                  <div className="py-2">
+                    {recentSearches.length > 0 && (
+                      <div className="px-4 pb-2">
+                        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                          <Clock className="w-3 h-3" /> Son axtarışlar
+                        </p>
+                        {recentSearches.map(s => (
+                          <button key={s} type="button" onClick={() => handleSearch(s)}
+                            className="w-full text-left px-2 py-1.5 text-sm text-foreground/80 hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
+                            <Clock className="w-3 h-3 text-muted-foreground" />
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    <div className="border-t border-border px-4 pt-2">
+                      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                        <TrendingUp className="w-3 h-3" /> Trend axtarışlar
+                      </p>
+                      {trendingSearches.map(s => (
+                        <button key={s} type="button" onClick={() => handleSearch(s)}
+                          className="w-full text-left px-2 py-1.5 text-sm text-foreground/80 hover:bg-secondary/50 rounded-lg transition-colors flex items-center gap-2">
+                          <TrendingUp className="w-3 h-3 text-primary" />
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
 
         <motion.div
