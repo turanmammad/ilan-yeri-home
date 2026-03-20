@@ -81,9 +81,9 @@ const AdminShops = () => {
   };
 
   const tabs: { key: "all" | ShopStatus; label: string }[] = [
+    { key: "pending", label: "Gözləyir" },
     { key: "all", label: "Hamısı" },
     { key: "active", label: "Aktiv" },
-    { key: "pending", label: "Gözləyir" },
     { key: "suspended", label: "Dayandırılıb" },
   ];
 
