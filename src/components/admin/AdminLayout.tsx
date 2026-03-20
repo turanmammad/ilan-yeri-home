@@ -9,7 +9,7 @@ import {
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 
-import { CreditCard, Megaphone, Bot, Server, Crown, Sparkles, BarChart3 } from "lucide-react";
+import { CreditCard, Megaphone, Bot, Server, Crown, Sparkles, BarChart3, FolderTree } from "lucide-react";
 
 const navSections = [
   {
@@ -45,6 +45,7 @@ const navSections = [
       { icon: BarChart3, label: "Top İstifadəçilər", path: "/admin/top-istifadeciler" },
       { icon: Bot, label: "AI Düzəltmələr", path: "/admin/ai" },
       { icon: Server, label: "Sistem vəziyyəti", path: "/admin/sistem" },
+      { icon: FolderTree, label: "Kateqoriyalar", path: "/admin/kateqoriyalar" },
       { icon: Settings, label: "Tənzimləmələr", path: "/admin/tenzimleme" },
     ],
   },
