@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   ArrowLeft, Heart, Share2, MapPin, Clock, Phone, MessageCircle,
@@ -179,6 +179,16 @@ const ListingDetail = () => {
   const [phoneRevealed, setPhoneRevealed] = useState(false);
   const [saved, setSaved] = useState(false);
 
+  const handleShare = useCallback(async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try { await navigator.share({ title: listing.title, url }); } catch {}
+    } else {
+      await navigator.clipboard.writeText(url);
+      alert("Link kopyalandı!");
+    }
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
@@ -217,7 +227,11 @@ const ListingDetail = () => {
                     >
                       <Heart className={`w-4 h-4 ${saved ? "fill-current" : ""}`} />
                     </button>
-                    <button className="w-9 h-9 rounded-xl border border-input flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+                    <button
+                      onClick={handleShare}
+                      className="w-9 h-9 rounded-xl border border-input flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                      title="Paylaş"
+                    >
                       <Share2 className="w-4 h-4" />
                     </button>
                   </div>
@@ -282,7 +296,11 @@ const ListingDetail = () => {
                       >
                         <Heart className={`w-4 h-4 ${saved ? "fill-current" : ""}`} />
                       </button>
-                      <button className="w-9 h-9 rounded-xl border border-input flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+                      <button
+                        onClick={handleShare}
+                        className="w-9 h-9 rounded-xl border border-input flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                        title="Paylaş"
+                      >
                         <Share2 className="w-4 h-4" />
                       </button>
                     </div>

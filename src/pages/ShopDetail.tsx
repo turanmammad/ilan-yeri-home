@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { MapPin, Clock, Star, Shield, Store, Heart, Phone, MessageCircle, Globe, Share2, ChevronRight, Grid3X3, Search, ExternalLink } from "lucide-react";
 import Header from "@/components/Header";
@@ -46,6 +46,16 @@ const ShopDetail = () => {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState("listings");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const handleShare = useCallback(async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try { await navigator.share({ title: shop.name, url }); } catch {}
+    } else {
+      await navigator.clipboard.writeText(url);
+      alert("Link kopyalandı!");
+    }
+  }, []);
 
   const filteredListings = searchQuery
     ? shopListings.filter((l) => l.title.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -106,7 +116,11 @@ const ShopDetail = () => {
                   <button className="h-10 px-4 border border-input bg-card text-foreground font-medium rounded-xl text-sm hover:bg-secondary transition-colors flex items-center gap-2">
                     <MessageCircle className="w-4 h-4" /> Mesaj
                   </button>
-                  <button className="w-10 h-10 border border-input rounded-xl flex items-center justify-center text-foreground/60 hover:text-foreground hover:bg-secondary transition-colors">
+                  <button
+                    onClick={handleShare}
+                    className="w-10 h-10 border border-input rounded-xl flex items-center justify-center text-foreground/60 hover:text-foreground hover:bg-secondary transition-colors"
+                    title="Paylaş"
+                  >
                     <Share2 className="w-4 h-4" />
                   </button>
                 </div>
