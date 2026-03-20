@@ -1,9 +1,10 @@
-import { Server, HardDrive, Cpu, MemoryStick, Wifi, Database, Clock, CheckCircle, AlertTriangle, XCircle, RefreshCw, Activity, Globe, Shield, Zap } from "lucide-react";
+import { useState } from "react";
+import { Server, HardDrive, Cpu, MemoryStick, Wifi, Database, Clock, CheckCircle, AlertTriangle, XCircle, RefreshCw, Activity, Globe, Shield, Zap, Trash2, Archive, Image, FileText, Code, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
 
 const systemMetrics = [
   { label: "CPU istifadəsi", value: 34, max: 100, unit: "%", icon: Cpu, status: "good" as const },
@@ -45,6 +46,115 @@ const eventTypeStyle = {
   error: "bg-destructive",
 };
 
+interface CacheItem {
+  id: string;
+  name: string;
+  icon: typeof Database;
+  size: string;
+  items: number;
+  lastCleared: string;
+  description: string;
+}
+
+const initialCacheItems: CacheItem[] = [
+  { id: "redis", name: "Redis Cache", icon: Database, size: "248 MB", items: 12450, lastCleared: "3 gün əvvəl", description: "API cavabları və sessiya məlumatları" },
+  { id: "cdn", name: "CDN Cache", icon: Globe, size: "1.8 GB", items: 34200, lastCleared: "7 gün əvvəl", description: "Statik fayllar, şəkillər və CSS/JS" },
+  { id: "images", name: "Şəkil Cache", icon: Image, size: "3.2 GB", items: 18900, lastCleared: "14 gün əvvəl", description: "Thumbnail və optimizasiya edilmiş şəkillər" },
+  { id: "search", name: "Axtarış İndeksi", icon: FileText, size: "512 MB", items: 24580, lastCleared: "5 gün əvvəl", description: "Elasticsearch indeks cache" },
+  { id: "views", name: "Baxış Sayğacı", icon: Activity, size: "64 MB", items: 156000, lastCleared: "1 gün əvvəl", description: "Elan və mağaza baxış statistikası" },
+  { id: "templates", name: "Şablon Cache", icon: Code, size: "32 MB", items: 890, lastCleared: "10 gün əvvəl", description: "Server-side render şablonları" },
+  { id: "sessions", name: "Sessiya Cache", icon: Shield, size: "128 MB", items: 8432, lastCleared: "Bu gün", description: "İstifadəçi sessiya məlumatları" },
+  { id: "api", name: "API Response Cache", icon: Zap, size: "96 MB", items: 5670, lastCleared: "2 gün əvvəl", description: "Xarici API cavab cache-ləri" },
+];
+
+const CacheManager = () => {
+  const [cacheItems, setCacheItems] = useState(initialCacheItems);
+  const [clearingId, setClearingId] = useState<string | null>(null);
+  const [clearingAll, setClearingAll] = useState(false);
+
+  const totalSize = "6.1 GB";
+  const totalItems = cacheItems.reduce((a, c) => a + c.items, 0);
+
+  const clearSingle = (id: string) => {
+    setClearingId(id);
+    setTimeout(() => {
+      setCacheItems(prev => prev.map(c => c.id === id ? { ...c, size: "0 MB", items: 0, lastCleared: "İndi" } : c));
+      setClearingId(null);
+      const item = cacheItems.find(c => c.id === id);
+      toast.success(`${item?.name} uğurla təmizləndi!`);
+    }, 1500);
+  };
+
+  const clearAll = () => {
+    setClearingAll(true);
+    setTimeout(() => {
+      setCacheItems(prev => prev.map(c => ({ ...c, size: "0 MB", items: 0, lastCleared: "İndi" })));
+      setClearingAll(false);
+      toast.success("Bütün cache uğurla təmizləndi!");
+    }, 2500);
+  };
+
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Archive className="w-4 h-4 text-primary" /> Cache İdarəetməsi
+            </CardTitle>
+            <p className="text-xs text-muted-foreground mt-1">Ümumi: {totalSize} · {totalItems.toLocaleString()} element</p>
+          </div>
+          <Button variant="destructive" size="sm" className="gap-2" onClick={clearAll} disabled={clearingAll}>
+            {clearingAll ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+            {clearingAll ? "Təmizlənir..." : "Hamısını təmizlə"}
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent className="p-0">
+        <div className="divide-y divide-border">
+          {cacheItems.map((c) => (
+            <div key={c.id} className="flex items-center justify-between px-4 py-3.5 hover:bg-secondary/30 transition-colors">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-primary/10 shrink-0">
+                  <c.icon className="w-4 h-4 text-primary" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-foreground">{c.name}</p>
+                  <p className="text-[10px] text-muted-foreground truncate">{c.description}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4 shrink-0">
+                <div className="text-right hidden sm:block">
+                  <p className="text-sm font-semibold text-foreground">{c.size}</p>
+                  <p className="text-[10px] text-muted-foreground">{c.items.toLocaleString()} element</p>
+                </div>
+                <div className="text-right hidden md:block">
+                  <p className="text-[10px] text-muted-foreground">Son təmizləmə</p>
+                  <p className="text-xs text-foreground">{c.lastCleared}</p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5 text-xs"
+                  onClick={() => clearSingle(c.id)}
+                  disabled={clearingId === c.id || c.items === 0}
+                >
+                  {clearingId === c.id ? (
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                  ) : (
+                    <Trash2 className="w-3 h-3" />
+                  )}
+                  {clearingId === c.id ? "..." : "Təmizlə"}
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
 const AdminSystem = () => {
   const onlineCount = services.filter((s) => s.status === "online").length;
 
@@ -55,7 +165,7 @@ const AdminSystem = () => {
           <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <Server className="w-6 h-6 text-primary" /> Sistem vəziyyəti
           </h1>
-          <p className="text-sm text-muted-foreground">Server resursları və servis statusu</p>
+          <p className="text-sm text-muted-foreground">Server resursları, servis statusu və cache idarəetməsi</p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="gap-1.5 text-xs">
@@ -91,6 +201,9 @@ const AdminSystem = () => {
           );
         })}
       </div>
+
+      {/* Cache Manager */}
+      <CacheManager />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Services */}
