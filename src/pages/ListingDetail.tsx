@@ -286,7 +286,11 @@ const ListingDetail = () => {
                       >
                         <Heart className={`w-4 h-4 ${saved ? "fill-current" : ""}`} />
                       </button>
-                      <button className="w-9 h-9 rounded-xl border border-input flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+                      <button
+                        onClick={handleShare}
+                        className="w-9 h-9 rounded-xl border border-input flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                        title="Paylaş"
+                      >
                         <Share2 className="w-4 h-4" />
                       </button>
                     </div>

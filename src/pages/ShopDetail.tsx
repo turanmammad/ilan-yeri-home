@@ -106,7 +106,11 @@ const ShopDetail = () => {
                   <button className="h-10 px-4 border border-input bg-card text-foreground font-medium rounded-xl text-sm hover:bg-secondary transition-colors flex items-center gap-2">
                     <MessageCircle className="w-4 h-4" /> Mesaj
                   </button>
-                  <button className="w-10 h-10 border border-input rounded-xl flex items-center justify-center text-foreground/60 hover:text-foreground hover:bg-secondary transition-colors">
+                  <button
+                    onClick={handleShare}
+                    className="w-10 h-10 border border-input rounded-xl flex items-center justify-center text-foreground/60 hover:text-foreground hover:bg-secondary transition-colors"
+                    title="Paylaş"
+                  >
                     <Share2 className="w-4 h-4" />
                   </button>
                 </div>
