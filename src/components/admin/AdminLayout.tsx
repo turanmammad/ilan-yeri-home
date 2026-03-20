@@ -42,6 +42,7 @@ const navSections = [
     label: "Sistem",
     items: [
       { icon: TrendingUp, label: "Analitika", path: "/admin/analitika" },
+      { icon: Crown, label: "Top İstifadəçilər", path: "/admin/top-istifadeciler" },
       { icon: Bot, label: "AI Düzəltmələr", path: "/admin/ai" },
       { icon: Server, label: "Sistem vəziyyəti", path: "/admin/sistem" },
       { icon: Settings, label: "Tənzimləmələr", path: "/admin/tenzimleme" },
