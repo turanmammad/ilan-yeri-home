@@ -170,7 +170,7 @@ const AdminDashboard = () => (
             <AlertTriangle className="w-4 h-4 text-amber-500" />
             Son şikayətlər
           </h2>
-          <button className="text-xs text-primary font-semibold hover:underline">Hamısı</button>
+          <Link to="/admin/sikayetler" className="text-xs text-primary font-semibold hover:underline">Hamısı</Link>
         </div>
         <div className="divide-y divide-border/50">
           {recentReports.map((r) => (
