@@ -77,91 +77,118 @@ const ShopSettings = () => {
       </div>
 
       {activeTab === "general" && (
-        <div className="bg-card rounded-2xl border border-border p-6 shadow-card space-y-6">
-          <h3 className="font-bold text-foreground">Mağaza məlumatları</h3>
+        <div className="bg-card rounded-2xl border border-border shadow-card overflow-hidden">
+          {/* Banner preview + upload */}
+          <div className="relative">
+            <div
+              className="aspect-[3/1] overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+              onClick={() => bannerRef.current?.click()}
+            >
+              {banner ? (
+                <img src={banner} alt="Banner" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-primary/30 to-primary/10 flex flex-col items-center justify-center gap-1.5">
+                  <Image className="w-8 h-8 text-muted-foreground/60" />
+                  <p className="text-xs text-muted-foreground">Baner şəkli yükləyin (1200×400px)</p>
+                </div>
+              )}
+            </div>
+            <div className="absolute top-3 right-3 flex gap-2">
+              <button onClick={() => bannerRef.current?.click()}
+                className="px-3 py-1.5 rounded-lg bg-card/90 backdrop-blur-sm border border-border text-xs font-medium text-foreground hover:bg-card transition-colors flex items-center gap-1">
+                <Camera className="w-3 h-3" /> {banner ? "Dəyişdir" : "Yüklə"}
+              </button>
+              {banner && (
+                <button onClick={() => setBanner(null)}
+                  className="px-3 py-1.5 rounded-lg bg-destructive/90 backdrop-blur-sm text-xs font-medium text-white hover:bg-destructive transition-colors flex items-center gap-1">
+                  <Trash2 className="w-3 h-3" /> Sil
+                </button>
+              )}
+            </div>
+            <input ref={bannerRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, setBanner)} />
 
-          {/* Logo Upload */}
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Mağaza logosu</label>
-            <div className="flex items-center gap-5">
+            {/* Logo overlapping banner */}
+            <div className="absolute -bottom-10 left-6">
               <div className="relative">
-                <div className="w-24 h-24 rounded-2xl border-2 border-dashed border-border bg-secondary/50 flex items-center justify-center overflow-hidden">
+                <div className="w-20 h-20 rounded-2xl border-4 border-card bg-secondary flex items-center justify-center overflow-hidden shadow-lg">
                   {logo ? (
                     <img src={logo} alt="Logo" className="w-full h-full object-cover" />
                   ) : (
-                    <Store className="w-10 h-10 text-muted-foreground" />
+                    <Store className="w-8 h-8 text-muted-foreground" />
                   )}
                 </div>
                 <button
                   onClick={() => logoRef.current?.click()}
-                  className="absolute -bottom-1.5 -right-1.5 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:brightness-90 transition"
+                  className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:brightness-90 transition"
                 >
-                  <Camera className="w-4 h-4" />
+                  <Camera className="w-3.5 h-3.5" />
                 </button>
                 {logo && (
                   <button
                     onClick={() => setLogo(null)}
-                    className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-destructive text-white flex items-center justify-center shadow-md"
+                    className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-destructive text-white flex items-center justify-center shadow-md"
                   >
                     <X className="w-3 h-3" />
                   </button>
                 )}
                 <input ref={logoRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, setLogo)} />
               </div>
-              <div>
-                <p className="text-sm font-medium text-foreground">Logo yüklə</p>
-                <p className="text-xs text-muted-foreground mt-0.5">PNG, JPG, WEBP — max 5MB</p>
-                <p className="text-xs text-muted-foreground">Kvadrat format tövsiyə edilir (200×200px)</p>
-                <button onClick={() => logoRef.current?.click()} className="mt-2 text-xs font-medium text-primary hover:underline flex items-center gap-1">
-                  <Upload className="w-3 h-3" /> Fayl seç
-                </button>
-              </div>
             </div>
           </div>
 
-          <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">Mağaza adı</label>
-              <input type="text" defaultValue="TechStore Bakı" className="w-full h-11 px-4 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">Təsvir</label>
-              <textarea defaultValue="Orijinal elektronika məhsulları. Rəsmi zəmanət ilə Apple, Samsung, Sony və digər brendlər." rows={3} className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none" />
-            </div>
-            <div className="grid sm:grid-cols-2 gap-4">
+          {/* Form area below banner */}
+          <div className="p-6 pt-14 space-y-6">
+            <div className="flex items-center gap-3">
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1.5">Kateqoriya</label>
-                <select className="w-full h-11 px-4 rounded-xl border border-input bg-background text-foreground text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-ring">
-                  <option>Elektronika</option>
-                  <option>Geyim</option>
-                  <option>Ev və bağ</option>
-                  <option>Nəqliyyat</option>
-                  <option>Uşaq aləmi</option>
-                </select>
+                <p className="text-xs text-muted-foreground">Profil: PNG, JPG — max 5MB, 200×200px</p>
+                <p className="text-xs text-muted-foreground">Baner: PNG, JPG — max 5MB, 1200×400px</p>
+              </div>
+            </div>
+
+            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5">Mağaza adı</label>
+                <input type="text" defaultValue="TechStore Bakı" className="w-full h-11 px-4 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1.5">Ünvan</label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <input type="text" defaultValue="Bakı, 28 May" className="w-full h-11 px-4 pl-10 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+                <label className="block text-sm font-medium text-foreground mb-1.5">Təsvir</label>
+                <textarea defaultValue="Orijinal elektronika məhsulları. Rəsmi zəmanət ilə Apple, Samsung, Sony və digər brendlər." rows={3} className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none" />
+              </div>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">Kateqoriya</label>
+                  <select className="w-full h-11 px-4 rounded-xl border border-input bg-background text-foreground text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-ring">
+                    <option>Elektronika</option>
+                    <option>Geyim</option>
+                    <option>Ev və bağ</option>
+                    <option>Nəqliyyat</option>
+                    <option>Uşaq aləmi</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">Ünvan</label>
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <input type="text" defaultValue="Bakı, 28 May" className="w-full h-11 px-4 pl-10 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">İş saatları</label>
-              <div className="relative">
-                <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <input type="text" defaultValue="Hər gün 09:00 - 20:00" className="w-full h-11 px-4 pl-10 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5">İş saatları</label>
+                <div className="relative">
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <input type="text" defaultValue="Hər gün 09:00 - 20:00" className="w-full h-11 px-4 pl-10 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+                </div>
               </div>
-            </div>
-            <button type="submit"
-              className={`flex items-center gap-2 font-semibold px-6 py-2.5 rounded-xl text-sm transition-all active:scale-[0.98] ${
-                saved ? "bg-emerald-500 text-white" : "bg-primary text-primary-foreground hover:brightness-95"
-              }`}>
-              {saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
-              {saved ? "Yadda saxlanıldı!" : "Yadda saxla"}
-            </button>
-          </form>
+              <button type="submit"
+                className={`flex items-center gap-2 font-semibold px-6 py-2.5 rounded-xl text-sm transition-all active:scale-[0.98] ${
+                  saved ? "bg-emerald-500 text-white" : "bg-primary text-primary-foreground hover:brightness-95"
+                }`}>
+                {saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
+                {saved ? "Yadda saxlanıldı!" : "Yadda saxla"}
+              </button>
+            </form>
+          </div>
         </div>
       )}
 
