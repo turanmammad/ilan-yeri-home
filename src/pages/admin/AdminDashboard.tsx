@@ -5,10 +5,10 @@ import {
 } from "lucide-react";
 
 const stats = [
-  { label: "Ümumi elanlar", value: "24,580", change: "+12.5%", up: true, icon: FileText, color: "text-blue-500 bg-blue-500/10" },
-  { label: "Aktiv istifadəçilər", value: "8,432", change: "+8.2%", up: true, icon: Users, color: "text-emerald-500 bg-emerald-500/10" },
-  { label: "Mağazalar", value: "342", change: "+3.1%", up: true, icon: ShoppingBag, color: "text-violet-500 bg-violet-500/10" },
-  { label: "Gündəlik baxış", value: "156K", change: "-2.4%", up: false, icon: Eye, color: "text-amber-500 bg-amber-500/10" },
+  { label: "Ümumi elanlar", value: "24,580", change: "+12.5%", up: true, icon: FileText, color: "text-blue-500 bg-blue-500/10", link: "/admin/elanlar" },
+  { label: "Aktiv istifadəçilər", value: "8,432", change: "+8.2%", up: true, icon: Users, color: "text-emerald-500 bg-emerald-500/10", link: "/admin/istifadeciler" },
+  { label: "Mağazalar", value: "342", change: "+3.1%", up: true, icon: ShoppingBag, color: "text-violet-500 bg-violet-500/10", link: "/admin/magazalar" },
+  { label: "Gündəlik baxış", value: "156K", change: "-2.4%", up: false, icon: Eye, color: "text-amber-500 bg-amber-500/10", link: "/admin/analitika" },
 ];
 
 const recentListings = [
