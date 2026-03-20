@@ -303,6 +303,19 @@ const AdminCampaigns = () => {
           </Tabs>
         </CardContent>
       </Card>
+
+      <ConfirmDialog
+        open={deleteId !== null}
+        onOpenChange={(open) => { if (!open) setDeleteId(null); }}
+        title="Kampaniyanı silmək istəyirsiniz?"
+        description="Bu əməliyyat geri qaytarıla bilməz. Kampaniya bütün statistikalarla birlikdə silinəcək."
+        confirmLabel="Sil"
+        variant="destructive"
+        onConfirm={() => {
+          // In real app: delete from DB
+          setDeleteId(null);
+        }}
+      />
     </div>
   );
 };
