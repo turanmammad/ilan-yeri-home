@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
-import { Search, Filter, Eye, Ban, Star, Clock, ExternalLink, ShoppingBag, TrendingUp, UserCheck, ShieldAlert } from "lucide-react";
+import { Search, Filter, Eye, Ban, Star, Clock, ExternalLink, ShoppingBag, TrendingUp, UserCheck, ShieldAlert, Edit } from "lucide-react";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { ShopDetailDialog } from "@/components/admin/ShopDetailDialog";
+import { ShopEditDialog, EditableShop } from "@/components/admin/ShopEditDialog";
 import { toast } from "sonner";
 
 type ShopStatus = "active" | "suspended" | "pending";
@@ -49,6 +50,7 @@ const AdminShops = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [confirmAction, setConfirmAction] = useState<{ type: "suspend" | "activate"; id: number; name: string } | null>(null);
   const [detailShop, setDetailShop] = useState<Shop | null>(null);
+  const [editShop, setEditShop] = useState<EditableShop | null>(null);
 
   const filtered = useMemo(() => {
     return shops.filter((s) => {
@@ -113,23 +115,18 @@ const AdminShops = () => {
         </div>
       </div>
 
-      {/* Category Filter */}
       {showFilters && (
         <div className="flex flex-wrap gap-2 p-3 bg-card rounded-xl border border-border">
           <span className="text-xs font-semibold text-muted-foreground self-center mr-2">Kateqoriya:</span>
           {shopCategories.map((c) => (
-            <button
-              key={c}
-              onClick={() => setSelectedCategory(c)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${selectedCategory === c ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"}`}
-            >
+            <button key={c} onClick={() => setSelectedCategory(c)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${selectedCategory === c ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"}`}>
               {c}
             </button>
           ))}
         </div>
       )}
 
-      {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           { label: "Ümumi mağazalar", value: String(counts.all), icon: ShoppingBag, color: "text-violet-500 bg-violet-500/10" },
@@ -139,9 +136,7 @@ const AdminShops = () => {
         ].map((s) => (
           <div key={s.label} className="bg-card rounded-xl border border-border p-3.5 shadow-sm">
             <div className="flex items-center gap-2 mb-2">
-              <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${s.color}`}>
-                <s.icon className="w-3.5 h-3.5" />
-              </div>
+              <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${s.color}`}><s.icon className="w-3.5 h-3.5" /></div>
             </div>
             <p className="text-lg font-bold text-foreground">{s.value}</p>
             <p className="text-[11px] text-muted-foreground">{s.label}</p>
@@ -149,20 +144,15 @@ const AdminShops = () => {
         ))}
       </div>
 
-      {/* Tabs */}
       <div className="flex gap-1 bg-secondary/50 rounded-xl p-1 w-fit">
         {tabs.map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setActiveTab(t.key)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === t.key ? "bg-card shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-          >
+          <button key={t.key} onClick={() => setActiveTab(t.key)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === t.key ? "bg-card shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
             {t.label} <span className="text-muted-foreground ml-1">({counts[t.key]})</span>
           </button>
         ))}
       </div>
 
-      {/* Table */}
       <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -215,6 +205,9 @@ const AdminShops = () => {
                             <ShieldAlert className="w-4 h-4" />
                           </button>
                         )}
+                        <button onClick={() => setEditShop({ id: s.id, name: s.name, owner: s.owner, category: s.category })} className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Redaktə et">
+                          <Edit className="w-4 h-4" />
+                        </button>
                         <button onClick={() => setDetailShop(s)} className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Bax"><Eye className="w-4 h-4" /></button>
                         <button className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Sayta keç"><ExternalLink className="w-4 h-4" /></button>
                       </div>
@@ -230,19 +223,22 @@ const AdminShops = () => {
         </div>
       </div>
 
-      <ShopDetailDialog
-        shop={detailShop}
-        open={!!detailShop}
-        onOpenChange={(open) => !open && setDetailShop(null)}
+      <ShopDetailDialog shop={detailShop} open={!!detailShop} onOpenChange={(open) => !open && setDetailShop(null)} />
+
+      <ShopEditDialog
+        shop={editShop}
+        open={!!editShop}
+        onOpenChange={(open) => !open && setEditShop(null)}
+        onSave={(updated) => {
+          setShops(prev => prev.map(s => s.id === updated.id ? { ...s, name: updated.name, owner: updated.owner, category: updated.category } : s));
+        }}
       />
 
       <ConfirmDialog
         open={!!confirmAction}
         onOpenChange={(open) => !open && setConfirmAction(null)}
         title={confirmAction?.type === "suspend" ? "Mağazanı dayandırmaq istəyirsiniz?" : "Mağazanı aktiv etmək istəyirsiniz?"}
-        description={`"${confirmAction?.name}" ${
-          confirmAction?.type === "suspend" ? "adlı mağaza dayandırılacaq və elanları gizlədiləcək." : "adlı mağaza yenidən aktiv ediləcək."
-        }`}
+        description={`"${confirmAction?.name}" ${confirmAction?.type === "suspend" ? "adlı mağaza dayandırılacaq və elanları gizlədiləcək." : "adlı mağaza yenidən aktiv ediləcək."}`}
         confirmLabel={confirmAction?.type === "suspend" ? "Dayandır" : "Aktiv et"}
         variant={confirmAction?.type === "suspend" ? "destructive" : "default"}
         onConfirm={handleConfirm}
