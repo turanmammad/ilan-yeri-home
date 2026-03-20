@@ -179,6 +179,16 @@ const ListingDetail = () => {
   const [phoneRevealed, setPhoneRevealed] = useState(false);
   const [saved, setSaved] = useState(false);
 
+  const handleShare = useCallback(async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try { await navigator.share({ title: listing.title, url }); } catch {}
+    } else {
+      await navigator.clipboard.writeText(url);
+      alert("Link kopyalandı!");
+    }
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />

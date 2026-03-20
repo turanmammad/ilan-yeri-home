@@ -47,6 +47,16 @@ const ShopDetail = () => {
   const [activeTab, setActiveTab] = useState("listings");
   const [searchQuery, setSearchQuery] = useState("");
 
+  const handleShare = useCallback(async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try { await navigator.share({ title: shop.name, url }); } catch {}
+    } else {
+      await navigator.clipboard.writeText(url);
+      alert("Link kopyalandı!");
+    }
+  }, []);
+
   const filteredListings = searchQuery
     ? shopListings.filter((l) => l.title.toLowerCase().includes(searchQuery.toLowerCase()))
     : shopListings;
