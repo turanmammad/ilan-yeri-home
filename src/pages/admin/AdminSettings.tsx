@@ -88,7 +88,7 @@ const ProfileTab = () => {
         <div>
           <label className="block text-sm font-medium text-foreground mb-1.5">Rol</label>
           <input value={profile.role} disabled
-            className="w-full h-10 px-4 rounded-xl border border-input bg-muted text-sm text-muted-foreground cursor-not-allowed" />
+            className="w-full h-10 px-4 rounded-xl border border-input bg-muted text-sm text-foreground cursor-not-allowed" />
         </div>
       </div>
 
