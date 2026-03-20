@@ -45,6 +45,7 @@ const navSections = [
       { icon: BarChart3, label: "Top İstifadəçilər", path: "/admin/top-istifadeciler" },
       { icon: Bot, label: "AI Düzəltmələr", path: "/admin/ai" },
       { icon: Server, label: "Sistem vəziyyəti", path: "/admin/sistem" },
+      { icon: FolderTree, label: "Kateqoriyalar", path: "/admin/kateqoriyalar" },
       { icon: Settings, label: "Tənzimləmələr", path: "/admin/tenzimleme" },
     ],
   },

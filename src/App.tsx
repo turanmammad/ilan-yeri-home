@@ -101,6 +101,7 @@ const App = () => (
               <Route path="premium" element={<AdminPromotions />} />
               <Route path="sponsor" element={<AdminSponsors />} />
               <Route path="top-istifadeciler" element={<AdminTopUsers />} />
+              <Route path="kateqoriyalar" element={<AdminCategories />} />
             </Route>
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
