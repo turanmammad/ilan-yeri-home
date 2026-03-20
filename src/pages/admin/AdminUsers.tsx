@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
-import { Search, Filter, Eye, Ban, Mail, Clock, ShieldAlert, UserCheck } from "lucide-react";
+import { Search, Filter, Eye, Ban, Mail, Clock, ShieldAlert, UserCheck, Edit } from "lucide-react";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { UserDetailDialog } from "@/components/admin/UserDetailDialog";
+import { UserEditDialog, EditableUser } from "@/components/admin/UserEditDialog";
 import { toast } from "sonner";
 
 type UserStatus = "active" | "blocked" | "suspended";
@@ -46,6 +47,7 @@ const AdminUsers = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [confirmAction, setConfirmAction] = useState<{ type: "block" | "suspend" | "activate"; id: number; name: string } | null>(null);
   const [detailUser, setDetailUser] = useState<UserItem | null>(null);
+  const [editUser, setEditUser] = useState<EditableUser | null>(null);
 
   const filtered = useMemo(() => {
     return users.filter((u) => {
@@ -92,30 +94,20 @@ const AdminUsers = () => {
         <div className="flex items-center gap-2">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
-              placeholder="İstifadəçi axtar..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="h-9 pl-9 pr-4 rounded-xl border border-input bg-background text-sm w-48 focus:outline-none focus:ring-2 focus:ring-ring"
-            />
+            <input placeholder="İstifadəçi axtar..." value={search} onChange={(e) => setSearch(e.target.value)}
+              className="h-9 pl-9 pr-4 rounded-xl border border-input bg-background text-sm w-48 focus:outline-none focus:ring-2 focus:ring-ring" />
           </div>
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className={`h-9 px-3 rounded-xl border border-input text-sm font-medium transition-colors flex items-center gap-1.5 ${showFilters ? "bg-primary text-primary-foreground" : "bg-card text-foreground hover:bg-secondary"}`}
-          >
+          <button onClick={() => setShowFilters(!showFilters)}
+            className={`h-9 px-3 rounded-xl border border-input text-sm font-medium transition-colors flex items-center gap-1.5 ${showFilters ? "bg-primary text-primary-foreground" : "bg-card text-foreground hover:bg-secondary"}`}>
             <Filter className="w-3.5 h-3.5" /> Filter
           </button>
         </div>
       </div>
 
-      {/* Status Tabs */}
       <div className="flex gap-1 bg-secondary/50 rounded-xl p-1 w-fit">
         {tabs.map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setActiveTab(t.key)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === t.key ? "bg-card shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-          >
+          <button key={t.key} onClick={() => setActiveTab(t.key)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${activeTab === t.key ? "bg-card shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
             {t.label} <span className="text-muted-foreground ml-1">({counts[t.key]})</span>
           </button>
         ))}
@@ -173,6 +165,9 @@ const AdminUsers = () => {
                             <ShieldAlert className="w-4 h-4" />
                           </button>
                         )}
+                        <button onClick={() => setEditUser({ id: u.id, name: u.name, email: u.email, phone: u.phone })} className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Redaktə et">
+                          <Edit className="w-4 h-4" />
+                        </button>
                         <button onClick={() => setDetailUser(u)} className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Profil"><Eye className="w-4 h-4" /></button>
                         <button className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Mesaj"><Mail className="w-4 h-4" /></button>
                       </div>
@@ -188,10 +183,15 @@ const AdminUsers = () => {
         </div>
       </div>
 
-      <UserDetailDialog
-        user={detailUser}
-        open={!!detailUser}
-        onOpenChange={(open) => !open && setDetailUser(null)}
+      <UserDetailDialog user={detailUser} open={!!detailUser} onOpenChange={(open) => !open && setDetailUser(null)} />
+
+      <UserEditDialog
+        user={editUser}
+        open={!!editUser}
+        onOpenChange={(open) => !open && setEditUser(null)}
+        onSave={(updated) => {
+          setUsers(prev => prev.map(u => u.id === updated.id ? { ...u, name: updated.name, email: updated.email, phone: updated.phone } : u));
+        }}
       />
 
       <ConfirmDialog
