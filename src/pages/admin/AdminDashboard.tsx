@@ -143,7 +143,7 @@ const AdminDashboard = () => (
             </thead>
             <tbody>
               {recentListings.map((l) => (
-                <tr key={l.id} className="border-b border-border/50 hover:bg-secondary/20 transition-colors">
+                <tr key={l.id} className="border-b border-border/50 hover:bg-secondary/20 transition-colors cursor-pointer" onClick={() => window.location.href = `/admin/elanlar`}>
                   <td className="px-5 py-3">
                     <p className="font-medium text-foreground text-sm truncate max-w-[180px]">{l.title}</p>
                     <p className="text-xs text-muted-foreground sm:hidden">{l.category}</p>
