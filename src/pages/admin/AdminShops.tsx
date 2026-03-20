@@ -45,7 +45,7 @@ const shopCategories = ["Hamısı", "Elektronika", "Nəqliyyat", "Geyim", "Ev v�
 const AdminShops = () => {
   const [shops, setShops] = useState<Shop[]>(initialShops);
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState<"all" | ShopStatus>("all");
+  const [activeTab, setActiveTab] = useState<"all" | ShopStatus>("pending");
   const [selectedCategory, setSelectedCategory] = useState("Hamısı");
   const [showFilters, setShowFilters] = useState(false);
   const [confirmAction, setConfirmAction] = useState<{ type: "suspend" | "activate"; id: number; name: string } | null>(null);
