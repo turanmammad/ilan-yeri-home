@@ -128,7 +128,7 @@ const AdminDashboard = () => (
       <div className="lg:col-span-3 bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
           <h2 className="text-sm font-bold text-foreground">Son elanlar</h2>
-          <button className="text-xs text-primary font-semibold hover:underline">Hamısına bax</button>
+          <Link to="/admin/elanlar" className="text-xs text-primary font-semibold hover:underline">Hamısına bax</Link>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
