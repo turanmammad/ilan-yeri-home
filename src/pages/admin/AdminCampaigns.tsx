@@ -268,7 +268,7 @@ const AdminCampaigns = () => {
                           <Button variant="ghost" size="icon" className="h-8 w-8">
                             <BarChart3 className="w-3.5 h-3.5" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/70 hover:text-destructive">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/70 hover:text-destructive" onClick={() => setDeleteId(c.id)}>
                             <Trash2 className="w-3.5 h-3.5" />
                           </Button>
                         </div>
