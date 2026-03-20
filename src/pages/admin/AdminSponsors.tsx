@@ -186,7 +186,10 @@ const PlacementPreview = ({ placement, adText, advertiser }: { placement: AdPlac
 const AdminSponsors = () => {
   const [ads, setAds] = useState<AdCampaign[]>(initialAds);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingAd, setEditingAd] = useState<AdCampaign | null>(null);
   const [newAd, setNewAd] = useState({ name: "", advertiser: "", placement: "banner" as AdPlacement, budget: "", days: "30" });
+  const [editForm, setEditForm] = useState({ name: "", advertiser: "", placement: "banner" as AdPlacement, budget: "", days: "30" });
   const [generatedText, setGeneratedText] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [step, setStep] = useState<1 | 2>(1);
@@ -205,14 +208,14 @@ const AdminSponsors = () => {
   };
 
   const handleAIGenerate = () => {
-    if (!newAd.name || !newAd.advertiser) {
+    const form = editDialogOpen ? editForm : newAd;
+    if (!form.name || !form.advertiser) {
       toast.error("Əvvəlcə kampaniya adı və reklamçı daxil edin");
       return;
     }
     setIsGenerating(true);
-    // Simulate AI generation with realistic delay
     setTimeout(() => {
-      const text = generateAdText(newAd.name, newAd.advertiser, newAd.placement);
+      const text = generateAdText(form.name, form.advertiser, form.placement);
       setGeneratedText(text);
       setIsGenerating(false);
       toast.success("AI reklam mətni yaradıldı!");
@@ -220,9 +223,10 @@ const AdminSponsors = () => {
   };
 
   const handleRegenerate = () => {
+    const form = editDialogOpen ? editForm : newAd;
     setIsGenerating(true);
     setTimeout(() => {
-      const text = generateAdText(newAd.name, newAd.advertiser, newAd.placement);
+      const text = generateAdText(form.name, form.advertiser, form.placement);
       setGeneratedText(text);
       setIsGenerating(false);
     }, 1200);
@@ -263,6 +267,30 @@ const AdminSponsors = () => {
   const openDialog = () => {
     resetForm();
     setCreateDialogOpen(true);
+  };
+
+  const openEditDialog = (ad: AdCampaign) => {
+    setEditingAd(ad);
+    const budgetNum = ad.budget.replace(/[^\d]/g, "");
+    setEditForm({ name: ad.name, advertiser: ad.advertiser, placement: ad.placement, budget: budgetNum, days: "30" });
+    setGeneratedText(ad.adText || "");
+    setStep(1);
+    setEditDialogOpen(true);
+  };
+
+  const saveEdit = () => {
+    if (!editingAd || !editForm.name || !editForm.advertiser || !editForm.budget) {
+      toast.error("Bütün sahələri doldurun");
+      return;
+    }
+    setAds(prev => prev.map(a => {
+      if (a.id !== editingAd.id) return a;
+      return { ...a, name: editForm.name, advertiser: editForm.advertiser, placement: editForm.placement, budget: `${editForm.budget} AZN`, adText: generatedText };
+    }));
+    setEditDialogOpen(false);
+    setEditingAd(null);
+    resetForm();
+    toast.success("Kampaniya yeniləndi!");
   };
 
   return (
