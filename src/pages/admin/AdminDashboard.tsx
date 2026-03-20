@@ -1,13 +1,14 @@
+import { Link } from "react-router-dom";
 import {
   FileText, Users, ShoppingBag, TrendingUp, Eye, Clock, AlertTriangle,
   ArrowUpRight, ArrowDownRight, MoreHorizontal,
 } from "lucide-react";
 
 const stats = [
-  { label: "Ümumi elanlar", value: "24,580", change: "+12.5%", up: true, icon: FileText, color: "text-blue-500 bg-blue-500/10" },
-  { label: "Aktiv istifadəçilər", value: "8,432", change: "+8.2%", up: true, icon: Users, color: "text-emerald-500 bg-emerald-500/10" },
-  { label: "Mağazalar", value: "342", change: "+3.1%", up: true, icon: ShoppingBag, color: "text-violet-500 bg-violet-500/10" },
-  { label: "Gündəlik baxış", value: "156K", change: "-2.4%", up: false, icon: Eye, color: "text-amber-500 bg-amber-500/10" },
+  { label: "Ümumi elanlar", value: "24,580", change: "+12.5%", up: true, icon: FileText, color: "text-blue-500 bg-blue-500/10", link: "/admin/elanlar" },
+  { label: "Aktiv istifadəçilər", value: "8,432", change: "+8.2%", up: true, icon: Users, color: "text-emerald-500 bg-emerald-500/10", link: "/admin/istifadeciler" },
+  { label: "Mağazalar", value: "342", change: "+3.1%", up: true, icon: ShoppingBag, color: "text-violet-500 bg-violet-500/10", link: "/admin/magazalar" },
+  { label: "Gündəlik baxış", value: "156K", change: "-2.4%", up: false, icon: Eye, color: "text-amber-500 bg-amber-500/10", link: "/admin/analitika" },
 ];
 
 const recentListings = [
@@ -63,7 +64,7 @@ const AdminDashboard = () => (
     {/* Stats */}
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       {stats.map((s) => (
-        <div key={s.label} className="bg-card rounded-2xl border border-border p-4 sm:p-5 shadow-sm">
+        <Link to={s.link} key={s.label} className="bg-card rounded-2xl border border-border p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between mb-3">
             <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${s.color}`}>
               <s.icon className="w-[18px] h-[18px]" strokeWidth={1.8} />
@@ -75,7 +76,7 @@ const AdminDashboard = () => (
           </div>
           <p className="text-xl sm:text-2xl font-bold text-foreground">{s.value}</p>
           <p className="text-xs text-muted-foreground mt-0.5">{s.label}</p>
-        </div>
+        </Link>
       ))}
     </div>
 
@@ -127,7 +128,7 @@ const AdminDashboard = () => (
       <div className="lg:col-span-3 bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
           <h2 className="text-sm font-bold text-foreground">Son elanlar</h2>
-          <button className="text-xs text-primary font-semibold hover:underline">Hamısına bax</button>
+          <Link to="/admin/elanlar" className="text-xs text-primary font-semibold hover:underline">Hamısına bax</Link>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -142,7 +143,7 @@ const AdminDashboard = () => (
             </thead>
             <tbody>
               {recentListings.map((l) => (
-                <tr key={l.id} className="border-b border-border/50 hover:bg-secondary/20 transition-colors">
+                <tr key={l.id} className="border-b border-border/50 hover:bg-secondary/20 transition-colors cursor-pointer" onClick={() => window.location.href = `/admin/elanlar`}>
                   <td className="px-5 py-3">
                     <p className="font-medium text-foreground text-sm truncate max-w-[180px]">{l.title}</p>
                     <p className="text-xs text-muted-foreground sm:hidden">{l.category}</p>
@@ -169,7 +170,7 @@ const AdminDashboard = () => (
             <AlertTriangle className="w-4 h-4 text-amber-500" />
             Son şikayətlər
           </h2>
-          <button className="text-xs text-primary font-semibold hover:underline">Hamısı</button>
+          <Link to="/admin/sikayetler" className="text-xs text-primary font-semibold hover:underline">Hamısı</Link>
         </div>
         <div className="divide-y divide-border/50">
           {recentReports.map((r) => (
