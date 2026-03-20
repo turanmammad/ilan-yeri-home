@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Megaphone, Eye, MousePointerClick, TrendingUp, Plus, Pause, Play, X, Sparkles, Loader2, Monitor, Smartphone, Info, Wand2, Check } from "lucide-react";
+import { Megaphone, Eye, MousePointerClick, TrendingUp, Plus, Pause, Play, X, Sparkles, Loader2, Monitor, Smartphone, Info, Wand2, Check, Pencil } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 
