@@ -99,6 +99,7 @@ const App = () => (
               <Route path="tenzimleme" element={<AdminSettings />} />
               <Route path="premium" element={<AdminPromotions />} />
               <Route path="sponsor" element={<AdminSponsors />} />
+              <Route path="top-istifadeciler" element={<AdminTopUsers />} />
             </Route>
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
