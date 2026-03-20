@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Megaphone, Eye, MousePointerClick, TrendingUp, Plus, Pause, Play, X, Sparkles, Loader2, Monitor, Smartphone, Info, Wand2, Check } from "lucide-react";
+import { Megaphone, Eye, MousePointerClick, TrendingUp, Plus, Pause, Play, X, Sparkles, Loader2, Monitor, Smartphone, Info, Wand2, Check, Pencil } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 
@@ -186,7 +186,10 @@ const PlacementPreview = ({ placement, adText, advertiser }: { placement: AdPlac
 const AdminSponsors = () => {
   const [ads, setAds] = useState<AdCampaign[]>(initialAds);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingAd, setEditingAd] = useState<AdCampaign | null>(null);
   const [newAd, setNewAd] = useState({ name: "", advertiser: "", placement: "banner" as AdPlacement, budget: "", days: "30" });
+  const [editForm, setEditForm] = useState({ name: "", advertiser: "", placement: "banner" as AdPlacement, budget: "", days: "30" });
   const [generatedText, setGeneratedText] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [step, setStep] = useState<1 | 2>(1);
@@ -205,14 +208,14 @@ const AdminSponsors = () => {
   };
 
   const handleAIGenerate = () => {
-    if (!newAd.name || !newAd.advertiser) {
+    const form = editDialogOpen ? editForm : newAd;
+    if (!form.name || !form.advertiser) {
       toast.error("Əvvəlcə kampaniya adı və reklamçı daxil edin");
       return;
     }
     setIsGenerating(true);
-    // Simulate AI generation with realistic delay
     setTimeout(() => {
-      const text = generateAdText(newAd.name, newAd.advertiser, newAd.placement);
+      const text = generateAdText(form.name, form.advertiser, form.placement);
       setGeneratedText(text);
       setIsGenerating(false);
       toast.success("AI reklam mətni yaradıldı!");
@@ -220,9 +223,10 @@ const AdminSponsors = () => {
   };
 
   const handleRegenerate = () => {
+    const form = editDialogOpen ? editForm : newAd;
     setIsGenerating(true);
     setTimeout(() => {
-      const text = generateAdText(newAd.name, newAd.advertiser, newAd.placement);
+      const text = generateAdText(form.name, form.advertiser, form.placement);
       setGeneratedText(text);
       setIsGenerating(false);
     }, 1200);
@@ -263,6 +267,30 @@ const AdminSponsors = () => {
   const openDialog = () => {
     resetForm();
     setCreateDialogOpen(true);
+  };
+
+  const openEditDialog = (ad: AdCampaign) => {
+    setEditingAd(ad);
+    const budgetNum = ad.budget.replace(/[^\d]/g, "");
+    setEditForm({ name: ad.name, advertiser: ad.advertiser, placement: ad.placement, budget: budgetNum, days: "30" });
+    setGeneratedText(ad.adText || "");
+    setStep(1);
+    setEditDialogOpen(true);
+  };
+
+  const saveEdit = () => {
+    if (!editingAd || !editForm.name || !editForm.advertiser || !editForm.budget) {
+      toast.error("Bütün sahələri doldurun");
+      return;
+    }
+    setAds(prev => prev.map(a => {
+      if (a.id !== editingAd.id) return a;
+      return { ...a, name: editForm.name, advertiser: editForm.advertiser, placement: editForm.placement, budget: `${editForm.budget} AZN`, adText: generatedText };
+    }));
+    setEditDialogOpen(false);
+    setEditingAd(null);
+    resetForm();
+    toast.success("Kampaniya yeniləndi!");
   };
 
   return (
@@ -367,6 +395,9 @@ const AdminSponsors = () => {
                             {a.status === "active" ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                           </button>
                         )}
+                        <button onClick={() => openEditDialog(a)} className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Düzəliş et">
+                          <Pencil className="w-4 h-4" />
+                        </button>
                         <button onClick={() => removeAd(a.id)} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive">
                           <X className="w-4 h-4" />
                         </button>
@@ -533,6 +564,146 @@ const AdminSponsors = () => {
                 <button onClick={createAd}
                   className="flex-1 h-11 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:brightness-95 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
                   <Check className="w-4 h-4" /> Kampaniya yarat
+                </button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Ad Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={(o) => { setEditDialogOpen(o); if (!o) { setEditingAd(null); resetForm(); } }}>
+        <DialogContent className="rounded-2xl max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-foreground flex items-center gap-2">
+              <Pencil className="w-5 h-5 text-primary" />
+              Kampaniyanı düzəliş et
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="flex items-center gap-2 mb-2">
+            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold ${step === 1 ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>
+              1. Məlumatlar
+            </div>
+            <div className="w-4 h-px bg-border" />
+            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold ${step === 2 ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>
+              2. AI Mətn & Önizləmə
+            </div>
+          </div>
+
+          {step === 1 && (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5">Kampaniya adı</label>
+                <input value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })}
+                  placeholder="Məs: Yaz Kampaniyası" className="w-full h-10 px-4 rounded-xl border border-input bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5">Reklamçı</label>
+                <input value={editForm.advertiser} onChange={e => setEditForm({ ...editForm, advertiser: e.target.value })}
+                  placeholder="Şirkət və ya mağaza adı" className="w-full h-10 px-4 rounded-xl border border-input bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Yerləşdirmə növü</label>
+                <div className="grid grid-cols-2 gap-3">
+                  {(Object.entries(placementConfig) as [AdPlacement, typeof placementConfig["banner"]][]).map(([key, cfg]) => (
+                    <button key={key} onClick={() => setEditForm({ ...editForm, placement: key })}
+                      className={`text-left p-3 rounded-xl border-2 transition-all ${
+                        editForm.placement === key ? "border-primary bg-primary/5" : "border-input hover:border-primary/30"
+                      }`}>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm font-semibold text-foreground">{cfg.label}</span>
+                        {editForm.placement === key && <Check className="w-4 h-4 text-primary" />}
+                      </div>
+                      <p className="text-[11px] font-mono text-primary">{cfg.size}</p>
+                      <p className="text-[10px] text-muted-foreground mt-0.5">{cfg.desc}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">Büdcə (AZN)</label>
+                  <input type="number" value={editForm.budget} onChange={e => setEditForm({ ...editForm, budget: e.target.value })}
+                    placeholder="300" className="w-full h-10 px-4 rounded-xl border border-input bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">Müddət (gün)</label>
+                  <input type="number" value={editForm.days} onChange={e => setEditForm({ ...editForm, days: e.target.value })}
+                    className="w-full h-10 px-4 rounded-xl border border-input bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
+                </div>
+              </div>
+
+              <button onClick={() => { if (!editForm.name || !editForm.advertiser || !editForm.budget) { toast.error("Bütün sahələri doldurun"); return; } setStep(2); }}
+                className="w-full h-11 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:brightness-95 transition-all active:scale-[0.98]">
+                Davam et — AI Mətn & Önizləmə →
+              </button>
+            </div>
+          )}
+
+          {step === 2 && (
+            <div className="space-y-4">
+              <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-foreground">AI Reklam Mətni Generatoru</h4>
+                    <p className="text-[10px] text-muted-foreground">Mövcud mətni saxlayın və ya AI ilə yenisini yaradın</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <button onClick={generatedText ? handleRegenerate : handleAIGenerate} disabled={isGenerating}
+                    className="flex-1 h-10 rounded-xl bg-gradient-to-r from-violet-500 to-indigo-600 text-white text-sm font-semibold flex items-center justify-center gap-2 hover:brightness-95 transition-all disabled:opacity-60">
+                    {isGenerating ? (
+                      <><Loader2 className="w-4 h-4 animate-spin" /> Yaradılır...</>
+                    ) : generatedText ? (
+                      <><Wand2 className="w-4 h-4" /> Yenidən yarat</>
+                    ) : (
+                      <><Sparkles className="w-4 h-4" /> AI ilə mətn yarat</>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5">Reklam mətni</label>
+                <textarea value={generatedText} onChange={e => setGeneratedText(e.target.value)} rows={4}
+                  placeholder="AI ilə yaradın və ya özünüz yazın..."
+                  className="w-full px-4 py-3 rounded-xl border border-input bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none" />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2 flex items-center gap-2">
+                  <Eye className="w-3.5 h-3.5 text-primary" />
+                  Baner önizləməsi — {placementConfig[editForm.placement].label}
+                  <span className="text-[10px] text-muted-foreground font-normal">({placementConfig[editForm.placement].size})</span>
+                </label>
+                <PlacementPreview placement={editForm.placement} adText={generatedText} advertiser={editForm.advertiser} />
+              </div>
+
+              <div className="rounded-xl bg-secondary/50 p-3 space-y-1.5">
+                <p className="text-xs font-bold text-foreground">Kampaniya xülasəsi</p>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px]">
+                  <span className="text-muted-foreground">Kampaniya:</span><span className="text-foreground font-medium">{editForm.name}</span>
+                  <span className="text-muted-foreground">Reklamçı:</span><span className="text-foreground font-medium">{editForm.advertiser}</span>
+                  <span className="text-muted-foreground">Yerləşdirmə:</span><span className="text-foreground font-medium">{placementConfig[editForm.placement].label} ({placementConfig[editForm.placement].size})</span>
+                  <span className="text-muted-foreground">Büdcə:</span><span className="text-foreground font-medium">{editForm.budget} AZN / {editForm.days} gün</span>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <button onClick={() => setStep(1)}
+                  className="h-11 px-5 rounded-xl border border-input text-sm font-medium text-foreground hover:bg-secondary transition-colors">
+                  ← Geri
+                </button>
+                <button onClick={saveEdit}
+                  className="flex-1 h-11 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:brightness-95 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                  <Check className="w-4 h-4" /> Yadda saxla
                 </button>
               </div>
             </div>
