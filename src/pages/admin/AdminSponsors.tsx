@@ -395,6 +395,9 @@ const AdminSponsors = () => {
                             {a.status === "active" ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                           </button>
                         )}
+                        <button onClick={() => openEditDialog(a)} className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Düzəliş et">
+                          <Pencil className="w-4 h-4" />
+                        </button>
                         <button onClick={() => removeAd(a.id)} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive">
                           <X className="w-4 h-4" />
                         </button>
