@@ -64,7 +64,7 @@ const AdminDashboard = () => (
     {/* Stats */}
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       {stats.map((s) => (
-        <div key={s.label} className="bg-card rounded-2xl border border-border p-4 sm:p-5 shadow-sm">
+        <Link to={s.link} key={s.label} className="bg-card rounded-2xl border border-border p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between mb-3">
             <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${s.color}`}>
               <s.icon className="w-[18px] h-[18px]" strokeWidth={1.8} />
@@ -76,7 +76,7 @@ const AdminDashboard = () => (
           </div>
           <p className="text-xl sm:text-2xl font-bold text-foreground">{s.value}</p>
           <p className="text-xs text-muted-foreground mt-0.5">{s.label}</p>
-        </div>
+        </Link>
       ))}
     </div>
 
