@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, Globe, Shield, Database, Save, Check, User, KeyRound, Camera, Eye, EyeOff, LogOut } from "lucide-react";
+import { Bell, Globe, Shield, Database, Save, Check, User, KeyRound, Camera, Eye, EyeOff, LogOut, Layers, Plus, Trash2, GripVertical, Edit2 } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -21,6 +21,7 @@ const tabs = [
   { id: "password", label: "Şifrə", icon: KeyRound },
   { id: "notifications", label: "Bildirişlər", icon: Bell },
   { id: "platform", label: "Platform", icon: Globe },
+  { id: "categories", label: "Kateqoriyalar", icon: Layers },
   { id: "security", label: "Təhlükəsizlik", icon: Shield },
 ] as const;
 
@@ -45,7 +46,6 @@ const ProfileTab = () => {
 
   return (
     <div className="space-y-5">
-      {/* Avatar */}
       <div className="flex items-center gap-4">
         <div className="relative">
           <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center">
@@ -111,18 +111,9 @@ const PasswordTab = () => {
   const [saved, setSaved] = useState(false);
 
   const handleSave = () => {
-    if (!form.current || !form.newPass || !form.confirm) {
-      toast.error("Bütün sahələri doldurun!");
-      return;
-    }
-    if (form.newPass.length < 8) {
-      toast.error("Yeni şifrə ən azı 8 simvol olmalıdır!");
-      return;
-    }
-    if (form.newPass !== form.confirm) {
-      toast.error("Yeni şifrələr uyğun gəlmir!");
-      return;
-    }
+    if (!form.current || !form.newPass || !form.confirm) { toast.error("Bütün sahələri doldurun!"); return; }
+    if (form.newPass.length < 8) { toast.error("Yeni şifrə ən azı 8 simvol olmalıdır!"); return; }
+    if (form.newPass !== form.confirm) { toast.error("Yeni şifrələr uyğun gəlmir!"); return; }
     setSaved(true);
     toast.success("Şifrə uğurla dəyişdirildi!");
     setForm({ current: "", newPass: "", confirm: "" });
@@ -143,7 +134,6 @@ const PasswordTab = () => {
           <li>Ən azı 1 rəqəm və xüsusi simvol</li>
         </ul>
       </div>
-
       <div className="space-y-3">
         <div>
           <label className="block text-sm font-medium text-foreground mb-1.5">Cari şifrə</label>
@@ -191,7 +181,6 @@ const PasswordTab = () => {
           )}
         </div>
       </div>
-
       <button onClick={handleSave}
         className={`flex items-center justify-center gap-2 w-full h-11 font-semibold rounded-xl text-sm transition-all active:scale-[0.98] ${
           saved ? "bg-emerald-500 text-white" : "bg-primary text-primary-foreground hover:brightness-95"
@@ -211,17 +200,8 @@ const NotificationsTab = () => {
     dailyDigest: true, weeklyReport: true,
   });
   const [saved, setSaved] = useState(false);
-
-  const toggle = (key: keyof typeof notifs) => {
-    setNotifs(n => ({ ...n, [key]: !n[key] }));
-    setSaved(false);
-  };
-
-  const handleSave = () => {
-    setSaved(true);
-    toast.success("Bildiriş tənzimləmələri yadda saxlanıldı!");
-    setTimeout(() => setSaved(false), 2000);
-  };
+  const toggle = (key: keyof typeof notifs) => { setNotifs(n => ({ ...n, [key]: !n[key] })); setSaved(false); };
+  const handleSave = () => { setSaved(true); toast.success("Bildiriş tənzimləmələri yadda saxlanıldı!"); setTimeout(() => setSaved(false), 2000); };
 
   return (
     <div className="space-y-5">
@@ -234,15 +214,11 @@ const NotificationsTab = () => {
           { key: "emailSystem" as const, label: "Sistem xəbərləri", desc: "Sistem yenilikləri və xətalar" },
         ]).map(item => (
           <div key={item.key} className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-foreground">{item.label}</p>
-              <p className="text-xs text-muted-foreground">{item.desc}</p>
-            </div>
+            <div><p className="text-sm font-medium text-foreground">{item.label}</p><p className="text-xs text-muted-foreground">{item.desc}</p></div>
             <Toggle enabled={notifs[item.key]} onToggle={() => toggle(item.key)} />
           </div>
         ))}
       </div>
-
       <div className="bg-card rounded-2xl border border-border p-5 shadow-sm space-y-3">
         <h3 className="text-sm font-bold text-foreground">🔔 Push bildirişləri</h3>
         {([
@@ -252,33 +228,22 @@ const NotificationsTab = () => {
           { key: "pushSystem" as const, label: "Sistem", desc: "Sistem xəbərdarlıqları" },
         ]).map(item => (
           <div key={item.key} className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-foreground">{item.label}</p>
-              <p className="text-xs text-muted-foreground">{item.desc}</p>
-            </div>
+            <div><p className="text-sm font-medium text-foreground">{item.label}</p><p className="text-xs text-muted-foreground">{item.desc}</p></div>
             <Toggle enabled={notifs[item.key]} onToggle={() => toggle(item.key)} />
           </div>
         ))}
       </div>
-
       <div className="bg-card rounded-2xl border border-border p-5 shadow-sm space-y-3">
         <h3 className="text-sm font-bold text-foreground">📊 Hesabatlar</h3>
         <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-foreground">Gündəlik xülasə</p>
-            <p className="text-xs text-muted-foreground">Hər gün saat 09:00-da</p>
-          </div>
+          <div><p className="text-sm font-medium text-foreground">Gündəlik xülasə</p><p className="text-xs text-muted-foreground">Hər gün saat 09:00-da</p></div>
           <Toggle enabled={notifs.dailyDigest} onToggle={() => toggle("dailyDigest")} />
         </div>
         <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-foreground">Həftəlik hesabat</p>
-            <p className="text-xs text-muted-foreground">Hər bazar ertəsi</p>
-          </div>
+          <div><p className="text-sm font-medium text-foreground">Həftəlik hesabat</p><p className="text-xs text-muted-foreground">Hər bazar ertəsi</p></div>
           <Toggle enabled={notifs.weeklyReport} onToggle={() => toggle("weeklyReport")} />
         </div>
       </div>
-
       <button onClick={handleSave}
         className={`flex items-center justify-center gap-2 w-full h-11 font-semibold rounded-xl text-sm transition-all active:scale-[0.98] ${
           saved ? "bg-emerald-500 text-white" : "bg-primary text-primary-foreground hover:brightness-95"
@@ -293,34 +258,17 @@ const NotificationsTab = () => {
 // ── Platform Tab ──
 const PlatformTab = () => {
   const [settings, setSettings] = useState({
-    siteName: "UcuzTap",
-    siteDescription: "Azərbaycanın ən böyük pulsuz elan platforması",
-    contactEmail: "info@ucuztap.az",
-    language: "az",
-    autoApprove: true,
-    imageLimit: 8,
-    listingDuration: 30,
+    siteName: "UcuzTap", siteDescription: "Azərbaycanın ən böyük pulsuz elan platforması",
+    contactEmail: "info@ucuztap.az", language: "az", autoApprove: true, imageLimit: 8, listingDuration: 30,
   });
   const [saved, setSaved] = useState(false);
-
-  const update = <K extends keyof typeof settings>(key: K, value: (typeof settings)[K]) => {
-    setSettings(s => ({ ...s, [key]: value }));
-    setSaved(false);
-  };
-
-  const handleSave = () => {
-    setSaved(true);
-    toast.success("Platform parametrləri yadda saxlanıldı!");
-    setTimeout(() => setSaved(false), 2000);
-  };
+  const update = <K extends keyof typeof settings>(key: K, value: (typeof settings)[K]) => { setSettings(s => ({ ...s, [key]: value })); setSaved(false); };
+  const handleSave = () => { setSaved(true); toast.success("Platform parametrləri yadda saxlanıldı!"); setTimeout(() => setSaved(false), 2000); };
 
   return (
     <div className="space-y-5">
       <div className="bg-card rounded-2xl border border-border p-5 shadow-sm space-y-3">
-        <div className="flex items-center gap-2">
-          <Globe className="w-4 h-4 text-primary" />
-          <h3 className="text-sm font-bold text-foreground">Ümumi parametrlər</h3>
-        </div>
+        <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-primary" /><h3 className="text-sm font-bold text-foreground">Ümumi parametrlər</h3></div>
         <div>
           <label className="block text-sm font-medium text-foreground mb-1.5">Sayt adı</label>
           <input value={settings.siteName} onChange={(e) => update("siteName", e.target.value)}
@@ -341,46 +289,28 @@ const PlatformTab = () => {
             <label className="block text-sm font-medium text-foreground mb-1.5">Dil</label>
             <select value={settings.language} onChange={(e) => update("language", e.target.value)}
               className="w-full h-10 px-4 rounded-xl border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring">
-              <option value="az">Azərbaycan dili</option>
-              <option value="ru">Русский</option>
-              <option value="en">English</option>
+              <option value="az">Azərbaycan dili</option><option value="ru">Русский</option><option value="en">English</option>
             </select>
           </div>
         </div>
       </div>
-
       <div className="bg-card rounded-2xl border border-border p-5 shadow-sm space-y-3">
-        <div className="flex items-center gap-2">
-          <Database className="w-4 h-4 text-primary" />
-          <h3 className="text-sm font-bold text-foreground">Elan parametrləri</h3>
-        </div>
+        <div className="flex items-center gap-2"><Database className="w-4 h-4 text-primary" /><h3 className="text-sm font-bold text-foreground">Elan parametrləri</h3></div>
         <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-foreground">Avtomatik təsdiq</p>
-            <p className="text-xs text-muted-foreground">Elanlar avtomatik yayımlansın</p>
-          </div>
+          <div><p className="text-sm font-medium text-foreground">Avtomatik təsdiq</p><p className="text-xs text-muted-foreground">Elanlar avtomatik yayımlansın</p></div>
           <Toggle enabled={settings.autoApprove} onToggle={() => update("autoApprove", !settings.autoApprove)} />
         </div>
         <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-foreground">Şəkil limiti</p>
-            <p className="text-xs text-muted-foreground">Hər elan üçün max şəkil</p>
-          </div>
+          <div><p className="text-sm font-medium text-foreground">Şəkil limiti</p><p className="text-xs text-muted-foreground">Hər elan üçün max şəkil</p></div>
           <input type="number" value={settings.imageLimit} onChange={(e) => update("imageLimit", Number(e.target.value))}
-            min={1} max={20}
-            className="w-16 h-9 px-3 rounded-xl border border-input bg-background text-sm text-center focus:outline-none focus:ring-2 focus:ring-ring" />
+            min={1} max={20} className="w-16 h-9 px-3 rounded-xl border border-input bg-background text-sm text-center focus:outline-none focus:ring-2 focus:ring-ring" />
         </div>
         <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-foreground">Elan müddəti (gün)</p>
-            <p className="text-xs text-muted-foreground">Elanın aktiv qalma müddəti</p>
-          </div>
+          <div><p className="text-sm font-medium text-foreground">Elan müddəti (gün)</p><p className="text-xs text-muted-foreground">Elanın aktiv qalma müddəti</p></div>
           <input type="number" value={settings.listingDuration} onChange={(e) => update("listingDuration", Number(e.target.value))}
-            min={1} max={365}
-            className="w-16 h-9 px-3 rounded-xl border border-input bg-background text-sm text-center focus:outline-none focus:ring-2 focus:ring-ring" />
+            min={1} max={365} className="w-16 h-9 px-3 rounded-xl border border-input bg-background text-sm text-center focus:outline-none focus:ring-2 focus:ring-ring" />
         </div>
       </div>
-
       <button onClick={handleSave}
         className={`flex items-center justify-center gap-2 w-full h-11 font-semibold rounded-xl text-sm transition-all active:scale-[0.98] ${
           saved ? "bg-emerald-500 text-white" : "bg-primary text-primary-foreground hover:brightness-95"
@@ -392,85 +322,195 @@ const PlatformTab = () => {
   );
 };
 
-// ── Security Tab ──
-const SecurityTab = () => {
-  const [sec, setSec] = useState({
-    twoFactorAuth: false,
-    loginAlerts: true,
-    sessionTimeout: 30,
-    ipWhitelist: "",
-  });
-  const [saved, setSaved] = useState(false);
-  const navigate = useNavigate();
+// ── Categories Tab ──
+interface CategoryItem {
+  id: number;
+  name: string;
+  slug: string;
+  icon: string;
+  enabled: boolean;
+  subcategories: { id: number; name: string; enabled: boolean }[];
+}
 
-  const sessions = [
-    { device: "Chrome - Windows", ip: "192.168.1.1", time: "İndi aktiv", current: true },
-    { device: "Safari - iPhone", ip: "10.0.0.5", time: "2 saat əvvəl", current: false },
-    { device: "Firefox - MacOS", ip: "172.16.0.3", time: "Dünən", current: false },
-  ];
+const initialCategories: CategoryItem[] = [
+  { id: 1, name: "Nəqliyyat", slug: "neqliyyat", icon: "🚗", enabled: true, subcategories: [
+    { id: 11, name: "Avtomobillər", enabled: true }, { id: 12, name: "Motosikletlər", enabled: true },
+    { id: 13, name: "Ehtiyat hissələri", enabled: true }, { id: 14, name: "Su nəqliyyatı", enabled: true },
+  ]},
+  { id: 2, name: "Daşınmaz əmlak", slug: "dasinmaz-emlak", icon: "🏠", enabled: true, subcategories: [
+    { id: 21, name: "Mənzillər", enabled: true }, { id: 22, name: "Həyət evləri", enabled: true },
+    { id: 23, name: "Torpaq sahələri", enabled: true }, { id: 24, name: "Qarajlar", enabled: true },
+    { id: 25, name: "Ofislər", enabled: true },
+  ]},
+  { id: 3, name: "Elektronika", slug: "elektronika", icon: "📱", enabled: true, subcategories: [
+    { id: 31, name: "Telefonlar", enabled: true }, { id: 32, name: "Planşetlər", enabled: true },
+    { id: 33, name: "Aksessuarlar", enabled: true }, { id: 34, name: "Televizorlar", enabled: true },
+  ]},
+  { id: 4, name: "İş elanları", slug: "is-elanlari", icon: "💼", enabled: true, subcategories: [
+    { id: 41, name: "Tam iş günü", enabled: true }, { id: 42, name: "Yarım günlük", enabled: true },
+    { id: 43, name: "Freelance", enabled: true },
+  ]},
+  { id: 5, name: "Geyim", slug: "geyim", icon: "👔", enabled: true, subcategories: [
+    { id: 51, name: "Kişi geyimləri", enabled: true }, { id: 52, name: "Qadın geyimləri", enabled: true },
+    { id: 53, name: "Uşaq geyimləri", enabled: true }, { id: 54, name: "Ayaqqabılar", enabled: true },
+  ]},
+  { id: 6, name: "Ev və bağ", slug: "ev-ve-bag", icon: "🛋️", enabled: true, subcategories: [
+    { id: 61, name: "Mebel", enabled: true }, { id: 62, name: "Məişət texnikası", enabled: true },
+    { id: 63, name: "Bağ ləvazimatları", enabled: true },
+  ]},
+  { id: 7, name: "Uşaq aləmi", slug: "usaq-alemi", icon: "👶", enabled: true, subcategories: [
+    { id: 71, name: "Oyuncaqlar", enabled: true }, { id: 72, name: "Uşaq arabaları", enabled: true },
+    { id: 73, name: "Uşaq mebeli", enabled: true },
+  ]},
+  { id: 8, name: "Hobbi və idman", slug: "hobbi-idman", icon: "🏋️", enabled: true, subcategories: [
+    { id: 81, name: "İdman avadanlıqları", enabled: true }, { id: 82, name: "Musiqi alətləri", enabled: true },
+    { id: 83, name: "Kitablar", enabled: true },
+  ]},
+  { id: 9, name: "Xidmətlər", slug: "xidmetler", icon: "🔧", enabled: true, subcategories: [
+    { id: 91, name: "Təmir", enabled: true }, { id: 92, name: "Təmizlik", enabled: true },
+    { id: 93, name: "Nəqliyyat xidmətləri", enabled: true },
+  ]},
+  { id: 10, name: "Heyvanlar", slug: "heyvanlar", icon: "🐾", enabled: true, subcategories: [
+    { id: 101, name: "İtlər", enabled: true }, { id: 102, name: "Pişiklər", enabled: true },
+    { id: 103, name: "Quşlar", enabled: true },
+  ]},
+  { id: 11, name: "Kompüter", slug: "komputer", icon: "💻", enabled: true, subcategories: [
+    { id: 111, name: "Noutbuklar", enabled: true }, { id: 112, name: "Masaüstü", enabled: true },
+    { id: 113, name: "Komponentlər", enabled: true },
+  ]},
+  { id: 12, name: "Gözəllik", slug: "gozellik", icon: "✨", enabled: true, subcategories: [
+    { id: 121, name: "Parfümeriya", enabled: true }, { id: 122, name: "Kosmetika", enabled: true },
+    { id: 123, name: "Saç baxımı", enabled: true },
+  ]},
+];
+
+const CategoriesTab = () => {
+  const [categories, setCategories] = useState<CategoryItem[]>(initialCategories);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editName, setEditName] = useState("");
+  const [newSubcategory, setNewSubcategory] = useState<{ catId: number; name: string } | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [saved, setSaved] = useState(false);
+
+  const startEdit = (cat: CategoryItem) => { setEditingId(cat.id); setEditName(cat.name); };
+  const saveEdit = () => {
+    if (!editName.trim()) return;
+    setCategories(prev => prev.map(c => c.id === editingId ? { ...c, name: editName.trim() } : c));
+    setEditingId(null);
+    setSaved(false);
+  };
+
+  const toggleCategory = (id: number) => {
+    setCategories(prev => prev.map(c => c.id === id ? { ...c, enabled: !c.enabled } : c));
+    setSaved(false);
+  };
+
+  const toggleSubcategory = (catId: number, subId: number) => {
+    setCategories(prev => prev.map(c => c.id === catId ? {
+      ...c, subcategories: c.subcategories.map(s => s.id === subId ? { ...s, enabled: !s.enabled } : s)
+    } : c));
+    setSaved(false);
+  };
+
+  const deleteSubcategory = (catId: number, subId: number) => {
+    setCategories(prev => prev.map(c => c.id === catId ? {
+      ...c, subcategories: c.subcategories.filter(s => s.id !== subId)
+    } : c));
+    toast.success("Alt kateqoriya silindi");
+    setSaved(false);
+  };
+
+  const addSubcategory = () => {
+    if (!newSubcategory || !newSubcategory.name.trim()) return;
+    const newId = Date.now();
+    setCategories(prev => prev.map(c => c.id === newSubcategory.catId ? {
+      ...c, subcategories: [...c.subcategories, { id: newId, name: newSubcategory.name.trim(), enabled: true }]
+    } : c));
+    setNewSubcategory(null);
+    toast.success("Alt kateqoriya əlavə edildi");
+    setSaved(false);
+  };
 
   const handleSave = () => {
     setSaved(true);
-    toast.success("Təhlükəsizlik tənzimləmələri yadda saxlanıldı!");
+    toast.success("Kateqoriya tənzimləmələri yadda saxlanıldı!");
     setTimeout(() => setSaved(false), 2000);
-  };
-
-  const handleLogoutAll = () => {
-    toast.success("Bütün sessiyalar bağlandı!");
-  };
-
-  const handleLogout = () => {
-    toast.success("Hesabdan çıxış edildi!");
-    navigate("/");
   };
 
   return (
     <div className="space-y-5">
-      <div className="bg-card rounded-2xl border border-border p-5 shadow-sm space-y-3">
-        <h3 className="text-sm font-bold text-foreground">🔐 Təhlükəsizlik parametrləri</h3>
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-foreground">İki addımlı doğrulama (2FA)</p>
-            <p className="text-xs text-muted-foreground">Admin girişi üçün əlavə təsdiq</p>
-          </div>
-          <Toggle enabled={sec.twoFactorAuth} onToggle={() => setSec(s => ({ ...s, twoFactorAuth: !s.twoFactorAuth }))} />
-        </div>
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-foreground">Giriş xəbərdarlıqları</p>
-            <p className="text-xs text-muted-foreground">Yeni cihazdan girişdə e-poçt göndər</p>
-          </div>
-          <Toggle enabled={sec.loginAlerts} onToggle={() => setSec(s => ({ ...s, loginAlerts: !s.loginAlerts }))} />
-        </div>
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-foreground">Sessiya müddəti (dəq)</p>
-            <p className="text-xs text-muted-foreground">Hərəkətsizlik müddəti</p>
-          </div>
-          <input type="number" value={sec.sessionTimeout}
-            onChange={(e) => setSec(s => ({ ...s, sessionTimeout: Number(e.target.value) }))}
-            min={5} max={120}
-            className="w-16 h-9 px-3 rounded-xl border border-input bg-background text-sm text-center focus:outline-none focus:ring-2 focus:ring-ring" />
-        </div>
+      <div className="p-4 rounded-xl bg-primary/5 border border-primary/10">
+        <p className="text-sm text-foreground font-medium">📂 Kateqoriya idarəetməsi</p>
+        <p className="text-xs text-muted-foreground mt-1">Kateqoriyaları aktiv/deaktiv edin, adlarını dəyişdirin və alt kateqoriyaları idarə edin.</p>
       </div>
 
-      <div className="bg-card rounded-2xl border border-border p-5 shadow-sm space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold text-foreground">📱 Aktiv sessiyalar</h3>
-          <button onClick={handleLogoutAll} className="text-xs text-destructive hover:underline">
-            Hamısını bağla
-          </button>
-        </div>
-        {sessions.map((s, i) => (
-          <div key={i} className="flex items-center justify-between py-2 border-b border-border last:border-0">
-            <div>
-              <p className="text-sm text-foreground">{s.device}</p>
-              <p className="text-xs text-muted-foreground">{s.ip} · {s.time}</p>
+      <div className="space-y-2">
+        {categories.map(cat => (
+          <div key={cat.id} className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
+            <div className="flex items-center gap-3 p-4">
+              <GripVertical className="w-4 h-4 text-muted-foreground/40 shrink-0 cursor-grab" />
+              <span className="text-lg shrink-0">{cat.icon}</span>
+              {editingId === cat.id ? (
+                <div className="flex items-center gap-2 flex-1">
+                  <input value={editName} onChange={(e) => setEditName(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && saveEdit()}
+                    className="h-8 px-3 rounded-lg border border-input bg-background text-sm flex-1 focus:outline-none focus:ring-2 focus:ring-ring"
+                    autoFocus />
+                  <button onClick={saveEdit} className="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-xs font-semibold">Saxla</button>
+                  <button onClick={() => setEditingId(null)} className="h-8 px-3 rounded-lg bg-secondary text-muted-foreground text-xs">Ləğv</button>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between flex-1 min-w-0">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-sm font-semibold text-foreground">{cat.name}</span>
+                    <span className="text-[10px] text-muted-foreground bg-secondary px-1.5 py-0.5 rounded">{cat.subcategories.length} alt</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <button onClick={() => startEdit(cat)} className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
+                      <Edit2 className="w-3.5 h-3.5" />
+                    </button>
+                    <button onClick={() => setExpandedId(expandedId === cat.id ? null : cat.id)}
+                      className="px-2.5 py-1 rounded-lg bg-secondary text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors">
+                      {expandedId === cat.id ? "Bağla" : "Alt kateqoriyalar"}
+                    </button>
+                    <Toggle enabled={cat.enabled} onToggle={() => toggleCategory(cat.id)} />
+                  </div>
+                </div>
+              )}
             </div>
-            {s.current ? (
-              <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Cari</span>
-            ) : (
-              <button className="text-xs text-destructive hover:underline">Bağla</button>
+
+            {/* Subcategories */}
+            {expandedId === cat.id && (
+              <div className="border-t border-border bg-secondary/20 p-3 space-y-1.5">
+                {cat.subcategories.map(sub => (
+                  <div key={sub.id} className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-secondary/50 transition-colors">
+                    <span className={`text-sm ${sub.enabled ? "text-foreground" : "text-muted-foreground line-through"}`}>{sub.name}</span>
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => deleteSubcategory(cat.id, sub.id)}
+                        className="p-1 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                      <Toggle enabled={sub.enabled} onToggle={() => toggleSubcategory(cat.id, sub.id)} />
+                    </div>
+                  </div>
+                ))}
+                {newSubcategory?.catId === cat.id ? (
+                  <div className="flex items-center gap-2 px-3 pt-1">
+                    <input value={newSubcategory.name} onChange={(e) => setNewSubcategory({ ...newSubcategory, name: e.target.value })}
+                      onKeyDown={(e) => e.key === "Enter" && addSubcategory()}
+                      placeholder="Alt kateqoriya adı..."
+                      className="h-8 px-3 rounded-lg border border-input bg-background text-sm flex-1 focus:outline-none focus:ring-2 focus:ring-ring"
+                      autoFocus />
+                    <button onClick={addSubcategory} className="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-xs font-semibold">Əlavə et</button>
+                    <button onClick={() => setNewSubcategory(null)} className="h-8 px-3 rounded-lg bg-secondary text-muted-foreground text-xs">Ləğv</button>
+                  </div>
+                ) : (
+                  <button onClick={() => setNewSubcategory({ catId: cat.id, name: "" })}
+                    className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-primary hover:underline">
+                    <Plus className="w-3 h-3" /> Alt kateqoriya əlavə et
+                  </button>
+                )}
+              </div>
             )}
           </div>
         ))}
@@ -481,13 +521,73 @@ const SecurityTab = () => {
           saved ? "bg-emerald-500 text-white" : "bg-primary text-primary-foreground hover:brightness-95"
         }`}>
         {saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
+        {saved ? "Yadda saxlanıldı!" : "Kateqoriya dəyişikliklərini yadda saxla"}
+      </button>
+    </div>
+  );
+};
+
+// ── Security Tab ──
+const SecurityTab = () => {
+  const [sec, setSec] = useState({ twoFactorAuth: false, loginAlerts: true, sessionTimeout: 30, ipWhitelist: "" });
+  const [saved, setSaved] = useState(false);
+  const navigate = useNavigate();
+
+  const sessions = [
+    { device: "Chrome - Windows", ip: "192.168.1.1", time: "İndi aktiv", current: true },
+    { device: "Safari - iPhone", ip: "10.0.0.5", time: "2 saat əvvəl", current: false },
+    { device: "Firefox - MacOS", ip: "172.16.0.3", time: "Dünən", current: false },
+  ];
+
+  const handleSave = () => { setSaved(true); toast.success("Təhlükəsizlik tənzimləmələri yadda saxlanıldı!"); setTimeout(() => setSaved(false), 2000); };
+  const handleLogoutAll = () => { toast.success("Bütün sessiyalar bağlandı!"); };
+  const handleLogout = () => { toast.success("Hesabdan çıxış edildi!"); navigate("/"); };
+
+  return (
+    <div className="space-y-5">
+      <div className="bg-card rounded-2xl border border-border p-5 shadow-sm space-y-3">
+        <h3 className="text-sm font-bold text-foreground">🔐 Təhlükəsizlik parametrləri</h3>
+        <div className="flex items-center justify-between">
+          <div><p className="text-sm font-medium text-foreground">İki addımlı doğrulama (2FA)</p><p className="text-xs text-muted-foreground">Admin girişi üçün əlavə təsdiq</p></div>
+          <Toggle enabled={sec.twoFactorAuth} onToggle={() => setSec(s => ({ ...s, twoFactorAuth: !s.twoFactorAuth }))} />
+        </div>
+        <div className="flex items-center justify-between">
+          <div><p className="text-sm font-medium text-foreground">Giriş xəbərdarlıqları</p><p className="text-xs text-muted-foreground">Yeni cihazdan girişdə e-poçt göndər</p></div>
+          <Toggle enabled={sec.loginAlerts} onToggle={() => setSec(s => ({ ...s, loginAlerts: !s.loginAlerts }))} />
+        </div>
+        <div className="flex items-center justify-between">
+          <div><p className="text-sm font-medium text-foreground">Sessiya müddəti (dəq)</p><p className="text-xs text-muted-foreground">Hərəkətsizlik müddəti</p></div>
+          <input type="number" value={sec.sessionTimeout}
+            onChange={(e) => setSec(s => ({ ...s, sessionTimeout: Number(e.target.value) }))}
+            min={5} max={120} className="w-16 h-9 px-3 rounded-xl border border-input bg-background text-sm text-center focus:outline-none focus:ring-2 focus:ring-ring" />
+        </div>
+      </div>
+      <div className="bg-card rounded-2xl border border-border p-5 shadow-sm space-y-3">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-bold text-foreground">📱 Aktiv sessiyalar</h3>
+          <button onClick={handleLogoutAll} className="text-xs text-destructive hover:underline">Hamısını bağla</button>
+        </div>
+        {sessions.map((s, i) => (
+          <div key={i} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+            <div><p className="text-sm text-foreground">{s.device}</p><p className="text-xs text-muted-foreground">{s.ip} · {s.time}</p></div>
+            {s.current ? (
+              <span className="text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-full">Cari</span>
+            ) : (
+              <button className="text-xs text-destructive hover:underline">Bağla</button>
+            )}
+          </div>
+        ))}
+      </div>
+      <button onClick={handleSave}
+        className={`flex items-center justify-center gap-2 w-full h-11 font-semibold rounded-xl text-sm transition-all active:scale-[0.98] ${
+          saved ? "bg-emerald-500 text-white" : "bg-primary text-primary-foreground hover:brightness-95"
+        }`}>
+        {saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
         {saved ? "Yadda saxlanıldı!" : "Təhlükəsizlik parametrlərini yadda saxla"}
       </button>
-
       <button onClick={handleLogout}
         className="flex items-center justify-center gap-2 w-full h-11 font-semibold rounded-xl text-sm border border-destructive text-destructive hover:bg-destructive/10 transition-all active:scale-[0.98]">
-        <LogOut className="w-4 h-4" />
-        Hesabdan çıxış et
+        <LogOut className="w-4 h-4" /> Hesabdan çıxış et
       </button>
     </div>
   );
@@ -497,36 +597,30 @@ const SecurityTab = () => {
 const AdminSettings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = (searchParams.get("tab") as TabId) || "profile";
-
   const setTab = (tab: TabId) => setSearchParams({ tab });
 
   return (
     <div className="max-w-2xl space-y-6">
       <div>
         <h1 className="text-xl font-bold text-foreground">Tənzimləmələr</h1>
-        <p className="text-sm text-muted-foreground">Profil, şifrə, bildiriş və platform parametrləri</p>
+        <p className="text-sm text-muted-foreground">Profil, şifrə, bildiriş, platform və kateqoriya parametrləri</p>
       </div>
-
-      {/* Tabs */}
       <div className="flex gap-1 bg-secondary/50 p-1 rounded-xl overflow-x-auto">
         {tabs.map(tab => (
           <button key={tab.id} onClick={() => setTab(tab.id)}
             className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
-              activeTab === tab.id
-                ? "bg-card text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
+              activeTab === tab.id ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
             }`}>
             <tab.icon className="w-3.5 h-3.5" />
             {tab.label}
           </button>
         ))}
       </div>
-
-      {/* Tab Content */}
       {activeTab === "profile" && <ProfileTab />}
       {activeTab === "password" && <PasswordTab />}
       {activeTab === "notifications" && <NotificationsTab />}
       {activeTab === "platform" && <PlatformTab />}
+      {activeTab === "categories" && <CategoriesTab />}
       {activeTab === "security" && <SecurityTab />}
     </div>
   );
