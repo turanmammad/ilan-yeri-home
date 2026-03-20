@@ -323,9 +323,12 @@ const ListingDetail = () => {
                     </button>
                   )}
 
-                  <button className="w-full h-12 border border-input bg-card text-foreground font-medium rounded-xl text-sm hover:bg-secondary transition-colors flex items-center justify-center gap-2">
+                  <Link
+                    to={`/hesab/mesajlar?seller=${encodeURIComponent(listing.seller.name)}&listing=${encodeURIComponent(listing.title)}`}
+                    className="w-full h-12 border border-input bg-card text-foreground font-medium rounded-xl text-sm hover:bg-secondary transition-colors flex items-center justify-center gap-2"
+                  >
                     <MessageCircle className="w-4 h-4" /> Mesaj yaz
-                  </button>
+                  </Link>
                 </div>
 
                 {/* Seller card */}
