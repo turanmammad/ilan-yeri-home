@@ -51,6 +51,7 @@ const AdminCampaigns = () => {
   const [search, setSearch] = useState("");
   const [dateRange, setDateRange] = useState<DateRange>(null);
   const [typeFilter, setTypeFilter] = useState("all");
+  const [deleteId, setDeleteId] = useState<number | null>(null);
 
   const types = useMemo(() => [...new Set(campaigns.map(c => c.type))], []);
 
