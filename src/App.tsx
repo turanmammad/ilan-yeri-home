@@ -42,6 +42,7 @@ import AdminAI from "./pages/admin/AdminAI.tsx";
 import AdminSystem from "./pages/admin/AdminSystem.tsx";
 import AdminPromotions from "./pages/admin/AdminPromotions.tsx";
 import AdminSponsors from "./pages/admin/AdminSponsors.tsx";
+import AdminTopUsers from "./pages/admin/AdminTopUsers.tsx";
 
 const queryClient = new QueryClient();
 
