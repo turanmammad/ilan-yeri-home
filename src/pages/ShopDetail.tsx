@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { MapPin, Clock, Star, Shield, Store, Heart, Phone, MessageCircle, Globe, Share2, ChevronRight, Grid3X3, Search, ExternalLink } from "lucide-react";
 import Header from "@/components/Header";
